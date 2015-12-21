@@ -3,6 +3,10 @@ sudo: false
 language: java
 jdk:      oraclejdk8
 
+before_install:
+  # use gradle daemon since we're calling it more than once
+  - echo "org.gradle.daemon=true" >> ~/.gradle/gradle.properties
+
 install:  ./gradlew clean assemble
 script:   ./gradlew check
 
