@@ -1,0 +1,19 @@
+sudo: false
+
+language: java
+jdk:      oraclejdk8
+
+install:  ./gradlew clean assemble
+script:   ./gradlew check
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+  directories:
+    - $HOME/.m2/
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/daemon/
+    - $HOME/.gradle/native/
+    - $HOME/.gradle/wrapper/
+
