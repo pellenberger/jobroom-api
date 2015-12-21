@@ -19,6 +19,7 @@ apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
 
 jar {
     baseName = 'jobroom-api'
@@ -35,6 +36,14 @@ allprojects {
         }
     }
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+check.dependsOn jacocoTestReport
 
 repositories {
     mavenLocal()
