@@ -22,3 +22,8 @@ cache:
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  webhooks:
+    # trigger Buildtime Trend Service to parse Travis CI log
+    - https://buildtimetrend.herokuapp.com/travis
