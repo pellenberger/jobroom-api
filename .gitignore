@@ -2,9 +2,8 @@ build
 tmp
 /.idea
 /.gradle
-/gradle
 
 *.iml
-*.jar
-*.war
 *.wip
+*.off
+
