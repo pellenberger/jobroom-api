@@ -12,14 +12,22 @@ buildscript {
 
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.asciidoctor:asciidoctor-gradle-plugin"
     }
 }
+
+plugins {
+    id "org.asciidoctor.convert" version "1.5.2"
+}
+
 
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
+apply plugin: 'org.asciidoctor.convert'
+
 
 jar {
     baseName = 'jobroom-api'
@@ -46,8 +54,14 @@ jacocoTestReport {
 check.dependsOn jacocoTestReport
 
 repositories {
+    jcenter()
     mavenLocal()
     mavenCentral()
+
+    // due to restdocs SNAPSHOT
+    maven {
+        url 'http://repo.spring.io/snapshot'
+    }
 }
 
 dependencies {
@@ -60,8 +74,26 @@ dependencies {
 
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "junit:junit"
+    testCompile "com.jayway.jsonpath:json-path:0.8.1"
+//    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RC1'
+    // error java.lang.IllegalAccessError with 1.0.0 RC1
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:1.0.2.BUILD-SNAPSHOT'
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.9'
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    attributes 'snippets': snippetsDir
+    inputs.dir snippetsDir
+    dependsOn test
 }

@@ -1,0 +1,30 @@
+= Here is my doc ! Cool !
+:source-highlighter: highlightjs
+
+GET /job
+
+Access using curl :
+
+include::{snippets}/get-job/curl-request.adoc[]
+
+HTTP request :
+
+include::{snippets}/get-job/http-request.adoc[]
+
+HTTP response :
+
+include::{snippets}/get-job/http-response.adoc[]
+
+POST /job
+
+Access using curl :
+
+include::{snippets}/post-job/curl-request.adoc[]
+
+HTTP request :
+
+include::{snippets}/post-job/http-request.adoc[]
+
+HTTP response :
+
+include::{snippets}/post-job/http-response.adoc[]

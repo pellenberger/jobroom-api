@@ -27,6 +27,15 @@ public class JobPositionController {
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
+    // Dumb function, just here to get a value on GET /job
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> get() {
+        JobPosition job = new JobPosition();
+        job.setTitle("Software engineer");
+        job.setCity("Berne");
+        return new ResponseEntity<>(job, HttpStatus.OK);
+    }
+
     private ResponseEntity<?> storeJobOffer(JobPosition job, String accessKey) throws JsonProcessingException {
         return new ResponseEntity<>(job, HttpStatus.CREATED);
     }
