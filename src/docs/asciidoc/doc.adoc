@@ -1,38 +1,45 @@
-= Here is my doc ! Cool !
+= Here is my doc !
+Patrick Ellenberger <patrick.ellenberger@seco.admin.ch>
+v0.0.1, January 2016: First draft
 :source-highlighter: highlightjs
+:toc: left
 
-GET /job
+You'll never hear RTFM again !
 
-Access using curl :
+:sectnums:
+
+== Get a job
+
+=== Access using curl
 
 include::{snippets}/get-job-position/curl-request.adoc[]
 
-HTTP request :
+=== HTTP request
 
 include::{snippets}/get-job-position/http-request.adoc[]
 
-HTTP response :
+=== HTTP response
 
 include::{snippets}/get-job-position/http-response.adoc[]
 
-Response fields :
+=== Response fields
 
 include::{snippets}/get-job-position/response-fields.adoc[]
 
-POST /job
+== Create a job
 
-Access using curl :
+=== Access using curl
 
 include::{snippets}/create-job-position/curl-request.adoc[]
 
-HTTP request :
+=== HTTP request
 
 include::{snippets}/create-job-position/http-request.adoc[]
 
-Request fields :
+=== Request fields
 
 include::{snippets}/create-job-position/request-fields.adoc[]
 
-HTTP response :
+=== HTTP response
 
 include::{snippets}/create-job-position/http-response.adoc[]

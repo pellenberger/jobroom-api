@@ -42,6 +42,9 @@ public class JobPositionController {
         JobPosition job = new JobPosition();
         job.setTitle("Software engineer");
         job.setCity("Berne");
+        job.setCountryCode("CH");
+        job.setZip("3002");
+        job.setStartImmediate(true);
         return new ResponseEntity<>(job, HttpStatus.OK);
     }
 

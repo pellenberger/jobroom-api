@@ -40,8 +40,8 @@ public class JobPosition {
 //    @Min(0)
 //    private Integer workloadTo;
 //
-//    @NotNull
-//    private boolean startImmediate;
+    @NotNull
+    private boolean startImmediate;
 //
 //    @NotNull
 //    private boolean perpetual;
@@ -149,13 +149,13 @@ public class JobPosition {
 //        this.workloadTo = workloadTo;
 //    }
 //
-//    public boolean isStartImmediate() {
-//        return startImmediate;
-//    }
-//
-//    public void setStartImmediate(boolean startImmediate) {
-//        this.startImmediate = startImmediate;
-//    }
+    public boolean isStartImmediate() {
+        return startImmediate;
+    }
+
+    public void setStartImmediate(boolean startImmediate) {
+        this.startImmediate = startImmediate;
+    }
 //
 //    public Date getStartDate() {
 //        return startDate;

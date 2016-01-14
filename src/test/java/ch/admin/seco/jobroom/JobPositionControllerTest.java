@@ -83,6 +83,8 @@ public class JobPositionControllerTest {
                 fieldWithPath("countryCode").description("countryCode desc")
                         .attributes(key("constraints").value("nothing")),
                 fieldWithPath("zip").description("zip desc")
+                        .attributes(key("constraints").value("nothing")),
+                fieldWithPath("startImmediate").description("startImmediate desc")
                         .attributes(key("constraints").value("nothing"))
         ));
 
@@ -100,7 +102,8 @@ public class JobPositionControllerTest {
                 fieldWithPath("city").description("city desc"),
                 fieldWithPath("description").description("description desc"),
                 fieldWithPath("countryCode").description("countryCode desc"),
-                fieldWithPath("zip").description("zip desc")
+                fieldWithPath("zip").description("zip desc"),
+                fieldWithPath("startImmediate").description("startImmediate desc")
         ));
 
         this.mockMvc.perform(get("/job"))
