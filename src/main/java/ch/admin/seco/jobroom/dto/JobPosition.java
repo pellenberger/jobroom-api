@@ -34,67 +34,67 @@ public class JobPosition {
     @Size(max = 50)
     private String city;
 
-    @NotNull
-    @Max(100)
-    @Min(0)
-    private Integer workloadFrom;
-
-    @Max(100)
-    @Min(0)
-    private Integer workloadTo;
-
-    @NotNull
-    private boolean startImmediate;
-
-    @NotNull
-    private boolean perpetual;
-
-    @Future
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date startDate;
-
-    @Future
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date durationLimit;
-
-    private String locationRemark;
-
-    private String job;
-
-    @Max(16)
-    @Min(1)
-    private Integer education;
-
-    private Integer experience;
-
-    @Max(99)
-    @Min(15)
-    private Integer ageFrom;
-
-    @Max(99)
-    @Min(15)
-    private Integer ageTo;
-
-    @Min(1)
-    @Max(2)
-    private Integer gender;
-
-    @Min(1)
-    @Max(70)
-    private Integer driverLicense;
-
-    private boolean testDrive;
-
-    @Size(min = 0, max = 5)
-    private List<LanguageSkill> languageSkills;
-
-    private Company company;
-
-    private Contact contact;
-
-    private Form form;
-
-    private Medium medium;
+//    @NotNull
+//    @Max(100)
+//    @Min(0)
+//    private Integer workloadFrom;
+//
+//    @Max(100)
+//    @Min(0)
+//    private Integer workloadTo;
+//
+//    @NotNull
+//    private boolean startImmediate;
+//
+//    @NotNull
+//    private boolean perpetual;
+//
+//    @Future
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+//    private Date startDate;
+//
+//    @Future
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+//    private Date durationLimit;
+//
+//    private String locationRemark;
+//
+//    private String job;
+//
+//    @Max(16)
+//    @Min(1)
+//    private Integer education;
+//
+//    private Integer experience;
+//
+//    @Max(99)
+//    @Min(15)
+//    private Integer ageFrom;
+//
+//    @Max(99)
+//    @Min(15)
+//    private Integer ageTo;
+//
+//    @Min(1)
+//    @Max(2)
+//    private Integer gender;
+//
+//    @Min(1)
+//    @Max(70)
+//    private Integer driverLicense;
+//
+//    private boolean testDrive;
+//
+//    @Size(min = 0, max = 5)
+//    private List<LanguageSkill> languageSkills;
+//
+//    private Company company;
+//
+//    private Contact contact;
+//
+//    private Form form;
+//
+//    private Medium medium;
 
     public String getTitle() {
         return title;
@@ -128,102 +128,102 @@ public class JobPosition {
         this.zip = zip;
     }
 
-    public String getLocationRemark() {
-        return locationRemark;
-    }
-
-    public void setLocationRemark(String locationRemark) {
-        this.locationRemark = locationRemark;
-    }
-
-    public Integer getWorkloadFrom() {
-        return workloadFrom;
-    }
-
-    public void setWorkloadFrom(Integer workloadFrom) {
-        this.workloadFrom = workloadFrom;
-    }
-
-    public Integer getWorkloadTo() {
-        return workloadTo;
-    }
-
-    public void setWorkloadTo(Integer workloadTo) {
-        this.workloadTo = workloadTo;
-    }
-
-    public boolean isStartImmediate() {
-        return startImmediate;
-    }
-
-    public void setStartImmediate(boolean startImmediate) {
-        this.startImmediate = startImmediate;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public boolean isPerpetual() {
-        return perpetual;
-    }
-
-    public void setPerpetual(boolean perpetual) {
-        this.perpetual = perpetual;
-    }
-
-    public Date getDurationLimit() {
-        return durationLimit;
-    }
-
-    public void setDurationLimit(Date durationLimit) {
-        this.durationLimit = durationLimit;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
-
-    public Form getForm() {
-        return form;
-    }
-
-    public void setForm(Form form) {
-        this.form = form;
-    }
-
-    public Medium getMedium() {
-        return medium;
-    }
-
-    public void setMedium(Medium medium) {
-        this.medium = medium;
-    }
-
-    public boolean isTestDrive() {
-        return testDrive;
-    }
-
-    public void setTestDrive(boolean testDrive) {
-        this.testDrive = testDrive;
-    }
-
+//    public String getLocationRemark() {
+//        return locationRemark;
+//    }
+//
+//    public void setLocationRemark(String locationRemark) {
+//        this.locationRemark = locationRemark;
+//    }
+//
+//    public Integer getWorkloadFrom() {
+//        return workloadFrom;
+//    }
+//
+//    public void setWorkloadFrom(Integer workloadFrom) {
+//        this.workloadFrom = workloadFrom;
+//    }
+//
+//    public Integer getWorkloadTo() {
+//        return workloadTo;
+//    }
+//
+//    public void setWorkloadTo(Integer workloadTo) {
+//        this.workloadTo = workloadTo;
+//    }
+//
+//    public boolean isStartImmediate() {
+//        return startImmediate;
+//    }
+//
+//    public void setStartImmediate(boolean startImmediate) {
+//        this.startImmediate = startImmediate;
+//    }
+//
+//    public Date getStartDate() {
+//        return startDate;
+//    }
+//
+//    public void setStartDate(Date startDate) {
+//        this.startDate = startDate;
+//    }
+//
+//    public boolean isPerpetual() {
+//        return perpetual;
+//    }
+//
+//    public void setPerpetual(boolean perpetual) {
+//        this.perpetual = perpetual;
+//    }
+//
+//    public Date getDurationLimit() {
+//        return durationLimit;
+//    }
+//
+//    public void setDurationLimit(Date durationLimit) {
+//        this.durationLimit = durationLimit;
+//    }
+//
+//    public Company getCompany() {
+//        return company;
+//    }
+//
+//    public void setCompany(Company company) {
+//        this.company = company;
+//    }
+//
+//    public Contact getContact() {
+//        return contact;
+//    }
+//
+//    public void setContact(Contact contact) {
+//        this.contact = contact;
+//    }
+//
+//    public Form getForm() {
+//        return form;
+//    }
+//
+//    public void setForm(Form form) {
+//        this.form = form;
+//    }
+//
+//    public Medium getMedium() {
+//        return medium;
+//    }
+//
+//    public void setMedium(Medium medium) {
+//        this.medium = medium;
+//    }
+//
+//    public boolean isTestDrive() {
+//        return testDrive;
+//    }
+//
+//    public void setTestDrive(boolean testDrive) {
+//        this.testDrive = testDrive;
+//    }
+//
     public String getCity() {
         return city;
     }
@@ -231,68 +231,68 @@ public class JobPosition {
     public void setCity(String city) {
         this.city = city;
     }
-
-    public String getJob() {
-        return job;
-    }
-
-    public void setJob(String job) {
-        this.job = job;
-    }
-
-    public Integer getEducation() {
-        return education;
-    }
-
-    public void setEducation(Integer education) {
-        this.education = education;
-    }
-
-    public Integer getExperience() {
-        return experience;
-    }
-
-    public void setExperience(Integer experience) {
-        this.experience = experience;
-    }
-
-    public Integer getAgeFrom() {
-        return ageFrom;
-    }
-
-    public void setAgeFrom(Integer ageFrom) {
-        this.ageFrom = ageFrom;
-    }
-
-    public Integer getAgeTo() {
-        return ageTo;
-    }
-
-    public void setAgeTo(Integer ageTo) {
-        this.ageTo = ageTo;
-    }
-
-    public Integer getGender() {
-        return gender;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
-    }
-
-    public Integer getDriverLicense() {
-        return driverLicense;
-    }
-
-    public void setDriverLicense(Integer driverLicense) {
-        this.driverLicense = driverLicense;
-    }
-
-    public List<LanguageSkill> getLanguageSkills() {
-        return languageSkills;
-    }
-
-    public void setLanguageSkills(List<LanguageSkill> languageSkills) {
-        this.languageSkills = languageSkills;
-    }
+//
+//    public String getJob() {
+//        return job;
+//    }
+//
+//    public void setJob(String job) {
+//        this.job = job;
+//    }
+//
+//    public Integer getEducation() {
+//        return education;
+//    }
+//
+//    public void setEducation(Integer education) {
+//        this.education = education;
+//    }
+//
+//    public Integer getExperience() {
+//        return experience;
+//    }
+//
+//    public void setExperience(Integer experience) {
+//        this.experience = experience;
+//    }
+//
+//    public Integer getAgeFrom() {
+//        return ageFrom;
+//    }
+//
+//    public void setAgeFrom(Integer ageFrom) {
+//        this.ageFrom = ageFrom;
+//    }
+//
+//    public Integer getAgeTo() {
+//        return ageTo;
+//    }
+//
+//    public void setAgeTo(Integer ageTo) {
+//        this.ageTo = ageTo;
+//    }
+//
+//    public Integer getGender() {
+//        return gender;
+//    }
+//
+//    public void setGender(Integer gender) {
+//        this.gender = gender;
+//    }
+//
+//    public Integer getDriverLicense() {
+//        return driverLicense;
+//    }
+//
+//    public void setDriverLicense(Integer driverLicense) {
+//        this.driverLicense = driverLicense;
+//    }
+//
+//    public List<LanguageSkill> getLanguageSkills() {
+//        return languageSkills;
+//    }
+//
+//    public void setLanguageSkills(List<LanguageSkill> languageSkills) {
+//        this.languageSkills = languageSkills;
+//    }
 }

@@ -21,6 +21,15 @@ public class JobPositionController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> add(@RequestBody JobPosition job, HttpServletRequest request) throws IOException {
         String accessKey = request.getHeader(HEADER_ACCESS_KEY);
+
+        // Dumb test, just here to force a value on a field
+        if (job.getTitle() == null) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        if (job.getTitle().isEmpty()) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
         if (checkAccess(accessKey, null)) {
             return storeJobOffer(job, accessKey);
         }

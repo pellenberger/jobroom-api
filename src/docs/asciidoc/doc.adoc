@@ -5,26 +5,34 @@ GET /job
 
 Access using curl :
 
-include::{snippets}/get-job/curl-request.adoc[]
+include::{snippets}/get-job-position/curl-request.adoc[]
 
 HTTP request :
 
-include::{snippets}/get-job/http-request.adoc[]
+include::{snippets}/get-job-position/http-request.adoc[]
 
 HTTP response :
 
-include::{snippets}/get-job/http-response.adoc[]
+include::{snippets}/get-job-position/http-response.adoc[]
+
+Response fields :
+
+include::{snippets}/get-job-position/response-fields.adoc[]
 
 POST /job
 
 Access using curl :
 
-include::{snippets}/post-job/curl-request.adoc[]
+include::{snippets}/create-job-position/curl-request.adoc[]
 
 HTTP request :
 
-include::{snippets}/post-job/http-request.adoc[]
+include::{snippets}/create-job-position/http-request.adoc[]
+
+Request fields :
+
+include::{snippets}/create-job-position/request-fields.adoc[]
 
 HTTP response :
 
-include::{snippets}/post-job/http-response.adoc[]
+include::{snippets}/create-job-position/http-response.adoc[]
