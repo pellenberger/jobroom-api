@@ -1,12 +1,9 @@
 package ch.admin.seco.jobroom.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.*;
-import java.util.Date;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JobPosition {
