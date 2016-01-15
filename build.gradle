@@ -31,6 +31,11 @@ apply plugin: 'org.asciidoctor.convert'
 jar {
     baseName = 'jobroom-api'
     version = '0.2.0-SNAPSHOT'
+
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
 }
 
 allprojects {
