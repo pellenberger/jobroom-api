@@ -1,31 +1,11 @@
 package ch.admin.seco.jobroom.dto
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-class LanguageSkill {
+data class LanguageSkill(
+    @Min(1) @Max(40) val id: Int, //FIXME --> id (iso name instead...? deal with AVAM mapping behind the scene...)
+    @Min(1) @Max(3) val spokenLevel: Int, //FIXME use a type-safe enumeration instead
+    @Min(1) @Max(3) val writtenLevel: Int //FIXME same as above
+)
 
-    @Min(1)
-    @Max(40)
-    var language: Int? = null
-
-    @Min(1)
-    @Max(3)
-    var languageOralSkill: Int? = null
-
-    @Min(1)
-    @Max(3)
-    var languageWrittenSkill: Int? = null
-
-    constructor() {
-    }
-
-    constructor(language: Int?, languageOralSkill: Int?, languageWrittenSkill: Int?) {
-        this.language = language
-        this.languageOralSkill = languageOralSkill
-        this.languageWrittenSkill = languageWrittenSkill
-    }
-}

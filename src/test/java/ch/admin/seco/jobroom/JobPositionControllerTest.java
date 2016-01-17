@@ -1,8 +1,11 @@
 package ch.admin.seco.jobroom;
 
 import ch.admin.seco.jobroom.dto.JobPosition;
+import ch.admin.seco.jobroom.dto.LanguageSkill;
+import ch.admin.seco.jobroom.web.JobPositionController;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,15 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -69,8 +70,16 @@ public class JobPositionControllerTest {
 
     @Test
     public void createJobPosition() throws Exception {
-        JobPosition job = new JobPosition();
-        job.setTitle("Software engineer");
+        // FIXME: this input is actually invalid! The javax.validation.constraints are not effective at the moment!
+        List<LanguageSkill> languages = Arrays.asList(new LanguageSkill(1, 1, 6));
+        JobPosition job = new JobPosition(
+                "Software engineer",
+                "A few more words...",
+                "CH",
+                "Bern",
+                "3003",
+                true,
+                languages);
         String jobPositionJson = testHelper.json(job);
 
         this.document.snippets(requestFields(
@@ -85,31 +94,68 @@ public class JobPositionControllerTest {
                 fieldWithPath("zip").description("zip desc")
                         .attributes(key("constraints").value("nothing")),
                 fieldWithPath("startImmediate").description("startImmediate desc")
-                        .attributes(key("constraints").value("nothing"))
+                        .attributes(key("constraints").value("nothing")),
+                fieldWithPath("languageSkills").description("languageSkills desc")
+                        .attributes(key("constraints").value("Empty List is okay, but null is not allowed"))
         ));
 
         this.mockMvc.perform(post("/job")
+                .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
                 .contentType(contentType)
                 .content(jobPositionJson))
                 .andExpect(status().isCreated());
+    }
+
+    @Ignore
+    @Test
+    public void rejectInvalidJobPosition() throws Exception {
+        JobPosition job = new JobPosition(
+                "Software engineer",
+                "A few more words...",
+                "Chut!",
+                "Bernnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
+                "30030000",
+                true,
+                Arrays.asList());
+        String jobPositionJson = testHelper.json(job);
+
+        this.mockMvc.perform(post("/job")
+                // FIXME: return unauthorized on invalid access key...
+                .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
+                .contentType(contentType)
+                .content(jobPositionJson))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     public void getJobPosition() throws Exception {
 
         this.document.snippets(responseFields(
+                fieldWithPath("id").description("id desc"),
                 fieldWithPath("title").description("title desc"),
                 fieldWithPath("city").description("city desc"),
                 fieldWithPath("description").description("description desc"),
                 fieldWithPath("countryCode").description("countryCode desc"),
                 fieldWithPath("zip").description("zip desc"),
-                fieldWithPath("startImmediate").description("startImmediate desc")
+                fieldWithPath("startImmediate").description("startImmediate desc"),
+                fieldWithPath("languageSkills").description("languageSkills desc")
         ));
 
         this.mockMvc.perform(get("/job"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", Matchers.is(12345)))
                 .andExpect(jsonPath("$.title", Matchers.is("Software engineer")))
-                .andExpect(jsonPath("$.city", Matchers.is("Berne")));
+                .andExpect(jsonPath("$.description", Matchers.containsString("bla,")))
+                .andExpect(jsonPath("$.city", Matchers.is("Bern")))
+                .andExpect(jsonPath("$.zip", Matchers.is("3002")))
+                .andExpect(jsonPath("$.startImmediate", Matchers.is(true)))
+
+                //.andExpect(jsonPath("$.languageSkills", Matchers.hasSize(0)))
+                .andExpect(jsonPath("$.languageSkills", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.languageSkills[0].id", Matchers.is(1)))
+                .andExpect(jsonPath("$.languageSkills[0].spokenLevel", Matchers.is(1)))
+                .andExpect(jsonPath("$.languageSkills[0].writtenLevel", Matchers.is(1)))
+        ;
     }
 
 }

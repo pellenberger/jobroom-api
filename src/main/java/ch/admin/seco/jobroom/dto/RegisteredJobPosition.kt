@@ -1,16 +1,26 @@
 package ch.admin.seco.jobroom.dto
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import java.util.*
+// FIXME consider composition/mixin style instead of inheritance ?
+class RegisteredJobPosition(
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-class RegisteredJobPosition : JobPosition() {
+        val id: Long,
 
-    var egovId: String? = null
+        // TODO: not necessary to keep this reference!
+        private val job: JobPosition
 
-    val links: Set<SelfLink> = HashSet()
+    ) : JobPosition(
 
-    var state: String? = null
+        title = job.title,
+        description = job.description,
+        countryCode = job.countryCode,
+        city = job.city,
+        zip = job.zip,
+        startImmediate = job.startImmediate,
+        languageSkills = job.languageSkills
 
-    var office: EmploymentOffice? = null
-}
+    )
+
+//    val links: Set<SelfLink> = HashSet()
+//
+//    var state: String? = null
+
