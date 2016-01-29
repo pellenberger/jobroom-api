@@ -79,7 +79,8 @@ dependencies {
     // jackson-module-kotlin is required for handling immutable objects (e.g. without typical java bean setters)
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:${dependencyManagement.compile.importedProperties['jackson.version']}"
 
-    compile "org.springframework.boot:spring-boot-starter-web"
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile "org.springframework.boot:spring-boot-devtools"
     // compile "org.springframework.boot:spring-boot-starter-jooq"
     // compile "org.springframework.boot:spring-boot-starter-security"
@@ -90,6 +91,8 @@ dependencies {
 //    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RC1'
     // error java.lang.IllegalAccessError with 1.0.0 RC1
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:1.0.2.BUILD-SNAPSHOT'
+
+    runtime 'org.hsqldb:hsqldb'
 }
 
 task wrapper(type: Wrapper) {

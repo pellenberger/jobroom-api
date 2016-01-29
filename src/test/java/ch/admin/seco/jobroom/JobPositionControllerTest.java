@@ -1,8 +1,8 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.dto.JobPosition;
-import ch.admin.seco.jobroom.dto.LanguageSkill;
-import ch.admin.seco.jobroom.web.JobPositionController;
+import ch.admin.seco.jobroom.model.JobPosition;
+import ch.admin.seco.jobroom.model.LanguageSkill;
+import ch.admin.seco.jobroom.web.JobPositionRepository;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
+import static ch.admin.seco.jobroom.model.Tristate.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -54,10 +55,26 @@ public class JobPositionControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
+    JobPositionRepository jobPositionRepository;
+
+    @Autowired
     RestApiTestHelper testHelper;
 
     @Before
     public void setup() throws Exception {
+        JobPosition job = new JobPosition(
+                1L,
+                "Software engineer",
+                "bla,bla,bla,...",
+                good,
+                "CH",
+                "Bern",
+                "3002",
+                true
+                );
+
+        this.jobPositionRepository.save(job);
+
         this.document = document("{method-name}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()));
@@ -73,13 +90,16 @@ public class JobPositionControllerTest {
         // FIXME: this input is actually invalid! The javax.validation.constraints are not effective at the moment!
         List<LanguageSkill> languages = Arrays.asList(new LanguageSkill(1, 1, 6));
         JobPosition job = new JobPosition(
+                null,
                 "Software engineer",
                 "A few more words...",
+                average,
                 "CH",
                 "Bern",
                 "3003",
-                true,
-                languages);
+                true
+                //languages
+        );
         String jobPositionJson = testHelper.json(job);
 
         this.document.snippets(requestFields(
@@ -89,18 +109,20 @@ public class JobPositionControllerTest {
                         .attributes(key("constraints").value("nothing")),
                 fieldWithPath("description").description("description desc")
                         .attributes(key("constraints").value("nothing")),
+                fieldWithPath("grade").description("grade desc")
+                        .attributes(key("constraints").value("nothing")),
                 fieldWithPath("countryCode").description("countryCode desc")
                         .attributes(key("constraints").value("nothing")),
                 fieldWithPath("zip").description("zip desc")
                         .attributes(key("constraints").value("nothing")),
                 fieldWithPath("startImmediate").description("startImmediate desc")
-                        .attributes(key("constraints").value("nothing")),
-                fieldWithPath("languageSkills").description("languageSkills desc")
-                        .attributes(key("constraints").value("Empty List is okay, but null is not allowed"))
+                        .attributes(key("constraints").value("nothing"))
+                //fieldWithPath("languageSkills").description("languageSkills desc")
+                //        .attributes(key("constraints").value("Empty List is okay, but null is not allowed"))
         ));
 
-        this.mockMvc.perform(post("/job")
-                .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
+        this.mockMvc.perform(post("/api/v0.2/job") // FIXME design the "versioning approach" (externally?)
+                //FIXME .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
                 .contentType(contentType)
                 .content(jobPositionJson))
                 .andExpect(status().isCreated());
@@ -110,18 +132,21 @@ public class JobPositionControllerTest {
     @Test
     public void rejectInvalidJobPosition() throws Exception {
         JobPosition job = new JobPosition(
+                null,
                 "Software engineer",
                 "A few more words...",
+                good,
                 "Chut!",
                 "Bernnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
                 "30030000",
-                true,
-                Arrays.asList());
+                true
+                //Arrays.asList()
+                );
         String jobPositionJson = testHelper.json(job);
 
         this.mockMvc.perform(post("/job")
                 // FIXME: return unauthorized on invalid access key...
-                .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
+                // FIXME .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
                 .contentType(contentType)
                 .content(jobPositionJson))
                 .andExpect(status().isBadRequest());
@@ -131,30 +156,34 @@ public class JobPositionControllerTest {
     public void getJobPosition() throws Exception {
 
         this.document.snippets(responseFields(
-                fieldWithPath("id").description("id desc"),
+                //fieldWithPath("id").description("id desc"),
                 fieldWithPath("title").description("title desc"),
                 fieldWithPath("city").description("city desc"),
                 fieldWithPath("description").description("description desc"),
+                fieldWithPath("grade").description("grade desc"),
                 fieldWithPath("countryCode").description("countryCode desc"),
                 fieldWithPath("zip").description("zip desc"),
                 fieldWithPath("startImmediate").description("startImmediate desc"),
-                fieldWithPath("languageSkills").description("languageSkills desc")
+                //fieldWithPath("languageSkills").description("languageSkills desc")
+                fieldWithPath("_links").description("_links hateoas desc")
+                //fieldWithPath("jobPosition").description("wtf spring-data-rest?")
         ));
 
-        this.mockMvc.perform(get("/job"))
+        this.mockMvc.perform(get("/api/v0.2/job/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", Matchers.is(12345)))
+                //.andExpect(jsonPath("$.id", Matchers.is(12345)))
                 .andExpect(jsonPath("$.title", Matchers.is("Software engineer")))
                 .andExpect(jsonPath("$.description", Matchers.containsString("bla,")))
+                .andExpect(jsonPath("$.grade", Matchers.is("good")))
                 .andExpect(jsonPath("$.city", Matchers.is("Bern")))
                 .andExpect(jsonPath("$.zip", Matchers.is("3002")))
                 .andExpect(jsonPath("$.startImmediate", Matchers.is(true)))
 
                 //.andExpect(jsonPath("$.languageSkills", Matchers.hasSize(0)))
-                .andExpect(jsonPath("$.languageSkills", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.languageSkills[0].id", Matchers.is(1)))
-                .andExpect(jsonPath("$.languageSkills[0].spokenLevel", Matchers.is(1)))
-                .andExpect(jsonPath("$.languageSkills[0].writtenLevel", Matchers.is(1)))
+//                .andExpect(jsonPath("$.languageSkills", Matchers.hasSize(1)))
+//                .andExpect(jsonPath("$.languageSkills[0].id", Matchers.is(1)))
+//                .andExpect(jsonPath("$.languageSkills[0].spokenLevel", Matchers.is(1)))
+//                .andExpect(jsonPath("$.languageSkills[0].writtenLevel", Matchers.is(1)))
         ;
     }
 

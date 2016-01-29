@@ -2,24 +2,17 @@ package ch.admin.seco.jobroom.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.kotlin.ExtensionsKt;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 
 @Configuration
-public class JacksonConfig {
+public class JacksonConfig extends RepositoryRestConfigurerAdapter {
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-
-        // Add support for serialization/deserialization of Kotlin classes and data classes.
-        ExtensionsKt.registerKotlinModule(mapper);
-
-        // TODO: more customization??
-//        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
-
-        return mapper;
+    @Override
+    public void configureJacksonObjectMapper(ObjectMapper objectMapper) {
+        //TODO needed or not??? super.configureJacksonObjectMapper(objectMapper);
+        ExtensionsKt.registerKotlinModule(objectMapper);
     }
+
 }
 

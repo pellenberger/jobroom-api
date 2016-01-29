@@ -1,35 +1,50 @@
-package ch.admin.seco.jobroom.dto
+package ch.admin.seco.jobroom.model
 
 import org.hibernate.validator.constraints.NotEmpty
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
 import javax.validation.constraints.Digits
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
-import kotlin.collections.listOf
 
-open class JobPosition (
-        @NotEmpty @Size(min = 10, max = 240) val title: String,
-
-        @NotEmpty @Size(max = 1900) val description: String,
-
-        //FIXME KOTLIN-and-CHECKSTYLE???:OFF
-        @NotEmpty @Size(min = 2, max = 2)
-        @Pattern(regexp = "^(A(D|E|F|G|I|L|M|N|O|R|S|T|Q|U|W|X|Z)|B(A|B|D|E|F|G|H|I|J|L|M|N|O|R|S|T|V|W|Y|Z)|C(A|C|D|F|G|H|I|K|L|M|N|O|R|U|V|X|Y|Z)|D(E|J|K|M|O|Z)|E(C|E|G|H|R|S|T)|F(I|J|K|M|O|R)|G(A|B|D|E|F|G|H|I|L|M|N|P|Q|R|S|T|U|W|Y)|H(K|M|N|R|T|U)|I(D|E|Q|L|M|N|O|R|S|T)|J(E|M|O|P)|K(E|G|H|I|M|N|P|R|W|Y|Z)|L(A|B|C|I|K|R|S|T|U|V|Y)|M(A|C|D|E|F|G|H|K|L|M|N|O|Q|P|R|S|T|U|V|W|X|Y|Z)|N(A|C|E|F|G|I|L|O|P|R|U|Z)|OM|P(A|E|F|G|H|K|L|M|N|R|S|T|W|Y)|QA|R(E|O|S|U|W)|S(A|B|C|D|E|G|H|I|J|K|L|M|N|O|R|T|V|Y|Z)|T(C|D|F|G|H|J|K|L|M|N|O|R|T|V|W|Z)|U(A|G|M|S|Y|Z)|V(A|C|E|G|I|N|U)|W(F|S)|Y(E|T)|Z(A|M|W))$")
-        val countryCode: String,
-        //FIXME KOTLIN-and-CHECKSTYLE???:ON
-
-        @NotEmpty @Size(max = 50) val city: String,
-
-        //FIXME international ZIP codes are not always digit-only identifiers (hence String type!). To be worked on with validation aspects
-        @NotEmpty @Digits(integer = 5, fraction = 0) val zip: String,
+enum class Tristate {
+    very_good, good, average
+}
 
 
-        // FIXME: naming...
-        val startImmediate: Boolean = false,
+@Entity data class JobPosition (
 
-        // FIXME the min constraint is silly (should be 0), but temporarily set to illustrate how validator annotations are (not) applied
-        @Size(min = 2, max = 5) val languageSkills: List<LanguageSkill> = listOf()
+    @Id @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO) var id: Long? = null,
 
-    )
+    @NotEmpty @Size(min = 10, max = 240) val title: String,
+
+    @NotEmpty @Size(max = 1900) val description: String,
+
+    val grade: Tristate,
+
+    //FIXME KOTLIN-and-CHECKSTYLE???:OFF
+    @NotEmpty @Size(min = 2, max = 2)
+    @Pattern(regexp = "^(A(D|E|F|G|I|L|M|N|O|R|S|T|Q|U|W|X|Z)|B(A|B|D|E|F|G|H|I|J|L|M|N|O|R|S|T|V|W|Y|Z)|C(A|C|D|F|G|H|I|K|L|M|N|O|R|U|V|X|Y|Z)|D(E|J|K|M|O|Z)|E(C|E|G|H|R|S|T)|F(I|J|K|M|O|R)|G(A|B|D|E|F|G|H|I|L|M|N|P|Q|R|S|T|U|W|Y)|H(K|M|N|R|T|U)|I(D|E|Q|L|M|N|O|R|S|T)|J(E|M|O|P)|K(E|G|H|I|M|N|P|R|W|Y|Z)|L(A|B|C|I|K|R|S|T|U|V|Y)|M(A|C|D|E|F|G|H|K|L|M|N|O|Q|P|R|S|T|U|V|W|X|Y|Z)|N(A|C|E|F|G|I|L|O|P|R|U|Z)|OM|P(A|E|F|G|H|K|L|M|N|R|S|T|W|Y)|QA|R(E|O|S|U|W)|S(A|B|C|D|E|G|H|I|J|K|L|M|N|O|R|T|V|Y|Z)|T(C|D|F|G|H|J|K|L|M|N|O|R|T|V|W|Z)|U(A|G|M|S|Y|Z)|V(A|C|E|G|I|N|U)|W(F|S)|Y(E|T)|Z(A|M|W))$")
+    val countryCode: String,
+    //FIXME KOTLIN-and-CHECKSTYLE???:ON
+
+    @NotEmpty @Size(max = 50) val city: String,
+
+    //FIXME international ZIP codes are not always digit-only identifiers (hence String type!). To be worked on with validation aspects
+    @NotEmpty @Digits(integer = 5, fraction = 0) val zip: String,
+
+
+    // FIXME: naming...
+    val startImmediate: Boolean = false
+
+    // FIXME the min constraint is silly (should be 0), but temporarily set to illustrate how validator annotations are (not) applied
+    //@Size(min = 2, max = 5) val languageSkills: List<LanguageSkill> = listOf()
+)
+{
+    // This private "default" constructor is only used by JPA layer
+    private constructor(): this(null, "", "", Tristate.good, "", "", "", false)
+}
 
     //
     //    @NotNull

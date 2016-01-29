@@ -1,4 +1,4 @@
-package ch.admin.seco.jobroom.dto
+package ch.admin.seco.jobroom.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

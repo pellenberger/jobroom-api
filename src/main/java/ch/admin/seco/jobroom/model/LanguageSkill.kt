@@ -1,4 +1,4 @@
-package ch.admin.seco.jobroom.dto
+package ch.admin.seco.jobroom.model
 
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
