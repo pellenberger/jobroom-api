@@ -7,7 +7,7 @@ import javax.persistence.*
 // TODO: ideally the same data-centric approach for more advanced constraints (e.g. publicationDate update)
 
 @Entity data class JobPosition(
-        
+
         @Id @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO)
         var id: Long? = null,
 
@@ -15,23 +15,56 @@ import javax.persistence.*
 
         val description: String,
 
-        val countryCode: String,
-
-        val city: String,
-
-        val zip: String, // TODO renamed as postalCode (zip is US and Philippines, like PLZ for DE,CH,AT,...)
+        // TODO add for the job location (... code reuse via some Address?)
+        //val jobLocationCountryCode: String,
+        //val jobLocationPpostalCode: String,
+        //val jobLocationLocality: String, ("Arbeitsort")
+        //val jobLocationAdditionalInformation: String?
 
         // FIXME: naming...
         val startImmediate: Boolean = false,
 
-        val
+        @Embedded
+        // TODO: consider @AttributeOverrides to deal with column prefixes ? (especially if we generalize the Address fields)
+        val company: Company,
 
         // FIXME the min constraint is silly (should be 0), but temporarily set to illustrate how validator annotations are (not) applied
         @ElementCollection //TODO check how we could override the table name...
         val languageSkill: Collection<LanguageSkill> = listOf()
 ) {
     // This private "default" constructor is only used by JPA layer
-    private constructor() : this(null, "", "", "", "", "", false)
+    private constructor() : this(null, "", "", false, Company("", "", "", "", "", ""))
+}
+
+@Embeddable
+data class Company(
+
+        @Column(name="company_name")
+        val name: String,
+
+        @Column(name="company_country_code")
+        val countryCode: String,
+
+        @Column(name="company_street")
+        val street: String,
+
+        @Column(name="company_house_number")
+        val houseNumber: String,
+
+        @Column(name="company_locality")
+        val locality: String,
+
+        @Column(name="company_postal_code")
+        val postalCode: String,
+
+        val postboxNumber: String? = null,
+
+        val postboxLocality: String? = null,
+
+        val postboxPostalCode: String? = null
+) {
+    // This private "default" constructor is only used by JPA layer (and the JobPosition parent declaration)
+    private constructor() : this("", "", "", "", "", "")
 }
 
 @Embeddable
@@ -234,3 +267,4 @@ data class LanguageSkill(
 //
 //    }
 //}
+

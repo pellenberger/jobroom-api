@@ -1,5 +1,6 @@
 package ch.admin.seco.jobroom;
 
+import ch.admin.seco.jobroom.model.Company;
 import ch.admin.seco.jobroom.model.JobPosition;
 import ch.admin.seco.jobroom.model.LanguageSkill;
 import ch.admin.seco.jobroom.web.JobPositionRepository;
@@ -73,17 +74,22 @@ public class JobPositionControllerTest {
 
     @Test
     public void createJobPosition() throws Exception {
-        // FIXME: this input is actually invalid! The javax.validation.constraints are not effective at the moment!
         List<LanguageSkill> languages = Arrays.asList(
                 new LanguageSkill("fr", LanguageSkill.Level.very_good, LanguageSkill.Level.very_good));
         JobPosition job = new JobPosition(
                 null,
                 "Software engineer",
                 "A few more words...",
-                "CH",
-                "Bern",
-                "3003",
                 true,
+                new Company(
+                        "SwissPost",
+                        "CH",
+                        "Bahnofstrasse",
+                        "11",
+                        "Bern",
+                        "3003",
+                        null, null, null
+                ),
                 languages
         );
         String jobPositionJson = testHelper.json(job);
@@ -91,15 +97,19 @@ public class JobPositionControllerTest {
         this.document.snippets(requestFields(
                 fieldWithPath("title").description("title desc")
                         .attributes(key("constraints").value("Must not be null. Must not be empty")),
-                fieldWithPath("city").description("city desc")
-                        .attributes(key("constraints").value("nothing")),
                 fieldWithPath("description").description("description desc")
                         .attributes(key("constraints").value("nothing")),
-                fieldWithPath("countryCode").description("countryCode desc")
-                        .attributes(key("constraints").value("nothing")),
-                fieldWithPath("zip").description("zip desc")
-                        .attributes(key("constraints").value("nothing")),
                 fieldWithPath("startImmediate").description("startImmediate desc")
+                        .attributes(key("constraints").value("nothing")),
+                fieldWithPath("company.name").description("company name desc")
+                        .attributes(key("constraints").value("nothing")),
+                fieldWithPath("company.locality").description("company locality desc")
+                        .attributes(key("constraints").value("nothing")),
+                fieldWithPath("company").description("company subobject desc")
+                        .attributes(key("constraints").value("TODO")),
+                fieldWithPath("company.countryCode").description("company country code desc")
+                        .attributes(key("constraints").value("nothing")),
+                fieldWithPath("company.postalCode").description("company postal code desc")
                         .attributes(key("constraints").value("nothing")),
                 fieldWithPath("languageSkill").description("languageSkill desc")
                         .attributes(key("constraints").value("Empty List is okay, but null is not allowed. TODO max = 5"))
@@ -116,6 +126,12 @@ public class JobPositionControllerTest {
 
     @Ignore
     @Test
+    public void modifyExistingJobPosition() throws Exception {
+        // TODO PUT request
+    }
+
+    @Ignore
+    @Test
     public void rejectInvalidJobPosition() throws Exception {
         // TODO create a json string without any JobPosition object
 
@@ -123,10 +139,11 @@ public class JobPositionControllerTest {
                 null,
                 "Software engineer",
                 "A few more words...",
-                "Chut!",
-                "Bernnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
-                "30030000",
+//                "Chut!",
+//                "Bernnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
+//                "30030000",
                 true,
+                new Company("", "", "", "", "", "", null, null, null),
                 Arrays.asList()
                 );
         String jobPositionJson = testHelper.json(job);
@@ -144,11 +161,9 @@ public class JobPositionControllerTest {
 
         this.document.snippets(responseFields(
                 fieldWithPath("title").description("title desc"),
-                fieldWithPath("city").description("city desc"),
                 fieldWithPath("description").description("description desc"),
-                fieldWithPath("countryCode").description("countryCode desc"),
-                fieldWithPath("zip").description("zip desc"),
                 fieldWithPath("startImmediate").description("startImmediate desc"),
+                fieldWithPath("company").description("company desc, TODO subfields"),
                 fieldWithPath("languageSkill").description("languageSkill desc"),
                 fieldWithPath("_links").description("_links hateoas desc")
                 //fieldWithPath("jobPosition").description("wtf spring-data-rest/hateoas?")
@@ -161,9 +176,13 @@ public class JobPositionControllerTest {
                 // FIXME: char encoding problem
                 //.andExpect(jsonPath("$.description", Matchers.containsString("hé!")))
                 .andExpect(jsonPath("$.description", Matchers.containsString("hey!\n")))
-                .andExpect(jsonPath("$.city", Matchers.is("Montreal Nord")))
-                .andExpect(jsonPath("$.zip", Matchers.is("QC H1G 2V1")))
                 .andExpect(jsonPath("$.startImmediate", Matchers.is(false)))
+
+                .andExpect(jsonPath("$.company.countryCode", Matchers.is("CA")))
+                .andExpect(jsonPath("$.company.locality", Matchers.is("Montreal Nord")))
+                .andExpect(jsonPath("$.company.postalCode", Matchers.is("QC H1G 2V1")))
+                .andExpect(jsonPath("$.company.street", Matchers.is("Hockey Avenue")))
+                .andExpect(jsonPath("$.company.houseNumber", Matchers.is("101")))
 
                 .andExpect(jsonPath("$.languageSkill", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.languageSkill[0].language", Matchers.is("fr")))
