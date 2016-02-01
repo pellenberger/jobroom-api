@@ -1,5 +1,6 @@
 package ch.admin.seco.jobroom.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.LastModifiedDate
 import java.sql.Date
 import javax.persistence.*

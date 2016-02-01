@@ -78,6 +78,7 @@ public class JobPositionControllerTest {
                 new LanguageSkill("fr", LanguageSkill.Level.very_good, LanguageSkill.Level.very_good));
         JobPosition job = new JobPosition(
                 null,
+                null,
                 "Software engineer",
                 "A few more words...",
                 true,
@@ -115,7 +116,7 @@ public class JobPositionControllerTest {
                         .attributes(key("constraints").value("Empty List is okay, but null is not allowed. TODO max = 5"))
         ));
 
-        this.mockMvc.perform(post("/job") // FIXME design the "versioning approach" (externally?)
+        this.mockMvc.perform(post("/jobPositions") // FIXME design the "versioning approach" (externally?)
                 //FIXME .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
                 .contentType(contentType)
                 .content(jobPositionJson))
@@ -137,6 +138,7 @@ public class JobPositionControllerTest {
 
         JobPosition job = new JobPosition(
                 null,
+                null,
                 "Software engineer",
                 "A few more words...",
 //                "Chut!",
@@ -148,7 +150,7 @@ public class JobPositionControllerTest {
                 );
         String jobPositionJson = testHelper.json(job);
 
-        this.mockMvc.perform(post("/job")
+        this.mockMvc.perform(post("/jobPositions")
                 // FIXME: return unauthorized on invalid access key...
                 // FIXME .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
                 .contentType(contentType)
@@ -169,7 +171,7 @@ public class JobPositionControllerTest {
                 //fieldWithPath("jobPosition").description("wtf spring-data-rest/hateoas?")
         ));
 
-        this.mockMvc.perform(get("/job/1"))
+        this.mockMvc.perform(get("/jobPositions/1"))
                 .andExpect(status().isOk())
                 //.andExpect(jsonPath("$.id", Matchers.is(12345)))
                 .andExpect(jsonPath("$.title", Matchers.is("John Doe")))
