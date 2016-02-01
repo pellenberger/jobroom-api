@@ -1,5 +1,7 @@
 package ch.admin.seco.jobroom.model
 
+import org.springframework.data.annotation.LastModifiedDate
+import java.sql.Date
 import javax.persistence.*
 
 
@@ -10,6 +12,9 @@ import javax.persistence.*
 
         @Id @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO)
         var id: Long? = null,
+
+        @Version
+        var version: Long? = null,
 
         val title: String,
 
@@ -33,7 +38,7 @@ import javax.persistence.*
         val languageSkill: Collection<LanguageSkill> = listOf()
 ) {
     // This private "default" constructor is only used by JPA layer
-    private constructor() : this(null, "", "", false, Company("", "", "", "", "", ""))
+    private constructor() : this(null, null, "", "", false, Company("", "", "", "", "", ""))
 }
 
 @Embeddable
