@@ -1,5 +1,7 @@
 package ch.admin.seco.jobroom.model
 
+import java.sql.Date
+import java.util.*
 import javax.persistence.*
 
 
@@ -14,67 +16,54 @@ import javax.persistence.*
         @Version
         var version: Long? = null,
 
-        val title: String,
+        val publicationStartDate: Date,
 
-        val description: String,
-
-        // TODO add for the job location (... code reuse via some Address?)
-        //val jobLocationCountryCode: String,
-        //val jobLocationPpostalCode: String,
-        //val jobLocationLocality: String, ("Arbeitsort")
-        //val jobLocationAdditionalInformation: String?
-
-        // FIXME: naming...
-        val startImmediate: Boolean = false,
+        var publicationEndDate: Date? = null,
 
         @Embedded
-        // TODO: consider @AttributeOverrides to deal with column prefixes ? (especially if we generalize the Address fields)
+        val job: Job,
+
+        @Embedded
         val company: Company,
 
-        // FIXME the min constraint is silly (should be 0), but temporarily set to illustrate how validator annotations are (not) applied
-        @ElementCollection //TODO check how we could override the table name...
-        val languageSkill: Collection<LanguageSkill> = listOf()
+        @Embedded
+        val contact: Contact,
+
+        @Embedded
+        val application: Application
+
+        // FIXME : ElementCollection not longer working with application property "spring.jpa.hibernate.naming-strategy=org.hibernate.cfg.DefaultComponentSafeNamingStrategy"
+//        @ElementCollection //TODO check how we could override the table name...
+//        val language: Collection<Language>
 ) {
     // This private "default" constructor is only used by JPA layer
-    private constructor() : this(null, null, "", "", false, Company("", "", "", "", "", ""))
+    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, Job(), Company(), Contact(), Application())
 }
 
 @Embeddable
-data class Company(
+data class Job(
 
-        @Column(name="company_name")
-        val name: String,
+        val title: String,
+        val description: String,
+        val workingTimePercentageFrom: Int,
+        val workingTimePercentageTo: Int,
+        var startDate: Date? = null,
+        var endDate: Date? = null,
 
-        @Column(name="company_country_code")
-        val countryCode: String,
+        @Embedded
+        val location: Location
 
-        @Column(name="company_street")
-        val street: String,
-
-        @Column(name="company_house_number")
-        val houseNumber: String,
-
-        @Column(name="company_locality")
-        val locality: String,
-
-        @Column(name="company_postal_code")
-        val postalCode: String,
-
-        val postboxNumber: String? = null,
-
-        val postboxLocality: String? = null,
-
-        val postboxPostalCode: String? = null
 ) {
-    // This private "default" constructor is only used by JPA layer (and the JobPosition parent declaration)
-    private constructor() : this("", "", "", "", "", "")
+    // This "default" constructor is only used by JPA layer
+    constructor() : this("", "", 0, 0, null, null, Location())
 }
 
 @Embeddable
-data class LanguageSkill(
+data class Language(
+
         val language: String,
-        val spokenLevel: LanguageSkill.Level,
-        val writtenLevel: LanguageSkill.Level
+        val spokenLevel: Language.Level,
+        val writtenLevel: Language.Level
 ) {
     enum class Level {
         // FIXME: JPA layer by default stores the Enum Integer value, while we use the text representation in the API
@@ -85,6 +74,80 @@ data class LanguageSkill(
         very_good  // 2
     }
 
+    // This "default" constructor is only used by JPA layer
+    constructor() : this("", Level.good, Level.good)
+}
+
+@Embeddable
+data class Location(
+
+        val countryCode: String,
+        val locality: String,
+        val postalCode: String,
+        var additionalDetails: String? = null
+) {
+    // This "default" constructor is only used by JPA layer
+    constructor() : this("", "", "", null);
+}
+
+@Embeddable
+data class Company (
+
+        val name: String,
+        val countryCode: String,
+        val street: String,
+        val houseNumber: String,
+        val locality: String,
+        val postalCode: String,
+        val phoneNumber: String,
+        val email: String,
+        val website: String,
+        val postbox: Postbox
+){
+    // This "default" constructor is only used by JPA layer
+    constructor() : this("", "", "", "", "", "", "", "", "", Postbox())
+}
+
+
+@Embeddable
+data class Postbox(
+
+        val number: String,
+        val locality: String,
+        val postalCode: String
+) {
     // This private "default" constructor is only used by JPA layer
-    private constructor() : this("", Level.good, Level.good)
+    constructor() : this("", "", "")
+}
+
+
+@Embeddable
+data class Contact(
+
+        val title: Contact.Title,
+        val firstName: String,
+        val lastName: String,
+        val phoneNumber: String,
+        val email: String
+) {
+    enum class Title {
+        // FIXME: JPA layer by default stores the Enum Integer value, while we use the text representation in the API
+        // FIXME: the current situation is not type-safe and error prone (any enum order change will affect the mapped integer values)
+        mister, // 0
+        madam // 1
+    }
+
+    // This private "default" constructor is only used by JPA layer
+    constructor() : this(Title.mister, "", "", "", "")
+}
+
+@Embeddable
+data class Application(
+
+        val telephonic: Boolean,
+        val written: Boolean,
+        val electronic: Boolean
+) {
+    // This private "default" constructor is only used by JPA layer
+    constructor() : this(false, false, false)
 }
