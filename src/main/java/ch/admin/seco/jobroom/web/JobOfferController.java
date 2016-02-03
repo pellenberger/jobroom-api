@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @BasePathAwareController
-public class JobPositionController {
+public class JobOfferController {
 
-    @RequestMapping(value = "/jobPositions/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/joboffers/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> preventsPut() {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }

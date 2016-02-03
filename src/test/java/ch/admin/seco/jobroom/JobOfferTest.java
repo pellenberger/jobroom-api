@@ -1,9 +1,9 @@
 package ch.admin.seco.jobroom;
 
 import ch.admin.seco.jobroom.model.Company;
-import ch.admin.seco.jobroom.model.JobPosition;
+import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.LanguageSkill;
-import ch.admin.seco.jobroom.web.JobPositionRepository;
+import ch.admin.seco.jobroom.web.JobOfferRepository;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ApiApplication.class)
 @WebAppConfiguration
-public class JobPositionControllerTest {
+public class JobOfferTest {
 
     private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
@@ -55,7 +55,7 @@ public class JobPositionControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    JobPositionRepository jobPositionRepository;
+    JobOfferRepository jobOfferRepository;
 
     @Autowired
     RestApiTestHelper testHelper;
@@ -73,10 +73,10 @@ public class JobPositionControllerTest {
     }
 
     @Test
-    public void createJobPosition() throws Exception {
+    public void createJobOffer() throws Exception {
         List<LanguageSkill> languages = Arrays.asList(
                 new LanguageSkill("fr", LanguageSkill.Level.very_good, LanguageSkill.Level.very_good));
-        JobPosition job = new JobPosition(
+        JobOffer jobOffer = new JobOffer(
                 null,
                 null,
                 "Software engineer",
@@ -93,7 +93,7 @@ public class JobPositionControllerTest {
                 ),
                 languages
         );
-        String jobPositionJson = testHelper.json(job);
+        String jobOfferJson = testHelper.json(jobOffer);
 
         this.document.snippets(requestFields(
                 fieldWithPath("title").description("title desc")
@@ -116,10 +116,10 @@ public class JobPositionControllerTest {
                         .attributes(key("constraints").value("Empty List is okay, but null is not allowed. TODO max = 5"))
         ));
 
-        this.mockMvc.perform(post("/jobPositions") // FIXME design the "versioning approach" (externally?)
+        this.mockMvc.perform(post("/joboffers") // FIXME design the "versioning approach" (externally?)
                 //FIXME .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
                 .contentType(contentType)
-                .content(jobPositionJson))
+                .content(jobOfferJson))
                 .andExpect(status().isCreated());
 
         // TODO get the id back, and run the GET request
@@ -127,16 +127,16 @@ public class JobPositionControllerTest {
 
     @Ignore
     @Test
-    public void modifyExistingJobPosition() throws Exception {
+    public void modifyExistingJobOffer() throws Exception {
         // TODO PUT request
     }
 
     @Ignore
     @Test
-    public void rejectInvalidJobPosition() throws Exception {
-        // TODO create a json string without any JobPosition object
+    public void rejectInvalidJobOffer() throws Exception {
+        // TODO create a json string without any JobOffer object
 
-        JobPosition job = new JobPosition(
+        JobOffer jobOffer = new JobOffer(
                 null,
                 null,
                 "Software engineer",
@@ -148,18 +148,18 @@ public class JobPositionControllerTest {
                 new Company("", "", "", "", "", "", null, null, null),
                 Arrays.asList()
                 );
-        String jobPositionJson = testHelper.json(job);
+        String jobOfferJson = testHelper.json(jobOffer);
 
-        this.mockMvc.perform(post("/jobPositions")
+        this.mockMvc.perform(post("/joboffers")
                 // FIXME: return unauthorized on invalid access key...
                 // FIXME .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
                 .contentType(contentType)
-                .content(jobPositionJson))
+                .content(jobOfferJson))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void getJobPosition() throws Exception {
+    public void getJobOffer() throws Exception {
 
         this.document.snippets(responseFields(
                 fieldWithPath("title").description("title desc"),
@@ -171,7 +171,7 @@ public class JobPositionControllerTest {
                 //fieldWithPath("jobPosition").description("wtf spring-data-rest/hateoas?")
         ));
 
-        this.mockMvc.perform(get("/jobPositions/1"))
+        this.mockMvc.perform(get("/joboffers/1"))
                 .andExpect(status().isOk())
                 //.andExpect(jsonPath("$.id", Matchers.is(12345)))
                 .andExpect(jsonPath("$.title", Matchers.is("John Doe")))
