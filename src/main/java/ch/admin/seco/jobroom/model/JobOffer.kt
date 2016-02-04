@@ -4,7 +4,6 @@ import java.sql.Date
 import java.util.*
 import javax.persistence.*
 
-
 // TODO: constraints like min/max should be (ONLY?) defined at SQL level!!!!
 // TODO: ideally the same data-centric approach for more advanced constraints (e.g. publicationDate update)
 
@@ -31,10 +30,6 @@ import javax.persistence.*
 
         @Embedded
         val application: Application
-
-        // FIXME : ElementCollection not longer working with application property "spring.jpa.hibernate.naming-strategy=org.hibernate.cfg.DefaultComponentSafeNamingStrategy"
-//        @ElementCollection //TODO check how we could override the table name...
-//        val language: Collection<Language>
 ) {
     // This private "default" constructor is only used by JPA layer
     private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, Job(), Company(), Contact(), Application())
@@ -51,19 +46,27 @@ data class Job(
         var endDate: Date? = null,
 
         @Embedded
-        val location: Location
+        val location: Location,
+
+        @ElementCollection
+        val languageSkills: Collection<LanguageSkill>
 
 ) {
     // This "default" constructor is only used by JPA layer
-    constructor() : this("", "", 0, 0, null, null, Location())
+    constructor() : this("", "", 0, 0, null, null, Location(), listOf())
 }
 
 @Embeddable
-data class Language(
+data class LanguageSkill(
 
+        // Hibernate bug : @ElementCollection is incompatible with DefaultComponentSafeNamingStrategy property
+        // Need to explicitly define column names
+        @Column(name="language")
         val language: String,
-        val spokenLevel: Language.Level,
-        val writtenLevel: Language.Level
+        @Column(name="spoken_level")
+        val spokenLevel: LanguageSkill.Level,
+        @Column(name="written_level")
+        val writtenLevel: LanguageSkill.Level
 ) {
     enum class Level {
         // FIXME: JPA layer by default stores the Enum Integer value, while we use the text representation in the API
@@ -102,6 +105,8 @@ data class Company (
         val phoneNumber: String,
         val email: String,
         val website: String,
+
+        @Embedded
         val postbox: Postbox
 ){
     // This "default" constructor is only used by JPA layer

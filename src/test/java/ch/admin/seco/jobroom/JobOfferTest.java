@@ -1,6 +1,6 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.model.Language;
+import ch.admin.seco.jobroom.model.LanguageSkill;
 import ch.admin.seco.jobroom.web.JobOfferRepository;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -73,8 +73,8 @@ public class JobOfferTest {
     @Ignore
     @Test
     public void createJobOffer() throws Exception {
-        List<Language> languages = Arrays.asList(
-                new Language("fr", Language.Level.very_good, Language.Level.very_good));
+        List<LanguageSkill> languageSkills = Arrays.asList(
+                new LanguageSkill("fr", LanguageSkill.Level.very_good, LanguageSkill.Level.very_good));
         // FIXME : create a JSON object instead of JobOffer
 //        JobOffer jobOffer = new JobOffer(
 //                null,
