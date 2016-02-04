@@ -63,18 +63,19 @@ data class LanguageSkill(
         // Need to explicitly define column names
         @Column(name="language")
         val language: String,
+
         @Column(name="spoken_level")
+        @Enumerated(EnumType.STRING)
         val spokenLevel: LanguageSkill.Level,
+
         @Column(name="written_level")
+        @Enumerated(EnumType.STRING)
         val writtenLevel: LanguageSkill.Level
 ) {
     enum class Level {
-        // FIXME: JPA layer by default stores the Enum Integer value, while we use the text representation in the API
-        // FIXME: the current situation is not type-safe and error prone (any enum order change will affect the mapped integer values)
-        //very_good("very_good"), good("good"), average("average")
-        average, // 0
-        good, // 1
-        very_good  // 2
+        average,
+        good,
+        very_good
     }
 
     // This "default" constructor is only used by JPA layer
@@ -129,17 +130,17 @@ data class Postbox(
 @Embeddable
 data class Contact(
 
+        @Enumerated(EnumType.STRING)
         val title: Contact.Title,
+
         val firstName: String,
         val lastName: String,
         val phoneNumber: String,
         val email: String
 ) {
     enum class Title {
-        // FIXME: JPA layer by default stores the Enum Integer value, while we use the text representation in the API
-        // FIXME: the current situation is not type-safe and error prone (any enum order change will affect the mapped integer values)
-        mister, // 0
-        madam // 1
+        mister,
+        madam
     }
 
     // This private "default" constructor is only used by JPA layer
