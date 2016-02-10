@@ -64,11 +64,11 @@ data class LanguageSkill(
         @Column(name="language")
         val language: String,
 
-        @Column(name="spoken_level")
+        @Column(name="spokenlevel")
         @Enumerated(EnumType.STRING)
         val spokenLevel: LanguageSkill.Level,
 
-        @Column(name="written_level")
+        @Column(name="writtenlevel")
         @Enumerated(EnumType.STRING)
         val writtenLevel: LanguageSkill.Level
 ) {
