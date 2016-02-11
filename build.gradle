@@ -86,6 +86,7 @@ dependencies {
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "junit:junit"
     testCompile "com.jayway.jsonpath:json-path:0.8.1"
+    testCompile "javax.json:javax.json-api:1.0"
 //    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RC1"
     // error java.lang.IllegalAccessError with 1.0.0 RC1
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.0.2.BUILD-SNAPSHOT"
