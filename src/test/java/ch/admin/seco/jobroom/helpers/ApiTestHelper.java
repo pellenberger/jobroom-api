@@ -1,4 +1,4 @@
-package ch.admin.seco.jobroom;
+package ch.admin.seco.jobroom.helpers;
 
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +9,17 @@ import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 @Component
-public class RestApiTestHelper {
+public class ApiTestHelper {
 
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
+
+    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype(),
+            Charset.forName("utf8"));
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -31,5 +36,9 @@ public class RestApiTestHelper {
         mappingJackson2HttpMessageConverter.write(
                 o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
         return mockHttpOutputMessage.getBodyAsString();
+    }
+
+    public MediaType getContentType() {
+        return contentType;
     }
 }

@@ -1,4 +1,4 @@
-package ch.admin.seco.jobroom;
+package ch.admin.seco.jobroom.helpers;
 
 import ch.admin.seco.jobroom.model.*;
 
@@ -119,4 +119,14 @@ public final class JobOfferTestHelper {
 
         return jobOffer;
     }
+
+    public static JsonObject getIncompleteJobOfferJson() {
+
+        JsonObject jobOffer = Json.createObjectBuilder()
+                .add("publicationStartDate", "2000-01-01")
+                .build();
+
+        return jobOffer;
+    }
+
 }
