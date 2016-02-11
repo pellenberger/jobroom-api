@@ -1,45 +1,79 @@
 = Here is my doc !
 Patrick Ellenberger <patrick.ellenberger@seco.admin.ch>
-v0.0.1, January 2016: First draft
+v0.0.1, February 2016: First draft
+:doctype: book
 :source-highlighter: highlightjs
 :toc: left
 
-You'll never hear RTFM again !
-
 :sectnums:
+:sectnumlevels: 2
 
-== Get a job
+= General
+
+//TODO : explain API is using standard REST conventions ("RESTful", HTTP methods behaviour, HAL, ...), JSON based
+
+== HTTP error handling
+
+//TODO : explain general error handling (tab with possible errors for each HTTP method)
+
+== Headers
+
+//TODO : explain headers that have to be added to requests
+
+== Authentication
+
+//TODO : explain authentication process (headers, token, validity, ...)
+
+== Optimistic locking
+
+//TODO
+
+== Pagination
+
+//TODO
+
+= Job offers
+
+//TODO : explain what a job offer is (??)
+
+== Create a job offer
+
+//TODO
+
+== Get a job offer
 
 === Access using curl
-
-include::{snippets}/get-job-position/curl-request.adoc[]
+include::{snippets}/get-job-offer/curl-request.adoc[]
 
 === HTTP request
-
-include::{snippets}/get-job-position/http-request.adoc[]
+include::{snippets}/get-job-offer/http-request.adoc[]
 
 === HTTP response
-
-include::{snippets}/get-job-position/http-response.adoc[]
+include::{snippets}/get-job-offer/http-response.adoc[]
 
 === Response fields
+include::{snippets}/get-job-offer/response-fields.adoc[]
 
-include::{snippets}/get-job-position/response-fields.adoc[]
+==== job
+include::{snippets}/get-job-offer-job/response-fields.adoc[]
 
-== Create a job
+==== company
+include::{snippets}/get-job-offer-company/response-fields.adoc[]
 
-=== Access using curl
+==== contact
+include::{snippets}/get-job-offer-contact/response-fields.adoc[]
 
-include::{snippets}/create-job-position/curl-request.adoc[]
+==== application
+include::{snippets}/get-job-offer-application/response-fields.adoc[]
 
-=== HTTP request
+== Get all job offers
 
-include::{snippets}/create-job-position/http-request.adoc[]
+// TODO
 
-=== Request fields
+== Edit a job offer
 
-include::{snippets}/create-job-position/request-fields.adoc[]
+//TODO
 
-=== HTTP response
+== Delete a job offer
 
-include::{snippets}/create-job-position/http-response.adoc[]
+//TODO
