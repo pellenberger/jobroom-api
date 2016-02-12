@@ -14,6 +14,7 @@ import org.springframework.restdocs.RestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ApiApplication.class)
 @WebAppConfiguration
+@WithMockUser
 public class ApiDocumentation {
 
     private MockMvc mockMvc;
@@ -69,6 +71,7 @@ public class ApiDocumentation {
                                 .withHost("api.job-room.ch")
                                 .withPort(80))
                 .build();
+
     }
 
     @Ignore

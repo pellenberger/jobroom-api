@@ -82,8 +82,14 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-data-rest"
     compile "org.springframework.boot:spring-boot-devtools"
+    compile "org.springframework.boot:spring-boot-starter-security"
+//    compile 'org.springframework.security:spring-security-core:4.0.3.RELEASE'
+//    compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
+//    compile 'org.springframework.security:spring-security-config:4.0.3.RELEASE'
 
     testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile "org.springframework.security:spring-security-test:4.0.0.RELEASE"
+
     testCompile "junit:junit"
     testCompile "com.jayway.jsonpath:json-path:0.8.1"
     testCompile "org.glassfish:javax.json:1.0.4"
