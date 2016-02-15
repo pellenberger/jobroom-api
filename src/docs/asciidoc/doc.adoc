@@ -1,4 +1,4 @@
-= Here is my doc !
+= JobRoom API Documentation !
 Patrick Ellenberger <patrick.ellenberger@seco.admin.ch>
 v0.0.1, February 2016: First draft
 :doctype: book
@@ -12,9 +12,39 @@ v0.0.1, February 2016: First draft
 
 //TODO : explain API is using standard REST conventions ("RESTful", HTTP methods behaviour, HAL, ...), JSON based
 
+== HTTP verbs
+
+Following verbs are fully supported :
+
+[cols="20,80"]
+|===
+| Verb | Description
+
+| GET | Used for retrieving resources, either a single object or a collection.
+| POST | Used for creating new resources.
+| PATCH | Used for updating existing resources with partial JSON data.
+| DELETE | Used for deleting resources.
+|===
+
 == HTTP error handling
 
-//TODO : explain general error handling (tab with possible errors for each HTTP method)
+Errors in HTTP responses follow REST standards.
+
+Following table describes examples and precisions related to JobRoom API :
+
+[cols="20,20,60"]
+|===
+| Status code | Name | Description
+
+| 200 | OK | Success using GET or PATCH for retrieving or updating resources.
+| 201 | Created | Success using POST for creating new resources.
+| 204 | No Content | Success using DELETE for deleting resources.
+| 400 | Bad request | Occurs when error in body using POST/PATCH (missing non nullable field, invalid JSON object, wrong object type, etc.).
+| 404 | Not Found | Occurs when requested resource does not exist.
+| 405 | Method Not Allowed | Occurs when HTTP verb cannot be applied to requested endpoint (e.g. `POST /joboffers/1`)
+| 406 | Not Acceptable | Occurs when `Accept` header format is not supported (e.g. `Accept:application/xml`)
+| 412 | Precondition failed | Occurs when `If-Match` header does not match with current resource model (see _Optimistic locking_)
+|===
 
 == Headers
 
