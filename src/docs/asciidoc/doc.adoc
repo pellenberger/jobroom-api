@@ -1,4 +1,4 @@
-= JobRoom API Documentation !
+= JobRoom API Documentation
 Patrick Ellenberger <patrick.ellenberger@seco.admin.ch>
 v0.0.1, February 2016: First draft
 :doctype: book
@@ -48,7 +48,16 @@ Following table describes examples and precisions related to JobRoom API :
 
 == Headers
 
-//TODO : explain headers that have to be added to requests
+Following headers have to be set for some requests in order to use the API :
+
+[cols="20,30,50"]
+|===
+| Header name | Value | When to use ?
+
+| `Content-Type` | `application/json` | When using POST/PATCH (every request that contains a JSON body).
+| `If-Match` | `<value of previous ETag>` | When supporting _Optimistic locking_ (see related chapter).
+| `Authorization` | `Basic <Base64 encoded credentials>` | Always, every API endpoints require authentication (see related chapter).
+|===
 
 == Authentication
 
