@@ -38,7 +38,29 @@ v0.0.1, February 2016: First draft
 
 == Create a job offer
 
-//TODO
+=== Access using curl
+include::{snippets}/create-job-offer/curl-request.adoc[]
+
+=== HTTP request
+include::{snippets}/create-job-offer/http-request.adoc[]
+
+=== HTTP response
+include::{snippets}/create-job-offer/http-response.adoc[]
+
+=== Request fields
+include::{snippets}/create-job-offer/request-fields.adoc[]
+
+==== job
+include::{snippets}/create-job-offer-job/request-fields.adoc[]
+
+==== company
+include::{snippets}/create-job-offer-company/request-fields.adoc[]
+
+==== contact
+include::{snippets}/create-job-offer-contact/request-fields.adoc[]
+
+==== application
+include::{snippets}/create-job-offer-application/request-fields.adoc[]
 
 == Get a job offer
 
@@ -68,7 +90,17 @@ include::{snippets}/get-job-offer-application/response-fields.adoc[]
 
 == Get all job offers
 
-// TODO
+=== Access using curl
+include::{snippets}/get-all-job-offers/curl-request.adoc[]
+
+=== HTTP request
+include::{snippets}/get-all-job-offers/http-request.adoc[]
+
+=== HTTP response
+include::{snippets}/get-all-job-offers/http-response.adoc[]
+
+=== Response fields
+include::{snippets}/get-all-job-offers/response-fields.adoc[]
 
 == Edit a job offer
 
