@@ -14,7 +14,6 @@ import org.springframework.restdocs.RestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +24,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,7 +35,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ApiApplication.class)
 @WebAppConfiguration
-@WithMockUser
 public class ApiDocumentation {
 
     private MockMvc mockMvc;
@@ -61,6 +61,10 @@ public class ApiDocumentation {
         return preprocessResponse(prettyPrint());
     }
 
+    org.springframework.test.web.servlet.request.RequestPostProcessor getHttpBasic() {
+        return httpBasic("user", "password");
+    }
+
     @Before
     public void setup() throws Exception {
 
@@ -70,8 +74,8 @@ public class ApiDocumentation {
                                 .withScheme("http")
                                 .withHost("api.job-room.ch")
                                 .withPort(80))
+                .apply(springSecurity())
                 .build();
-
     }
 
     @Ignore
@@ -105,7 +109,7 @@ public class ApiDocumentation {
 
 
         this.mockMvc.perform(post("/joboffers") // FIXME design the "versioning approach" (externally?)
-                //FIXME .header(JobPositionController.HEADER_ACCESS_KEY, "MySecretKey")
+                .with(getHttpBasic())
                 .contentType(apiTestHelper.getContentType())
                 .content(jobOfferJson))
                 .andExpect(status().isCreated());
@@ -116,7 +120,7 @@ public class ApiDocumentation {
     @Test
     public void getJobOffer() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers/1"))
+        this.mockMvc.perform(get("/joboffers/1").with(getHttpBasic()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.publicationStartDate", Matchers.is("2000-01-01")))
                 .andExpect(jsonPath("$.publicationEndDate", Matchers.is("2001-02-02")))
@@ -261,5 +265,17 @@ public class ApiDocumentation {
     @Test
     public void deleteJobOffer() {
         // TODO DELETE /joboffers/1
+    }
+
+    @Test
+    public void accessWithoutAuth() throws Exception {
+        this.mockMvc.perform(get("/joboffers"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void accessWithBadCredentials() throws Exception {
+        this.mockMvc.perform(get("/joboffers").with(httpBasic("wrong_username", "wrong_password")))
+                .andExpect(status().isUnauthorized());
     }
 }
