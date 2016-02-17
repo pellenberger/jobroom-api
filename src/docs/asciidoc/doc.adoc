@@ -1,4 +1,4 @@
-= Here is my doc !
+= JobRoom API Documentation
 Patrick Ellenberger <patrick.ellenberger@seco.admin.ch>
 v0.0.1, February 2016: First draft
 :doctype: book
@@ -12,13 +12,52 @@ v0.0.1, February 2016: First draft
 
 //TODO : explain API is using standard REST conventions ("RESTful", HTTP methods behaviour, HAL, ...), JSON based
 
+== HTTP verbs
+
+Following verbs are fully supported :
+
+[cols="20,80"]
+|===
+| Verb | Description
+
+| GET | Used for retrieving resources, either a single object or a collection.
+| POST | Used for creating new resources.
+| PATCH | Used for updating existing resources with partial JSON data.
+| DELETE | Used for deleting resources.
+|===
+
 == HTTP error handling
 
-//TODO : explain general error handling (tab with possible errors for each HTTP method)
+Errors in HTTP responses follow REST standards.
+
+Following table describes examples and precisions related to JobRoom API :
+
+[cols="20,20,60"]
+|===
+| Status code | Name | Description
+
+| 200 | OK | Success using GET or PATCH for retrieving or updating resources.
+| 201 | Created | Success using POST for creating new resources.
+| 204 | No Content | Success using DELETE for deleting resources.
+| 400 | Bad request | Occurs when error in body using POST/PATCH (missing non nullable field, invalid JSON object, wrong object type, etc.).
+| 404 | Not Found | Occurs when requested resource does not exist.
+| 405 | Method Not Allowed | Occurs when HTTP verb cannot be applied to requested endpoint (e.g. `POST /joboffers/1`)
+| 406 | Not Acceptable | Occurs when `Accept` header format is not supported (e.g. `Accept:application/xml`)
+| 412 | Precondition failed | Occurs when `If-Match` header does not match with current resource model (see _Optimistic locking_)
+|===
 
 == Headers
 
-//TODO : explain headers that have to be added to requests
+Following headers have to be set for some requests in order to use the API :
+
+[cols="20,30,50"]
+|===
+| Header name | Value | When to use ?
+
+| `Content-Type` | `application/json` | When using POST/PATCH (every request that contains a JSON body).
+| `If-Match` | `<value of previous ETag>` | When supporting _Optimistic locking_ (see related chapter).
+| `Authorization` | `Basic <Base64 encoded credentials>` | Always, every API endpoints require authentication (see related chapter).
+|===
 
 == Authentication
 
@@ -38,7 +77,29 @@ v0.0.1, February 2016: First draft
 
 == Create a job offer
 
-//TODO
+=== Access using curl
+include::{snippets}/create-job-offer/curl-request.adoc[]
+
+=== HTTP request
+include::{snippets}/create-job-offer/http-request.adoc[]
+
+=== HTTP response
+include::{snippets}/create-job-offer/http-response.adoc[]
+
+=== Request fields
+include::{snippets}/create-job-offer/request-fields.adoc[]
+
+==== job
+include::{snippets}/create-job-offer-job/request-fields.adoc[]
+
+==== company
+include::{snippets}/create-job-offer-company/request-fields.adoc[]
+
+==== contact
+include::{snippets}/create-job-offer-contact/request-fields.adoc[]
+
+==== application
+include::{snippets}/create-job-offer-application/request-fields.adoc[]
 
 == Get a job offer
 
@@ -68,7 +129,17 @@ include::{snippets}/get-job-offer-application/response-fields.adoc[]
 
 == Get all job offers
 
-// TODO
+=== Access using curl
+include::{snippets}/get-all-job-offers/curl-request.adoc[]
+
+=== HTTP request
+include::{snippets}/get-all-job-offers/http-request.adoc[]
+
+=== HTTP response
+include::{snippets}/get-all-job-offers/http-response.adoc[]
+
+=== Response fields
+include::{snippets}/get-all-job-offers/response-fields.adoc[]
 
 == Edit a job offer
 

@@ -17,8 +17,8 @@ public final class JobOfferTestHelper {
                 Date.valueOf("2000-01-01"),
                 Date.valueOf("2001-02-02"),
                 new Job(
-                        "Ingénieur",
-                        "Software development",
+                        "Software engineer",
+                        "Development of eGov applications",
                         80,
                         100,
                         Date.valueOf("2000-03-01"),
@@ -52,10 +52,10 @@ public final class JobOfferTestHelper {
                 ),
                 new Contact(
                         Contact.Title.mister,
-                        "Jean",
+                        "Alizée",
                         "Dupont",
                         "0791234567",
-                        "jean.dupont@seco.admin.ch"
+                        "alizee.dupont@seco.admin.ch"
                 ),
                 new Application(
                         false,
@@ -68,52 +68,52 @@ public final class JobOfferTestHelper {
     public static JsonObject getCompleteJobOfferJson() {
 
         JsonObject jobOffer = Json.createObjectBuilder()
-                .add("publicationStartDate", "2000-01-01")
-                .add("publicationEndDate", "2001-02-02")
+                .add("publicationStartDate", "2016-02-15")
+                .add("publicationEndDate", "2016-04-01")
                 .add("job", Json.createObjectBuilder()
-                    .add("title", "Ingénieur")
-                    .add("description", "Software development")
-                    .add("workingTimePercentageFrom", 80)
-                    .add("workingTimePercentageTo", 100)
-                    .add("startDate", "2000-03-01")
-                    .add("endDate", "2002-04-02")
+                    .add("title", "Financial manager")
+                    .add("description", "You will have to assist executives in making decisions that affect the organization")
+                    .add("workingTimePercentageFrom", 60)
+                    .add("workingTimePercentageTo", 90)
+                    .add("startDate", "2016-03-01")
+                    .add("endDate", "2018-05-31")
                     .add("location", Json.createObjectBuilder()
                         .add("countryCode", "CH")
-                        .add("locality", "Bern")
-                        .add("postalCode", "3010")
-                        .add("additionalDetails", "All day in an office"))
+                        .add("locality", "Lausanne")
+                        .add("postalCode", "1017")
+                        .add("additionalDetails", "Possibility of having interesting bonus"))
                     .add("languageSkills", Json.createArrayBuilder()
                         .add(Json.createObjectBuilder()
-                            .add("language", "de")
-                            .add("spokenLevel", "very_good")
-                            .add("writtenLevel", "good"))
-                        .add(Json.createObjectBuilder()
                             .add("language", "fr")
-                            .add("spokenLevel", "average")
-                            .add("writtenLevel", "average"))))
+                            .add("spokenLevel", "very_good")
+                            .add("writtenLevel", "very_good"))
+                        .add(Json.createObjectBuilder()
+                            .add("language", "en")
+                            .add("spokenLevel", "very_good")
+                            .add("writtenLevel", "good"))))
                 .add("company", Json.createObjectBuilder()
-                    .add("name", "SECO")
+                    .add("name", "Mission Realty")
                     .add("countryCode", "CH")
-                    .add("street", "Finkenhubelweg")
-                    .add("houseNumber", "12")
-                    .add("locality", "Bern")
-                    .add("postalCode", "3001")
-                    .add("phoneNumber", "0581234567")
-                    .add("email", "info@seco.admin.ch")
-                    .add("website", "www.seco.admin.ch")
+                    .add("street", "Glennerstrasse")
+                    .add("houseNumber", "62")
+                    .add("locality", "Genolier")
+                    .add("postalCode", "1272")
+                    .add("phoneNumber", "0225176355")
+                    .add("email", "info@missionrealty.ch")
+                    .add("website", "www.missionrealty.ch")
                     .add("postbox", Json.createObjectBuilder()
-                        .add("number", "3002")
-                        .add("locality", "Bern")
-                        .add("postalCode", "3001")))
+                        .add("number", "1234")
+                        .add("locality", "Genolier")
+                        .add("postalCode", "1272")))
                 .add("contact", Json.createObjectBuilder()
                     .add("title", "mister")
-                    .add("firstName", "Jean")
-                    .add("lastName", "Dupont")
-                    .add("phoneNumber", "0791234567")
-                    .add("email", "jean.dupont@seco.admin.ch"))
+                    .add("firstName", "Bertrand")
+                    .add("lastName", "Boulé")
+                    .add("phoneNumber", "0795721186")
+                    .add("email", "bertrand.boule@missionrealty.ch"))
                 .add("application", Json.createObjectBuilder()
-                    .add("telephonic", false)
-                    .add("written", true)
+                    .add("telephonic", true)
+                    .add("written", false)
                     .add("electronic", true))
                 .build();
 
