@@ -7,3 +7,6 @@ tmp
 *.wip
 *.off
 
+config/application.properties
+gradle.properties
+
