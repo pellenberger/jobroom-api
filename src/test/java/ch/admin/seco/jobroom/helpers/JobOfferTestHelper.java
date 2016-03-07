@@ -58,9 +58,9 @@ public final class JobOfferTestHelper {
                         "alizee.dupont@seco.admin.ch"
                 ),
                 new Application(
-                        false,
-                        true,
-                        true
+                        0,
+                        1,
+                        1
                 )
         );
     }
@@ -112,9 +112,9 @@ public final class JobOfferTestHelper {
                     .add("phoneNumber", "0795721186")
                     .add("email", "bertrand.boule@missionrealty.ch"))
                 .add("application", Json.createObjectBuilder()
-                    .add("telephonic", true)
-                    .add("written", false)
-                    .add("electronic", true))
+                    .add("telephonic", 1)
+                    .add("written", 0)
+                    .add("electronic", 1))
                 .build();
 
         return jobOffer;

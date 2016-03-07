@@ -3,13 +3,17 @@ package ch.admin.seco.jobroom.model
 import java.sql.Date
 import java.util.*
 import javax.persistence.*
+import javax.validation.constraints.Min
+import javax.validation.constraints.Size
 
 // TODO: constraints like min/max should be (ONLY?) defined at SQL level!!!!
 // TODO: ideally the same data-centric approach for more advanced constraints (e.g. publicationDate update)
 
 @Entity data class JobOffer(
 
-        @Id @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO)
+        @Id
+        @GeneratedValue(generator="joboffer_gen")
+        @SequenceGenerator(name="joboffer_gen", sequenceName="aoste_seq")
         var id: Long? = null,
 
         @Version
@@ -38,6 +42,7 @@ import javax.persistence.*
 @Embeddable
 data class Job(
 
+        @Min(50)
         val title: String,
         val description: String,
         val workingTimePercentageFrom: Int,
@@ -48,6 +53,7 @@ data class Job(
         @Embedded
         val location: Location,
 
+        @Size(min=2, max=5)
         @ElementCollection
         val languageSkills: Collection<LanguageSkill>
 
@@ -150,10 +156,10 @@ data class Contact(
 @Embeddable
 data class Application(
 
-        val telephonic: Boolean,
-        val written: Boolean,
-        val electronic: Boolean
+        val telephonic: Int,
+        val written: Int,
+        val electronic: Int
 ) {
     // This private "default" constructor is only used by JPA layer
-    constructor() : this(false, false, false)
+    constructor() : this(0, 0, 0)
 }

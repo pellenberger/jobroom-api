@@ -215,9 +215,9 @@ public class ApiDocumentation {
                 .andExpect(jsonPath("$.contact.lastName", Matchers.is("Dupont")))
                 .andExpect(jsonPath("$.contact.phoneNumber", Matchers.is("0791234567")))
                 .andExpect(jsonPath("$.contact.email", Matchers.is("jean.dupont@seco.admin.ch")))
-                .andExpect(jsonPath("$.application.telephonic", Matchers.is(false)))
-                .andExpect(jsonPath("$.application.written", Matchers.is(true)))
-                .andExpect(jsonPath("$.application.electronic", Matchers.is(true)))
+                .andExpect(jsonPath("$.application.telephonic", Matchers.is(0)))
+                .andExpect(jsonPath("$.application.written", Matchers.is(1)))
+                .andExpect(jsonPath("$.application.electronic", Matchers.is(1)))
 
                 .andDo(document("{method-name}", getPreprocessRequest(), getPreprocessResponse(),
                         responseFields(
