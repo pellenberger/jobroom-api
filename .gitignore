@@ -7,6 +7,6 @@ tmp
 *.wip
 *.off
 
-config/application.properties
+config/*.properties
 gradle.properties
 
