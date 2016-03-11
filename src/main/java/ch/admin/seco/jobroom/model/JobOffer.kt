@@ -1,9 +1,9 @@
 package ch.admin.seco.jobroom.model
 
+import org.hibernate.annotations.Nationalized
 import java.sql.Date
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.Min
 import javax.validation.constraints.Size
 
 // TODO: constraints like min/max should be (ONLY?) defined at SQL level!!!!
@@ -14,16 +14,17 @@ import javax.validation.constraints.Size
         @Id
         @GeneratedValue(generator="joboffer_gen")
         @SequenceGenerator(name="joboffer_gen", sequenceName="aoste_seq")
-        var id: Long? = null,
+        var id: Int? = null,
 
         @Version
-        var version: Long? = null,
+        var version: Int? = null,
 
         val publicationStartDate: Date,
 
         var publicationEndDate: Date? = null,
 
         @Embedded
+        @get:javax.validation.Valid
         val job: Job,
 
         @Embedded
@@ -42,9 +43,13 @@ import javax.validation.constraints.Size
 @Embeddable
 data class Job(
 
-        @Min(50)
         val title: String,
+
+        @Lob
+        @Nationalized
+        @field:Size(max = 10000)
         val description: String,
+
         val workingTimePercentageFrom: Int,
         val workingTimePercentageTo: Int,
         var startDate: Date? = null,
@@ -53,7 +58,7 @@ data class Job(
         @Embedded
         val location: Location,
 
-        @Size(min=2, max=5)
+        @field: Size(min=2, max=5)
         @ElementCollection
         val languageSkills: Collection<LanguageSkill>
 

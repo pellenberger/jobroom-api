@@ -8,4 +8,4 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasRole('ROLE_USER')")
 @RepositoryRestResource(path = "joboffers")
-public interface JobOfferRepository extends PagingAndSortingRepository<JobOffer, Long> {}
+public interface JobOfferRepository extends PagingAndSortingRepository<JobOffer, Integer> {}
