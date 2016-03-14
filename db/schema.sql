@@ -36,12 +36,17 @@ create table joboffer (
   contact_email varchar2(50 char) not null, -- kp_email
   application_telephonic integer not null, -- bewer_telefonisch_b
   application_written integer not null, -- bewer_schriftlich_b
-  application_electronic integer not null -- bewer_elektronisch_b
+  application_electronic integer not null, -- bewer_elektronisch_b
+  owner_id integer not null
 );
 
 alter table joboffer add (
 constraint joboffer_pk primary key (id)
 );
+
+alter table joboffer
+add constraint fk_owner
+foreign key (owner_id) references aoste_accesskeys;
 
 alter table joboffer add (
 constraint application_telephonic_ck check (application_telephonic in (0, 1)),

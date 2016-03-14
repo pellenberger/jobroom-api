@@ -61,7 +61,8 @@ public final class JobOfferTestHelper {
                         0,
                         1,
                         1
-                )
+                ),
+                null
         );
     }
 

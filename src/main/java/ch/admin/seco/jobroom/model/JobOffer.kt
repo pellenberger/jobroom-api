@@ -1,6 +1,8 @@
 package ch.admin.seco.jobroom.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Nationalized
+import org.springframework.data.rest.core.annotation.RestResource
 import java.sql.Date
 import java.util.*
 import javax.persistence.*
@@ -34,10 +36,15 @@ import javax.validation.constraints.Size
         val contact: Contact,
 
         @Embedded
-        val application: Application
+        val application: Application,
+
+        @ManyToOne
+        @JoinColumn(name="owner_id")
+        @JsonIgnore
+        var owner: RestAccessKey? = null
 ) {
     // This private "default" constructor is only used by JPA layer
-    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, Job(), Company(), Contact(), Application())
+    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, Job(), Company(), Contact(), Application(), null)
 }
 
 @Embeddable
