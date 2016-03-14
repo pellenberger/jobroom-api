@@ -15,6 +15,7 @@ import org.springframework.restdocs.RestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -61,10 +62,6 @@ public class ApiDocumentation {
         return preprocessResponse(prettyPrint());
     }
 
-    org.springframework.test.web.servlet.request.RequestPostProcessor getHttpBasic() {
-        return httpBasic("user", "password");
-    }
-
     @Before
     public void setup() throws Exception {
 
@@ -79,6 +76,7 @@ public class ApiDocumentation {
     }
 
     @Test
+    @WithMockUser
     public void createJobOffer() throws Exception {
 
         // TODO add constraints in documentation (should be included using REST Docs mechanism : ConstraintDescriptions (JPA / SQL))
@@ -87,7 +85,6 @@ public class ApiDocumentation {
         String jobOfferJson = JobOfferTestHelper.getCompleteJobOfferJson().toString();
 
         this.mockMvc.perform(post("/joboffers") // FIXME design the "versioning approach" (externally?)
-                .with(getHttpBasic())
                 .contentType(apiTestHelper.getContentType())
                 .content(jobOfferJson))
                 .andExpect(status().isCreated())
@@ -174,9 +171,10 @@ public class ApiDocumentation {
     }
 
     @Test
+    @WithMockUser
     public void getJobOffer() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers/1").with(getHttpBasic()))
+        this.mockMvc.perform(get("/joboffers/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.publicationStartDate", Matchers.is("2000-01-01")))
                 .andExpect(jsonPath("$.publicationEndDate", Matchers.is("2001-02-02")))
@@ -306,9 +304,10 @@ public class ApiDocumentation {
     }
 
     @Test
+    @WithMockUser
     public void getAllJobOffers() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers").with(getHttpBasic()))
+        this.mockMvc.perform(get("/joboffers"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.page", Matchers.notNullValue()))
@@ -341,7 +340,7 @@ public class ApiDocumentation {
 
     @Test
     public void accessWithBadCredentials() throws Exception {
-        this.mockMvc.perform(get("/joboffers").with(httpBasic("wrong_username", "wrong_password")))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic("some_user", "some_password")))
                 .andExpect(status().isUnauthorized());
     }
 }
