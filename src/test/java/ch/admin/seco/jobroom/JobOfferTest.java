@@ -2,7 +2,7 @@ package ch.admin.seco.jobroom;
 
 import ch.admin.seco.jobroom.helpers.ApiTestHelper;
 import ch.admin.seco.jobroom.helpers.JobOfferTestHelper;
-import ch.admin.seco.jobroom.web.JobOfferRepository;
+import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +38,7 @@ public class JobOfferTest {
 
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
     }
+
 
     @Test
     public void createIncompleteJobOffer() throws Exception {

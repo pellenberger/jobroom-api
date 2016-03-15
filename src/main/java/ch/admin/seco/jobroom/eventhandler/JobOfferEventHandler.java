@@ -2,7 +2,7 @@ package ch.admin.seco.jobroom.eventhandler;
 
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
-import ch.admin.seco.jobroom.web.RestAccessKeyRepository;
+import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;

@@ -1,4 +1,4 @@
-package ch.admin.seco.jobroom.web;
+package ch.admin.seco.jobroom.repository;
 
 
 import ch.admin.seco.jobroom.model.RestAccessKey;

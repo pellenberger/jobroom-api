@@ -2,11 +2,11 @@ package ch.admin.seco.jobroom.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Nationalized
-import org.springframework.data.rest.core.annotation.RestResource
 import java.sql.Date
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.Size
+import javax.validation.Valid
 
 // TODO: constraints like min/max should be (ONLY?) defined at SQL level!!!!
 // TODO: ideally the same data-centric approach for more advanced constraints (e.g. publicationDate update)
@@ -26,7 +26,7 @@ import javax.validation.constraints.Size
         var publicationEndDate: Date? = null,
 
         @Embedded
-        @get:javax.validation.Valid
+        @get:Valid
         val job: Job,
 
         @Embedded
@@ -65,7 +65,7 @@ data class Job(
         @Embedded
         val location: Location,
 
-        @field: Size(min=2, max=5)
+        @field:Size(min=2, max=5)
         @ElementCollection
         val languageSkills: Collection<LanguageSkill>
 

@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom.security;
 
 import ch.admin.seco.jobroom.model.RestAccessKey;
-import ch.admin.seco.jobroom.web.RestAccessKeyRepository;
+import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

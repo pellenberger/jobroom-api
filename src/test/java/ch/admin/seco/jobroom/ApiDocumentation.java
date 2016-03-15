@@ -2,7 +2,7 @@ package ch.admin.seco.jobroom;
 
 import ch.admin.seco.jobroom.helpers.ApiTestHelper;
 import ch.admin.seco.jobroom.helpers.JobOfferTestHelper;
-import ch.admin.seco.jobroom.web.JobOfferRepository;
+import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -88,6 +88,7 @@ public class ApiDocumentation {
                 .contentType(apiTestHelper.getContentType())
                 .content(jobOfferJson))
                 .andExpect(status().isCreated())
+
 
                 .andDo(document("{method-name}", getPreprocessRequest(), getPreprocessResponse(),
                         requestFields(

@@ -1,4 +1,4 @@
-package ch.admin.seco.jobroom.web;
+package ch.admin.seco.jobroom.controller;
 
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.http.HttpStatus;
