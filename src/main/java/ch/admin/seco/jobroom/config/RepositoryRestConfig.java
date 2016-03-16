@@ -1,5 +1,6 @@
 package ch.admin.seco.jobroom.config;
 
+import ch.admin.seco.jobroom.validator.BeforeSaveJobOfferValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -20,8 +21,13 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
     @Override
     public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
         Validator validator = validator();
-        //bean validation always before save and create
         validatingListener.addValidator("beforeCreate", validator);
         validatingListener.addValidator("beforeSave", validator);
+        validatingListener.addValidator("beforeSave", beforeSaveJobOfferValidator());
+    }
+
+    @Bean
+    public BeforeSaveJobOfferValidator beforeSaveJobOfferValidator() {
+        return new BeforeSaveJobOfferValidator();
     }
 }
