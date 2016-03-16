@@ -12,8 +12,8 @@ insert into joboffer (
   application_telephonic, application_written, application_electronic,
   owner_id
   )
-values (1, 0, '2000-01-01', '2001-02-02',
-  'Software engineer', 'Development of eGov applications', 80, 100, '2000-03-01', '2002-04-02',
+values (1, 0, '2100-01-01', '2101-02-02',
+  'Software engineer', 'Development of eGov applications', 80, 100, '2100-03-01', '2102-04-02',
   'CH', 'Bern', '3010', 'All day in an office',
   'SECO', 'CH', 'Finkenhubelweg', '12', 'Bern', '3001', '0581234567', 'info@seco.admin.ch', 'www.seco.admin.ch', '3002', 'Bern', '3001',
   'mister', 'Alizée', 'Dupont', '0791234567', 'jean.dupont@seco.admin.ch',

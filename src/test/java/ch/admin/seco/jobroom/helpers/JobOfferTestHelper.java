@@ -14,15 +14,15 @@ public final class JobOfferTestHelper {
         return new JobOffer(
                 null,
                 null,
-                Date.valueOf("2000-01-01"),
-                Date.valueOf("2001-02-02"),
+                Date.valueOf("2100-01-01"),
+                Date.valueOf("2101-02-02"),
                 new Job(
                         "Software engineer",
                         "Development of eGov applications",
                         80,
                         100,
-                        Date.valueOf("2000-03-01"),
-                        Date.valueOf("2002-04-02"),
+                        Date.valueOf("2100-03-01"),
+                        Date.valueOf("2102-04-02"),
                         new Location(
                                 "CH",
                                 "Bern",
@@ -69,15 +69,15 @@ public final class JobOfferTestHelper {
     public static JsonObject getCompleteJobOfferJson() {
 
         JsonObject jobOffer = Json.createObjectBuilder()
-                .add("publicationStartDate", "2016-02-15")
-                .add("publicationEndDate", "2016-04-01")
+                .add("publicationStartDate", "2116-02-15")
+                .add("publicationEndDate", "2116-04-01")
                 .add("job", Json.createObjectBuilder()
                     .add("title", "Financial manager")
                     .add("description", "You will have to assist executives in making decisions that affect the organization")
                     .add("workingTimePercentageFrom", 60)
                     .add("workingTimePercentageTo", 90)
-                    .add("startDate", "2016-03-01")
-                    .add("endDate", "2018-05-31")
+                    .add("startDate", "2116-03-01")
+                    .add("endDate", "2118-05-31")
                     .add("location", Json.createObjectBuilder()
                         .add("countryCode", "CH")
                         .add("locality", "Lausanne")
