@@ -32,9 +32,9 @@ public interface JobOfferRepository extends PagingAndSortingRepository<JobOffer,
     @Override
     void delete(JobOffer entity);
 
-    // PATCH uses findOne(Integer integer) to get entity to save --> secured
+    @PreAuthorize("#joboffer.owner.keyOwner == principal.username")
     @Override
-    <S extends JobOffer> S save(S entity);
+    <S extends JobOffer> S save(@Param("joboffer") S entity);
 
     // ********
     // all following actions are not exposed through REST api
