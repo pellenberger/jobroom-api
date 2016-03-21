@@ -4,11 +4,9 @@ import ch.admin.seco.jobroom.helpers.ApiTestHelper;
 import ch.admin.seco.jobroom.helpers.JobOfferTestHelper;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.restdocs.RestDocumentation;
@@ -26,8 +24,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -35,6 +32,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ApiApplication.class)
 @WebAppConfiguration
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApiDocumentation {
 
     private MockMvc mockMvc;
@@ -52,6 +50,7 @@ public class ApiDocumentation {
 
     @Autowired
     ApiTestHelper apiTestHelper;
+
 
     OperationRequestPreprocessor getPreprocessRequest() {
         return preprocessRequest(prettyPrint());
@@ -79,7 +78,7 @@ public class ApiDocumentation {
     }
 
     @Test
-    public void createJobOffer() throws Exception {
+    public void b_createJobOffer() throws Exception {
 
         // TODO add constraints in documentation (should be included using REST Docs mechanism : ConstraintDescriptions (JPA / SQL))
         // TODO only describe subobjects here (not GET request anymore) ??
@@ -91,7 +90,6 @@ public class ApiDocumentation {
                 .contentType(apiTestHelper.getContentType())
                 .content(jobOfferJson))
                 .andExpect(status().isCreated())
-
 
                 .andDo(document("{method-name}", getPreprocessRequest(), getPreprocessResponse(),
                         requestFields(
@@ -172,10 +170,14 @@ public class ApiDocumentation {
                                 fieldWithPath("application.written").description("todo"),
                                 fieldWithPath("application.electronic").description("todo")
                         )));
+
+        this.mockMvc.perform(get("/joboffers").with(getHttpBasic()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(2)));
     }
 
     @Test
-    public void getJobOffer() throws Exception {
+    public void c_getJobOffer() throws Exception {
 
         this.mockMvc.perform(get("/joboffers/1").with(getHttpBasic()))
                 .andExpect(status().isOk())
@@ -222,33 +224,33 @@ public class ApiDocumentation {
 
                 .andDo(document("{method-name}", getPreprocessRequest(), getPreprocessResponse(),
                         responseFields(
-                                fieldWithPath("publicationStartDate").description("todo"),
-                                fieldWithPath("publicationEndDate").description("todo"),
-                                fieldWithPath("job").description("Description of the job (further information bellow)"),
-                                fieldWithPath("company").description("The company that offers the job (further information bellow)"),
-                                fieldWithPath("contact").description("Contact person about the job offer (further information bellow)"),
-                                fieldWithPath("application").description("Support for submitting the job application (further information bellow"),
-                                fieldWithPath("_links").description("todo")
+                                fieldWithPath("publicationStartDate").ignored(),
+                                fieldWithPath("publicationEndDate").ignored(),
+                                fieldWithPath("job").ignored(),
+                                fieldWithPath("company").ignored(),
+                                fieldWithPath("contact").ignored(),
+                                fieldWithPath("application").ignored(),
+                                fieldWithPath("_links").ignored()
                         )))
                 .andDo(document("{method-name}-job", getPreprocessRequest(), getPreprocessResponse(),
                         responseFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("job").ignored(),
-                                fieldWithPath("job.title").description("todo"),
-                                fieldWithPath("job.description").description("todo"),
-                                fieldWithPath("job.workingTimePercentageFrom").description("todo"),
-                                fieldWithPath("job.workingTimePercentageTo").description("todo"),
-                                fieldWithPath("job.startDate").description("todo"),
-                                fieldWithPath("job.endDate").description("todo"),
-                                fieldWithPath("job.location.countryCode").description("todo"),
-                                fieldWithPath("job.location.locality").description("todo"),
-                                fieldWithPath("job.location.postalCode").description("todo"),
-                                fieldWithPath("job.location.additionalDetails").description("todo"),
-                                fieldWithPath("job.languageSkills").description("todo"),
-                                fieldWithPath("job.languageSkills[].language").description("todo"),
-                                fieldWithPath("job.languageSkills[].spokenLevel").description("todo"),
-                                fieldWithPath("job.languageSkills[].writtenLevel").description("todo"),
+                                fieldWithPath("job.title").ignored(),
+                                fieldWithPath("job.description").ignored(),
+                                fieldWithPath("job.workingTimePercentageFrom").ignored(),
+                                fieldWithPath("job.workingTimePercentageTo").ignored(),
+                                fieldWithPath("job.startDate").ignored(),
+                                fieldWithPath("job.endDate").ignored(),
+                                fieldWithPath("job.location.countryCode").ignored(),
+                                fieldWithPath("job.location.locality").ignored(),
+                                fieldWithPath("job.location.postalCode").ignored(),
+                                fieldWithPath("job.location.additionalDetails").ignored(),
+                                fieldWithPath("job.languageSkills").ignored(),
+                                fieldWithPath("job.languageSkills[].language").ignored(),
+                                fieldWithPath("job.languageSkills[].spokenLevel").ignored(),
+                                fieldWithPath("job.languageSkills[].writtenLevel").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored(),
@@ -260,18 +262,18 @@ public class ApiDocumentation {
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
-                                fieldWithPath("company.name").description("todo"),
-                                fieldWithPath("company.countryCode").description("todo"),
-                                fieldWithPath("company.street").description("todo"),
-                                fieldWithPath("company.houseNumber").description("todo"),
-                                fieldWithPath("company.locality").description("todo"),
-                                fieldWithPath("company.postalCode").description("todo"),
-                                fieldWithPath("company.phoneNumber").description("todo"),
-                                fieldWithPath("company.email").description("todo"),
-                                fieldWithPath("company.website").description("todo"),
-                                fieldWithPath("company.postbox.number").description("todo"),
-                                fieldWithPath("company.postbox.locality").description("todo"),
-                                fieldWithPath("company.postbox.postalCode").description("todo"),
+                                fieldWithPath("company.name").ignored(),
+                                fieldWithPath("company.countryCode").ignored(),
+                                fieldWithPath("company.street").ignored(),
+                                fieldWithPath("company.houseNumber").ignored(),
+                                fieldWithPath("company.locality").ignored(),
+                                fieldWithPath("company.postalCode").ignored(),
+                                fieldWithPath("company.phoneNumber").ignored(),
+                                fieldWithPath("company.email").ignored(),
+                                fieldWithPath("company.website").ignored(),
+                                fieldWithPath("company.postbox.number").ignored(),
+                                fieldWithPath("company.postbox.locality").ignored(),
+                                fieldWithPath("company.postbox.postalCode").ignored(),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored(),
                                 fieldWithPath("_links").ignored()
@@ -283,11 +285,11 @@ public class ApiDocumentation {
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
-                                fieldWithPath("contact.title").description("todo"),
-                                fieldWithPath("contact.firstName").description("todo"),
-                                fieldWithPath("contact.lastName").description("todo"),
-                                fieldWithPath("contact.phoneNumber").description("todo"),
-                                fieldWithPath("contact.email").description("todo"),
+                                fieldWithPath("contact.title").ignored(),
+                                fieldWithPath("contact.firstName").ignored(),
+                                fieldWithPath("contact.lastName").ignored(),
+                                fieldWithPath("contact.phoneNumber").ignored(),
+                                fieldWithPath("contact.email").ignored(),
                                 fieldWithPath("application").ignored(),
                                 fieldWithPath("_links").ignored()
                         )))
@@ -299,19 +301,19 @@ public class ApiDocumentation {
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored(),
-                                fieldWithPath("application.telephonic").description("todo"),
-                                fieldWithPath("application.written").description("todo"),
-                                fieldWithPath("application.electronic").description("todo"),
+                                fieldWithPath("application.telephonic").ignored(),
+                                fieldWithPath("application.written").ignored(),
+                                fieldWithPath("application.electronic").ignored(),
                                 fieldWithPath("_links").ignored()
                         )));
     }
 
     @Test
-    public void getAllJobOffers() throws Exception {
+    public void a_getAllJobOffers() throws Exception {
 
         this.mockMvc.perform(get("/joboffers").with(getHttpBasic()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(2)))
+                .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$.page", Matchers.notNullValue()))
 
                 .andDo(document("{method-name}", getPreprocessRequest(), getPreprocessResponse(),
@@ -322,15 +324,27 @@ public class ApiDocumentation {
                         )));
     }
 
-    @Ignore
     @Test
-    public void editJobOffer() throws Exception {
-        // TODO PUT /joboffers/1
+    public void d_editJobOffer() throws Exception {
+
+        String jobOfferJson = JobOfferTestHelper.getPartialJobOfferJson().toString();
+
+        this.mockMvc.perform(patch("/joboffers/1")
+                .with(getHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(jobOfferJson))
+                .andExpect(status().isNoContent())
+
+                .andDo(document("{method-name}", getPreprocessRequest(), getPreprocessResponse()));
     }
 
-    @Ignore
     @Test
-    public void deleteJobOffer() {
-        // TODO DELETE /joboffers/1
+    public void e_deleteJobOffer() throws Exception {
+
+        this.mockMvc.perform(delete("/joboffers/1")
+                .with(getHttpBasic()))
+                .andExpect(status().isNoContent())
+
+                .andDo(document("{method-name}", getPreprocessRequest(), getPreprocessResponse()));
     }
 }

@@ -1,3 +1,8 @@
+-- *****
+-- This script creates data used in the test class that generates the documentation (ApiDocumentation.java)
+-- It creates a user that has one joboffer that contains two languageskills
+-- *****
+
 insert into aoste_accesskeys (
   id, owner, accesskey, active_b
 )

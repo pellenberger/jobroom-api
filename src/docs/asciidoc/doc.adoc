@@ -26,9 +26,9 @@ Following verbs are fully supported :
 | DELETE | Used for deleting resources.
 |===
 
-== HTTP error handling
+== HTTP response status codes
 
-Errors in HTTP responses follow REST standards.
+Status codes in HTTP responses follow REST standards.
 
 Following table describes examples and precisions related to JobRoom API :
 
@@ -36,10 +36,11 @@ Following table describes examples and precisions related to JobRoom API :
 |===
 | Status code | Name | Description
 
-| 200 | OK | Success using GET or PATCH for retrieving or updating resources.
+| 200 | OK | Success using GET for retrieving resources.
 | 201 | Created | Success using POST for creating new resources.
-| 204 | No Content | Success using DELETE for deleting resources.
+| 204 | No Content | Success using DELETE or PATCH for deleting or updating resources.
 | 400 | Bad request | Occurs when error in body using POST/PATCH (missing non nullable field, invalid JSON object, wrong object type, etc.).
+| 401 | Unauthorized |
 | 404 | Not Found | Occurs when requested resource does not exist.
 | 405 | Method Not Allowed | Occurs when HTTP verb cannot be applied to requested endpoint (e.g. `POST /joboffers/1`)
 | 406 | Not Acceptable | Occurs when `Accept` header format is not supported (e.g. `Accept:application/xml`)
@@ -77,74 +78,77 @@ Following headers have to be set for some requests in order to use the API :
 
 == Create a job offer
 
-=== Access using curl
-include::{snippets}/create-job-offer/curl-request.adoc[]
-
 === HTTP request
-include::{snippets}/create-job-offer/http-request.adoc[]
+include::{snippets}/b_create-job-offer/http-request.adoc[]
 
 === HTTP response
-include::{snippets}/create-job-offer/http-response.adoc[]
+include::{snippets}/b_create-job-offer/http-response.adoc[]
 
 === Request fields
-include::{snippets}/create-job-offer/request-fields.adoc[]
+include::{snippets}/b_create-job-offer/request-fields.adoc[]
+
+//TODO : constraints
 
 ==== job
-include::{snippets}/create-job-offer-job/request-fields.adoc[]
+include::{snippets}/b_create-job-offer-job/request-fields.adoc[]
 
 ==== company
-include::{snippets}/create-job-offer-company/request-fields.adoc[]
+include::{snippets}/b_create-job-offer-company/request-fields.adoc[]
 
 ==== contact
-include::{snippets}/create-job-offer-contact/request-fields.adoc[]
+include::{snippets}/b_create-job-offer-contact/request-fields.adoc[]
 
 ==== application
-include::{snippets}/create-job-offer-application/request-fields.adoc[]
+include::{snippets}/b_create-job-offer-application/request-fields.adoc[]
+
+=== curl request
+include::{snippets}/b_create-job-offer/curl-request.adoc[]
 
 == Get a job offer
 
-=== Access using curl
-include::{snippets}/get-job-offer/curl-request.adoc[]
-
 === HTTP request
-include::{snippets}/get-job-offer/http-request.adoc[]
+include::{snippets}/c_get-job-offer/http-request.adoc[]
 
 === HTTP response
-include::{snippets}/get-job-offer/http-response.adoc[]
+include::{snippets}/c_get-job-offer/http-response.adoc[]
 
-=== Response fields
-include::{snippets}/get-job-offer/response-fields.adoc[]
+NOTE: A complete description of the fields can be found in the section <<Create a job offer>>
 
-==== job
-include::{snippets}/get-job-offer-job/response-fields.adoc[]
-
-==== company
-include::{snippets}/get-job-offer-company/response-fields.adoc[]
-
-==== contact
-include::{snippets}/get-job-offer-contact/response-fields.adoc[]
-
-==== application
-include::{snippets}/get-job-offer-application/response-fields.adoc[]
+=== curl request
+include::{snippets}/c_get-job-offer/curl-request.adoc[]
 
 == Get all job offers
 
-=== Access using curl
-include::{snippets}/get-all-job-offers/curl-request.adoc[]
-
 === HTTP request
-include::{snippets}/get-all-job-offers/http-request.adoc[]
+include::{snippets}/a_get-all-job-offers/http-request.adoc[]
 
 === HTTP response
-include::{snippets}/get-all-job-offers/http-response.adoc[]
+include::{snippets}/a_get-all-job-offers/http-response.adoc[]
 
 === Response fields
-include::{snippets}/get-all-job-offers/response-fields.adoc[]
+include::{snippets}/a_get-all-job-offers/response-fields.adoc[]
+
+=== curl request
+include::{snippets}/a_get-all-job-offers/curl-request.adoc[]
 
 == Edit a job offer
 
-//TODO
+=== HTTP request
+include::{snippets}/d_edit-job-offer/http-request.adoc[]
+
+=== HTTP response
+include::{snippets}/d_edit-job-offer/http-response.adoc[]
+
+=== curl request
+include::{snippets}/d_edit-job-offer/curl-request.adoc[]
 
 == Delete a job offer
 
-//TODO
+=== HTTP request
+include::{snippets}/e_delete-job-offer/http-request.adoc[]
+
+=== HTTP response
+include::{snippets}/e_delete-job-offer/http-response.adoc[]
+
+=== curl request
+include::{snippets}/e_delete-job-offer/curl-request.adoc[]

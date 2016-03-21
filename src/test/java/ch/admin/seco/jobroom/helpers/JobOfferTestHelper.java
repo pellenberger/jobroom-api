@@ -130,4 +130,15 @@ public final class JobOfferTestHelper {
         return jobOffer;
     }
 
+    public static JsonObject getPartialJobOfferJson() {
+
+        JsonObject jobOffer = Json.createObjectBuilder()
+                .add("publicationStartDate", "2100-01-20")
+                .add("contact", Json.createObjectBuilder()
+                        .add("title", "madam"))
+                .build();
+
+        return jobOffer;
+    }
+
 }
