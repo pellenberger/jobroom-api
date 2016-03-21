@@ -17,7 +17,9 @@ public class JobOfferValidatorHelper {
      */
     public static void validatePublicationStartDate(JobOffer jobOffer, Errors errors) {
         if (jobOffer.getPublicationStartDate().before(JobOfferValidatorHelper.now())) {
-            errors.rejectValue("publicationStartDate", String.valueOf(HttpStatus.BAD_REQUEST.value()), "publicationStartDate cannot be smaller than current date");
+            errors.rejectValue("publicationStartDate",
+                    String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                    "publicationStartDate cannot be smaller than current date");
         }
     }
 

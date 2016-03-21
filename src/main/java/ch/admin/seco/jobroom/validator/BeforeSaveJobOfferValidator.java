@@ -49,7 +49,8 @@ public class BeforeSaveJobOfferValidator implements Validator {
         boolean publicationStartDateChanged = !jobOfferOld.getPublicationStartDate().equals(jobOffer.getPublicationStartDate());
 
         if (jobAlreadyPublished && publicationStartDateChanged) {
-            errors.rejectValue("publicationStartDate", String.valueOf(HttpStatus.BAD_REQUEST.value()), "publicationStartDate cannot be changed on a job that is already published");
+            errors.rejectValue("publicationStartDate",
+                    String.valueOf(HttpStatus.BAD_REQUEST.value()), "publicationStartDate cannot be changed on a job that is already published");
         }
     }
 }
