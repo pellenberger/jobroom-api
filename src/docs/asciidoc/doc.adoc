@@ -1,16 +1,28 @@
 = JobRoom API Documentation
-Patrick Ellenberger <patrick.ellenberger@seco.admin.ch>
-v0.0.1, February 2016: First draft
+eGov Services <avam-mediamatik@seco.admin.ch>
+v0.0.1, April 2016
 :doctype: book
 :source-highlighter: highlightjs
 :toc: left
+:icons: font
 
 :sectnums:
 :sectnumlevels: 2
 
+:base-url: http://api.job-room.ch
+
 = General
 
-//TODO : explain API is using standard REST conventions ("RESTful", HTTP methods behaviour, HAL, ...), JSON based
+JobRoom REST API exposes a simple way to manage job offers. It follows _RESTful_ standards like :
+
+* Actions on resources are performed through HTTP methods
+* Resources are exposed with JSON format
+* HATEOAS architecture is implemented with HAL standard
+* Basic HTTP authentication
+* Explicit HTTP status codes
+* Pagination support
+
+Following chapters explain more precisely some of these concepts and provide examples in how to create, read, edit and delete some job offers.
 
 == HTTP verbs
 
@@ -40,11 +52,12 @@ Following table describes examples and precisions related to JobRoom API :
 | 201 | Created | Success using POST for creating new resources.
 | 204 | No Content | Success using DELETE or PATCH for deleting or updating resources.
 | 400 | Bad request | Occurs when error in body using POST/PATCH (missing non nullable field, invalid JSON object, wrong object type, etc.).
-| 401 | Unauthorized |
+| 401 | Unauthorized | Occurs when accessing to a protected resource with bad credentials.
 | 404 | Not Found | Occurs when requested resource does not exist.
 | 405 | Method Not Allowed | Occurs when HTTP verb cannot be applied to requested endpoint (e.g. `POST /joboffers/1`)
-| 406 | Not Acceptable | Occurs when `Accept` header format is not supported (e.g. `Accept:application/xml`)
-| 412 | Precondition failed | Occurs when `If-Match` header does not match with current resource model (see _Optimistic locking_)
+| 406 | Not Acceptable | Occurs when format of `Accept` header is not supported (e.g. `Accept:application/xml`)
+| 412 | Precondition failed | Occurs when `If-Match` header does not match with current resource model (see section <<Optimistic locking>>)
+| 500 | Internal Server Error | Occurs when a request can't be executed (e.g. violation of database constraint)
 |===
 
 == Headers
@@ -56,25 +69,94 @@ Following headers have to be set for some requests in order to use the API :
 | Header name | Value | When to use ?
 
 | `Content-Type` | `application/json` | When using POST/PATCH (every request that contains a JSON body).
-| `If-Match` | `<value of previous ETag>` | When supporting _Optimistic locking_ (see related chapter).
-| `Authorization` | `Basic <Base64 encoded credentials>` | Always, every API endpoints require authentication (see related chapter).
+| `If-Match` | `<value of previous ETag>` | When supporting _Optimistic locking_ (see section <<Optimistic locking>>).
+| `Authorization` | `Basic <Base64 encoded credentials>` | Always, every API endpoints require authentication (see section <<Authentication>>).
 |===
 
 == Authentication
 
-//TODO : explain authentication process (headers, token, validity, ...)
+NOTE: First, you need to get a pair of username/password.
+
+Authentication is done using HTTP Basic Auth.
+
+Every request to the API must have a header `Authorization` with a value constructed like : +
+`Basic _Base64(username:password)_`. +
+Value after `Basic` is a Base64 representation of the string containing the username and the password, separated by a colon.
+
+[%hardbreaks]
+Example :
+username : *user*
+password : *password*
+The value of the `Authorization` header will be `Basic dXNlcjpwYXNzd29yZA==`.
 
 == Optimistic locking
 
-//TODO
+When two clients edit the same resource at the same time, the API doesn't prevent these ones to override the other's work.
+It is up to the client to take the duty of always being up to date before edit an existing resource.
+A proper way to do this is to use the optimistic locking provided by the API.
 
-== Pagination
+When retrieving a resource using :
+[subs="attributes"]
+----
+GET {base-url}/joboffers/123
+----
 
-//TODO
+The response will contain a header named `ETag` which indicates the current version of the given resource.
+
+On edit (PATCH request), it is possible to set a header `If-Match` with the version got in the previous GET request.
+If resource has been updated since, the new and given versions will not match and the API will reply with a `412 Precondition failed` error.
+
+The version of a resource changes every time the resource is updated with new values.
+
+Further information can be found in Spring Data REST documentation : http://docs.spring.io/spring-data/rest/docs/2.4.4.RELEASE/reference/html/#conditional.etag
+
+== Paging
+
+Paging is supported on collections. Paging size can be defined using `size` as url parameter :
+[subs="attributes"]
+----
+GET {base-url}/joboffers/?size=2
+----
+
+Response contains an array with the number of elements defined in the `size` parameter.
+Furthermore, it comes with a set of links that can be used to navigate between the pages by directly performing the given requests :
+[source,json, subs="attributes"]
+----
+"_links": {
+    "first": {
+      "href": "{base-url}/joboffers?page=0&size=2"
+    },
+    "self": {
+      "href": "{base-url}/joboffers"
+    },
+    "next": {
+      "href": "{base-url}/joboffers?page=1&size=2"
+    },
+    "last": {
+      "href": "{base-url}/joboffers?page=10&size=2"
+}
+----
+
+Finally, the response contains a `page` object that informs about the current paging state :
+[source,json]
+----
+"page": {
+    "size": 2,
+    "totalElements": 22,
+    "totalPages": 11,
+    "number": 0
+}
+----
+
+NOTE: By default, without specifying a `size` parameter, paging is done with a size of 20
+
+Further information can be found in Spring Data REST documentation : http://docs.spring.io/spring-data/rest/docs/2.4.4.RELEASE/reference/html/#paging-and-sorting
 
 = Job offers
 
 //TODO : explain what a job offer is (??)
+
+Following chapters provide examples of requests and responses used to manage job offers.
 
 == Create a job offer
 
