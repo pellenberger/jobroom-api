@@ -53,7 +53,6 @@ data class Job(
         val title: String,
 
         @Lob
-        @Nationalized
         @field:Size(max = 10000)
         val description: String,
 

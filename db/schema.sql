@@ -8,7 +8,7 @@ create table joboffer (
   publicationstartdate date not null,
   publicationenddate date,
   job_title varchar2(255 char) not null, -- bezeichnung
-  job_description nclob not null, -- beschreibung
+  job_description clob not null, -- beschreibung
   job_workingtimepercentagefrom integer not null, -- pensum_von
   job_workingtimepercentageto integer not null, -- pensum_bis
   job_startdate date, -- ?
