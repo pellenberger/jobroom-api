@@ -7,7 +7,7 @@ import javax.json.JsonObject;
 import java.sql.Date;
 import java.util.Arrays;
 
-public final class JobOfferTestHelper {
+public final class DatasetTestHelper {
 
     public static JobOffer getCompleteJobOffer() {
 
@@ -51,7 +51,7 @@ public final class JobOfferTestHelper {
                         )
                 ),
                 new Contact(
-                        Contact.Title.mister,
+                        Contact.Title.madam,
                         "Alizée",
                         "Dupont",
                         "0791234567",

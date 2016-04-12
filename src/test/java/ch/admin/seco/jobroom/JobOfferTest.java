@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
 import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferTestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetTestHelper;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,11 +39,10 @@ public class JobOfferTest {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
     }
 
-
     @Test
     public void createIncompleteJobOffer() throws Exception {
 
-        String jobOffer = JobOfferTestHelper.getIncompleteJobOfferJson().toString();
+        String jobOffer = DatasetTestHelper.getIncompleteJobOfferJson().toString();
 
         mockMvc.perform(post("/joboffers")
                 .contentType(apiTestHelper.getContentType())

@@ -17,6 +17,10 @@ public class JobOfferEventHandler {
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
 
+    /**
+     * Method is only called when using REST
+     * Direct repository manipulation doesn't trigger event
+     */
     @HandleBeforeCreate
     public void handleBeforeCreate(JobOffer jobOffer) {
 

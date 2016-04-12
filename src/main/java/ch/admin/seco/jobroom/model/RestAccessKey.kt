@@ -16,8 +16,8 @@ import javax.persistence.*
         val keyOwner: String,
 
         @field:Column(name = "ACTIVE_B")
-        val active: Int
+        var active: Int? = null
 ) {
-        private constructor() : this(null, "", "", 0)
+        private constructor() : this(null, "", "", null)
         constructor(accessKey: String, keyOwner: String, active: Int) : this(null, accessKey, keyOwner, active)
 }

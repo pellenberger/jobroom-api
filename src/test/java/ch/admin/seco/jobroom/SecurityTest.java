@@ -1,23 +1,18 @@
 package ch.admin.seco.jobroom;
 
 import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferTestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetTestHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -53,23 +48,14 @@ public class SecurityTest {
     @Autowired
     JobOfferRepository jobOfferRepository;
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private List<RestAccessKey> users;
 
-    private static boolean isInitialized = false;
-    private static RestAccessKey key1;
-    private static RestAccessKey key2;
-    private static RestAccessKey key3;
-    private static RestAccessKey key4;
+    private RestAccessKey user1;
+    private RestAccessKey user2;
+    private RestAccessKey user3;
 
-    @BeforeClass
-    public static void setupClass() throws Exception {
-        key1 = new RestAccessKey("key1", "owner1", 1);
-        key2 = new RestAccessKey("key2", "owner2", 1);
-        key3 = new RestAccessKey("key3", "owner3", 1);
-        key4 = new RestAccessKey("key4", "owner4", 0);
-
-    }
+    private int idJobUser1;
+    private int idJobUser2;
 
     @Before
     public void setup() throws Exception {
@@ -78,74 +64,105 @@ public class SecurityTest {
                 .apply(springSecurity())
                 .build();
 
-        if (!isInitialized) {
-            setupOnce();
-            isInitialized = true;
-        }
-    }
+        //
+        // Create dataset
+        // 2 active users + 1 inactive user containing each 3 joboffers
+        //
 
-    /**
-     * Creates 3 active users containing each 3 joboffers + 1 inactive user
-     */
-    private void setupOnce() {
+        user1 = new RestAccessKey("key1", "owner1", 1);
+        user2 = new RestAccessKey("key2", "owner2", 1);
+        user3 = new RestAccessKey("key3", "owner3", 1);
 
-        List<RestAccessKey> keys = new ArrayList<>(Arrays.asList(
-                key1,
-                key2,
-                key3
+        users = new ArrayList<>(Arrays.asList(
+                user1,
+                user2,
+                user3
         ));
 
         for (int i = 0; i < 3; i ++) {
-            RestAccessKey key = keys.get(i);
-            restAccessKeyRepository.save(key);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(key.getKeyOwner(), key.getAccessKey());
-            SecurityContext securityContext = new SecurityContextImpl();
-            securityContext.setAuthentication(authenticationToken);
-            authenticationManager.authenticate(authenticationToken);
-            SecurityContextHolder.setContext(securityContext);
+            RestAccessKey user = users.get(i);
+            restAccessKeyRepository.save(user);
+            apiTestHelper.authenticate(user);
 
             for(int j = 0; j < 3; j ++) {
-                JobOffer job = JobOfferTestHelper.getCompleteJobOffer();
-                job.setOwner(key);
+                JobOffer job = DatasetTestHelper.getCompleteJobOffer();
+                job.setOwner(user);
                 jobOfferRepository.save(job);
+
+                // save id of one of user1 and user2 job
+                if (i == 0 && j == 0) {
+                    idJobUser1 = job.getId();
+                } else if (i == 1 && j == 0) {
+                    idJobUser2 = job.getId();
+                }
             }
         }
+
+        user3.setActive(0);
+        restAccessKeyRepository.save(user3);
+
+        apiTestHelper.unAuthenticate();
+    }
+
+    @After
+    public void cleanup() {
+
+        user3.setActive(1);
+        restAccessKeyRepository.save(user3);
+
+        for (int i = 0; i < 3; i ++) {
+            apiTestHelper.authenticate(users.get(i));
+            jobOfferRepository.deleteAll();
+        }
+        restAccessKeyRepository.deleteAll();
     }
 
     @Test
     public void accessWithoutAuth() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers"))
+       this.mockMvc.perform(get("/joboffers"))
                 .andExpect(status().isUnauthorized());
 
         this.mockMvc.perform(post("/joboffers")
                 .contentType(apiTestHelper.getContentType())
-                .content(JobOfferTestHelper.getCompleteJobOfferJson().toString()))
+                .content(DatasetTestHelper.getCompleteJobOfferJson().toString()))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void accessWithBadCredentials() throws Exception {
 
+        // wrong user and wrong password (GET / POST)
+
         this.mockMvc.perform(get("/joboffers").with(httpBasic("wrong_user", "wrong_password")))
                 .andExpect(status().isUnauthorized());
 
-        this.mockMvc.perform(post("/joboffers")
+        this.mockMvc.perform(post("/joboffers").with(httpBasic("wrong_user", "wrong_password"))
                 .contentType(apiTestHelper.getContentType())
-                .content(JobOfferTestHelper.getCompleteJobOfferJson().toString()))
+                .content(DatasetTestHelper.getCompleteJobOfferJson().toString()))
+                .andExpect(status().isUnauthorized());
+
+        // correct user but wrong password (GET / POST)
+
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user1.getKeyOwner(), "wrong_password")))
+                .andExpect(status().isUnauthorized());
+
+        this.mockMvc.perform(post("/joboffers").with(httpBasic(user1.getKeyOwner(), "wrong_password"))
+                .contentType(apiTestHelper.getContentType())
+                .content(DatasetTestHelper.getCompleteJobOfferJson().toString()))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void restAccessKeys() throws Exception {
-
-        this.mockMvc.perform(get("/restAccessKeys").with(httpBasic(key1.getKeyOwner(), key1.getAccessKey())))
+        // RestAccessKey resource must not be exposed through API
+        this.mockMvc.perform(get("/restAccessKeys").with(httpBasic(user1.getKeyOwner(), user1.getAccessKey())))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void getOnlyOwningJobs() throws Exception {
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(key1.getKeyOwner(), key1.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user1.getKeyOwner(), user1.getAccessKey())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(3)));
     }
@@ -153,18 +170,18 @@ public class SecurityTest {
     @Test
     public void postJob() throws Exception {
         this.mockMvc.perform(post("/joboffers")
-                .with(httpBasic(key2.getKeyOwner(), key2.getAccessKey()))
+                .with(httpBasic(user1.getKeyOwner(), user1.getAccessKey()))
                 .contentType(apiTestHelper.getContentType())
-                .content(JobOfferTestHelper.getCompleteJobOfferJson().toString()))
+                .content(DatasetTestHelper.getCompleteJobOfferJson().toString()))
                 .andExpect(status().isCreated());
 
         // user that created the job has one more job on its collection
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(key2.getKeyOwner(), key2.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user1.getKeyOwner(), user1.getAccessKey())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(4)));
 
         // other user has always the same number of jobs
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(key3.getKeyOwner(), key3.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user2.getKeyOwner(), user2.getAccessKey())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(3)));
     }
@@ -172,31 +189,35 @@ public class SecurityTest {
     @Test
     public void accessNotOwningJob() throws Exception {
 
-        // job created in data.sql with login user:password
-        int id = 1;
-        this.mockMvc.perform(get("/joboffers/" + String.valueOf(id)).with(httpBasic("user", "password")))
+        this.mockMvc.perform(get("/joboffers/" + String.valueOf(idJobUser1)).with(httpBasic(user1.getKeyOwner(), user1.getAccessKey())))
                 .andExpect(status().isOk());
 
-        // try to access the job with owner2 (GET)
-        this.mockMvc.perform(get("/joboffers/" + String.valueOf(id)).with(httpBasic(key2.getKeyOwner(), key2.getAccessKey())))
+        // try to access job of other owner (GET)
+        this.mockMvc.perform(get("/joboffers/" + String.valueOf(idJobUser2)).with(httpBasic(user1.getKeyOwner(), user1.getAccessKey())))
                 .andExpect(status().isNotFound());
 
-        // try to access the job with owner2 (DELETE)
-        this.mockMvc.perform(delete("/joboffers/" + String.valueOf(id)).with(httpBasic(key2.getKeyOwner(), key2.getAccessKey())))
+        // try to access job of other owner (DELETE)
+        this.mockMvc.perform(delete("/joboffers/" + String.valueOf(idJobUser2)).with(httpBasic(user1.getKeyOwner(), user1.getAccessKey())))
                 .andExpect(status().isNotFound());
 
-        // try to access the job with owner2 (PATCH)
-        this.mockMvc.perform(patch("/joboffers/" + String.valueOf(id))
-                .with(httpBasic(key2.getKeyOwner(), key2.getAccessKey()))
+        // try to access job of other owner (PATCH)
+        this.mockMvc.perform(patch("/joboffers/" + String.valueOf(idJobUser2))
+                .with(httpBasic(user1.getKeyOwner(), user1.getAccessKey()))
                 .contentType(apiTestHelper.getContentType())
-                .content(JobOfferTestHelper.getCompleteJobOfferJson().toString()))
+                .content(DatasetTestHelper.getCompleteJobOfferJson().toString()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void accessWithInactiveKey() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(key4.getKeyOwner(), key4.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user3.getKeyOwner(), user3.getAccessKey())))
                 .andExpect(status().isUnauthorized());
+
+        user3.setActive(1);
+        restAccessKeyRepository.save(user3);
+
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user3.getKeyOwner(), user3.getAccessKey())))
+                .andExpect(status().isOk());
     }
 }

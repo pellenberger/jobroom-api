@@ -1,12 +1,11 @@
 package ch.admin.seco.jobroom.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.annotations.Nationalized
 import java.sql.Date
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.Size
 import javax.validation.Valid
+import javax.validation.constraints.Size
 
 // TODO: constraints like min/max should be (ONLY?) defined at SQL level!!!!
 // TODO: ideally the same data-centric approach for more advanced constraints (e.g. publicationDate update)
