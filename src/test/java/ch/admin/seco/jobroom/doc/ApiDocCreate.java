@@ -70,6 +70,7 @@ public class ApiDocCreate {
         apiTestHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
         restAccessKeyRepository.deleteAll();
+        apiTestHelper.unAuthenticate();
     }
 
     @Test

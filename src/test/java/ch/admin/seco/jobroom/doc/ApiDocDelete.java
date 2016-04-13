@@ -69,11 +69,15 @@ public class ApiDocDelete {
         JobOffer jobOffer = DatasetTestHelper.getCompleteJobOffer();
         jobOffer.setOwner(restAccessKey);
         idNewJobOffer = jobOfferRepository.save(jobOffer).getId();
+
+        apiTestHelper.unAuthenticate();
     }
 
     @After
     public void cleanup() {
+
         restAccessKeyRepository.deleteAll();
+        apiTestHelper.unAuthenticate();
     }
 
     @Test

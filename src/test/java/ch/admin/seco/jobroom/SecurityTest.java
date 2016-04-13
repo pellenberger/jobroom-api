@@ -115,6 +115,7 @@ public class SecurityTest {
             jobOfferRepository.deleteAll();
         }
         restAccessKeyRepository.deleteAll();
+        apiTestHelper.unAuthenticate();
     }
 
     @Test

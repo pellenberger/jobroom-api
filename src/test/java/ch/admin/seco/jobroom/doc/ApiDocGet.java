@@ -73,6 +73,8 @@ public class ApiDocGet {
         JobOffer jobOffer = DatasetTestHelper.getCompleteJobOffer();
         jobOffer.setOwner(restAccessKey);
         idNewJobOffer = jobOfferRepository.save(jobOffer).getId();
+
+        apiTestHelper.unAuthenticate();
     }
 
     @After
@@ -80,6 +82,7 @@ public class ApiDocGet {
         apiTestHelper.authenticate("user", "password");
         jobOfferRepository.deleteAll();
         restAccessKeyRepository.deleteAll();
+        apiTestHelper.unAuthenticate();
     }
 
     @Test

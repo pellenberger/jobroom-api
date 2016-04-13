@@ -87,6 +87,7 @@ public class ApiTestHelper {
 
     /**
      * User has to be defined in RestAccessKeyRepository
+     * Don't forget to unauthenticate when dataset is created
      */
     public void authenticateDefault() {
         this.authenticate(DEFAULT_USER, DEFAULT_PASSWORD);
@@ -94,6 +95,7 @@ public class ApiTestHelper {
 
     /**
      * User has to be defined in RestAccessKeyRepository
+     * Don't forget to unauthenticate when dataset is created
      */
     public void authenticate(RestAccessKey restAccessKey) {
         this.authenticate(restAccessKey.getKeyOwner(), restAccessKey.getAccessKey());
@@ -101,6 +103,7 @@ public class ApiTestHelper {
 
     /**
      * User has to be defined in RestAccessKeyRepository
+     * Don't forget to unauthenticate when dataset is created
      */
     public void authenticate(String username, String password) {
 
