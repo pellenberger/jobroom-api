@@ -8,7 +8,7 @@ before_install:
   - echo "org.gradle.daemon=true" >> ~/.gradle/gradle.properties
 
 install:  ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD clean assemble
-script:   ./gradlew check
+script:   ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD check
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
