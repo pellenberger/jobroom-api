@@ -2,6 +2,8 @@ package ch.admin.seco.jobroom.validator;
 
 
 import ch.admin.seco.jobroom.model.JobOffer;
+import org.joda.time.LocalDate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -19,6 +21,22 @@ public class BeforeCreateJobOfferValidator implements Validator {
 
         JobOffer jobOffer = (JobOffer) target;
 
-        JobOfferValidatorHelper.validatePublicationStartDate(jobOffer, errors);
+        validatePublicationStartDate(jobOffer, errors);
+    }
+
+    /**
+     * Prevents user from saving a publication start date that is smaller than current date
+     */
+    private void validatePublicationStartDate(JobOffer jobOffer, Errors errors) {
+
+        LocalDate today = new LocalDate();
+        LocalDate publicationStartDay = new LocalDate(jobOffer.getPublicationStartDate());
+
+        if (publicationStartDay.isBefore(today)) {
+            errors.rejectValue("publicationStartDate",
+                    String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                    "publicationStartDate cannot be smaller than current date");
+        }
     }
 }
+
