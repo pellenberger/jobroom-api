@@ -7,7 +7,7 @@ before_install:
   # Use Gradle daemon since we're calling it more than once
   - echo "org.gradle.daemon=true" >> ~/.gradle/gradle.properties
 
-install:  ./gradlew clean assemble
+install:  ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD clean assemble
 script:   ./gradlew check
 
 before_cache:
