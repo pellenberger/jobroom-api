@@ -64,7 +64,7 @@ data class Job(
         val location: Location,
 
         @field:Size(min=2, max=5)
-        @ElementCollection
+        @ElementCollection(fetch = FetchType.EAGER)
         val languageSkills: Collection<LanguageSkill>
 
 ) {

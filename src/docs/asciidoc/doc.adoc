@@ -64,13 +64,14 @@ Following table describes examples and precisions related to JobRoom API :
 
 Following headers have to be set for some requests in order to use the API :
 
-[cols="20,30,50"]
+[cols="20,35,45"]
 |===
 | Header name | Value | When to use ?
 
-| `Content-Type` | `application/json` | When using POST/PATCH (every request that contains a JSON body).
-| `If-Match` | `<value of previous ETag>` | When supporting _Optimistic locking_ (see section <<Optimistic locking>>).
+| `Content-Type` | `application/json;charset=UTF-8` | On POST/PATCH (every request that contains a JSON body).
+| `If-Match` | `<value of previous ETag>` | On PATCH when supporting _Optimistic locking_ (see section <<Optimistic locking>>).
 | `Authorization` | `Basic <Base64 encoded credentials>` | Always, every API endpoints require authentication (see section <<Authentication>>).
+| `Accept` | `application/json;charset=UTF-8` | Always.
 |===
 
 == Authentication

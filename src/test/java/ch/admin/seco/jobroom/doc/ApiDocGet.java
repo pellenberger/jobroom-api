@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -88,7 +89,7 @@ public class ApiDocGet {
     @Test
     public void getJobOffer() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers/" + idNewJobOffer).with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(get("/joboffers/" + idNewJobOffer).accept(MediaType.APPLICATION_JSON_UTF8).with(apiTestHelper.getDefaultHttpBasic()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.publicationStartDate", Matchers.is("2100-01-01")))
                 .andExpect(jsonPath("$.publicationEndDate", Matchers.is("2101-02-02")))
@@ -122,8 +123,7 @@ public class ApiDocGet {
                 .andExpect(jsonPath("$.company.postbox.locality", Matchers.is("Bern")))
                 .andExpect(jsonPath("$.company.postbox.postalCode", Matchers.is("3001")))
                 .andExpect(jsonPath("$.contact.title", Matchers.is("madam")))
-                // FIXME encoding issue
-//                .andExpect(jsonPath("$.contact.firstName", Matchers.is("Alizée")))
+                .andExpect(jsonPath("$.contact.firstName", Matchers.is("Alizée")))
                 .andExpect(jsonPath("$.contact.lastName", Matchers.is("Dupont")))
                 .andExpect(jsonPath("$.contact.phoneNumber", Matchers.is("0791234567")))
                 .andExpect(jsonPath("$.contact.email", Matchers.is("alizee.dupont@seco.admin.ch")))
