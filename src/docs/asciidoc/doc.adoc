@@ -51,9 +51,9 @@ Following table describes examples and precisions related to JobRoom API :
 | 200 | OK | Success using GET for retrieving resources.
 | 201 | Created | Success using POST for creating new resources.
 | 204 | No Content | Success using DELETE or PATCH for deleting or updating resources.
-| 400 | Bad request | Occurs when error in body using POST/PATCH (missing non nullable field, invalid JSON object, wrong object type, etc.).
+| 400 | Bad request | Occurs when error in body using POST/PATCH (missing non nullable field, invalid JSON object, wrong object type, validation failed, etc.).
 | 401 | Unauthorized | Occurs when accessing to a protected resource with bad credentials.
-| 404 | Not Found | Occurs when requested resource does not exist.
+| 404 | Not Found | Occurs when requested resource does not exist or when accessing another user's resource.
 | 405 | Method Not Allowed | Occurs when HTTP verb cannot be applied to requested endpoint (e.g. `POST /joboffers/1`)
 | 406 | Not Acceptable | Occurs when format of `Accept` header is not supported (e.g. `Accept:application/xml`)
 | 412 | Precondition failed | Occurs when `If-Match` header does not match with current resource model (see section <<Optimistic locking>>)
@@ -235,3 +235,56 @@ include::{snippets}/delete-job-offer/http-response.adoc[]
 
 === curl request
 include::{snippets}/delete-job-offer/curl-request.adoc[]
+
+= Appendix
+
+== Language codes
+
+Following codes are available to set the language in the _languageSkills_ object :
+
+[cols="10,30,30,30"]
+|===
+| Code | Sprache | Langue | Lingua
+
+| 1 | Deutsch | allemand | tedesco
+| 2 | Französisch | français | francese
+| 3 | Italienisch | italien | italiano
+| 4 | Rätoromanisch | rheto-Romanche | reto-Romancio
+| 5 | Englisch | anglais | inglese
+| 6 | Spanisch | espagnol | spagnolo
+| 7 | Portugiesisch | portugais | portoghese
+| 8 | Türkisch | turc | turco
+| 9 | Griechisch | grec | greco
+| 10 | Ungarisch | hongrois | ungherese
+| 11 | Polnisch | polonais | polacco
+| 12 | Tschechisch | tchèque | ceco
+| 13 | Serbokroatisch | serbo-croate | serbo croato
+| 14 | Holländisch | hollandais | olandese
+| 15 | Flaemisch | flamand | fiammingo
+| 16 | Arabisch | arabe | arabo
+| 17 | Hebräisch | hébraïque | ebreo
+| 18 | Russisch | russe | russo
+| 19 | Schwedisch | suédois | svedese
+| 20 | Japanisch | japonais | giapponese
+| 21 | Chinesisch | chinois | cinese
+| 22 | Slowenisch | slovène | sloveno
+| 23 | Kroatisch | croate | croato
+| 24 | Dänisch | danois | danese
+| 25 | Tamil | tamoul | tamil
+| 26 | Albanisch | albanais | albanese
+| 27 | Kurdisch | kurde | curdo
+| 28 | CH-Deutsch | suisse allém. | svizzero ted.
+| 29 | Serbisch | serbe | serbo
+| 30 | Mazedonisch | macédonien | macedone
+| 31 | Bosnisch | bosniaque | bosniaco
+| 32 | Bulgarisch | bulgare | bulgaro
+| 33 | Norwegisch | norvégien | norvegese
+| 34 | Slowakisch | slovaque | slovaco
+| 35 | Litauisch | lituanien | lituano
+| 36 | Thai | thaïlandais | tailandese
+| 37 | Finnisch | finlandais | finlandese
+| 38 | Khmer | khmer | khmer
+| 39 | Vietnamesisch | vietnamien | vietnamita
+| 40 | Rumänisch | roumain | rumeno
+|===
+

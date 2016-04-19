@@ -22,6 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -77,7 +78,6 @@ public class ApiDocCreate {
     public void createJobOffer() throws Exception {
 
         // TODO add constraints in documentation (should be included using REST Docs mechanism : ConstraintDescriptions (JPA / SQL))
-        // TODO only describe subobjects here (not GET request anymore) ??
 
         String jobOfferJson = DatasetTestHelper.getCompleteJobOfferJson().toString();
 
@@ -89,32 +89,80 @@ public class ApiDocCreate {
 
                 .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
                         requestFields(
-                                fieldWithPath("publicationStartDate").description("todo"),
-                                fieldWithPath("publicationEndDate").description("todo"),
-                                fieldWithPath("job").description("Description of the job (further information bellow)"),
-                                fieldWithPath("company").description("The company that offers the job (further information bellow)"),
-                                fieldWithPath("contact").description("Contact person about the job offer (further information bellow)"),
-                                fieldWithPath("application").description("Support for submitting the job application (further information bellow")
+                                fieldWithPath("publicationStartDate")
+                                        .description("todo")
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "* Cannot be smaller than current date.\n" +
+                                                "* Cannot be modified once that job offer has been published.")),
+                                fieldWithPath("publicationEndDate")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Must be greater than publicationStartDate.")),
+                                fieldWithPath("job")
+                                        .description("Description of the job\n\n(further information bellow)")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company")
+                                        .description("The company that offers the job\n\n(further information bellow)")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("contact")
+                                        .description("Contact person about the job offer\n\n(further information bellow)")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("application")
+                                        .description("Support for submitting the job application\n\n(further information bellow")
+                                        .attributes(key("constraints").value("* Not null"))
                         )))
                 .andDo(document("{method-name}-job", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
                         requestFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("job").ignored(),
-                                fieldWithPath("job.title").description("todo"),
-                                fieldWithPath("job.description").description("todo"),
-                                fieldWithPath("job.workingTimePercentageFrom").description("todo"),
-                                fieldWithPath("job.workingTimePercentageTo").description("todo"),
-                                fieldWithPath("job.startDate").description("todo"),
-                                fieldWithPath("job.endDate").description("todo"),
-                                fieldWithPath("job.location.countryCode").description("todo"),
-                                fieldWithPath("job.location.locality").description("todo"),
-                                fieldWithPath("job.location.postalCode").description("todo"),
-                                fieldWithPath("job.location.additionalDetails").description("todo"),
-                                fieldWithPath("job.languageSkills").description("todo"),
-                                fieldWithPath("job.languageSkills[].language").description("todo"),
-                                fieldWithPath("job.languageSkills[].spokenLevel").description("todo"),
-                                fieldWithPath("job.languageSkills[].writtenLevel").description("todo"),
+                                fieldWithPath("job.title")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("job.description")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.\n* Length max 10000 characters.")),
+                                fieldWithPath("job.workingTimePercentageFrom")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.\n* Must be greater than 0.")),
+                                fieldWithPath("job.workingTimePercentageTo")
+                                        .description("todo")
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "* Must be greater or equal than workingTimePercentageFrom.\n" +
+                                                "* Must be less or equal than 100.")),
+                                fieldWithPath("job.startDate")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("")),
+                                fieldWithPath("job.endDate")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Must be greater than startDate")),
+                                fieldWithPath("job.location.countryCode")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("job.location.locality")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("job.location.postalCode")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("job.location.additionalDetails")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("")),
+                                fieldWithPath("job.languageSkills")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.\n* Size must be between 2 and 5.")),
+                                fieldWithPath("job.languageSkills[].language")
+                                        .description("todo")
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "* Must be one of authorized language codes (see section <<Language codes>>)")),
+                                fieldWithPath("job.languageSkills[].spokenLevel")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.\n* Must be in ('average', 'good', 'very_good').")),
+                                fieldWithPath("job.languageSkills[].writtenLevel")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.\n* Must be in ('average', 'good', 'very_good').")),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored()
@@ -125,18 +173,42 @@ public class ApiDocCreate {
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
-                                fieldWithPath("company.name").description("todo"),
-                                fieldWithPath("company.countryCode").description("todo"),
-                                fieldWithPath("company.street").description("todo"),
-                                fieldWithPath("company.houseNumber").description("todo"),
-                                fieldWithPath("company.locality").description("todo"),
-                                fieldWithPath("company.postalCode").description("todo"),
-                                fieldWithPath("company.phoneNumber").description("todo"),
-                                fieldWithPath("company.email").description("todo"),
-                                fieldWithPath("company.website").description("todo"),
-                                fieldWithPath("company.postbox.number").description("todo"),
-                                fieldWithPath("company.postbox.locality").description("todo"),
-                                fieldWithPath("company.postbox.postalCode").description("todo"),
+                                fieldWithPath("company.name")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.countryCode")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.street")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.houseNumber")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.locality")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.postalCode")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.phoneNumber")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.email")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.website")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.postbox.number")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.postbox.locality")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("company.postbox.postalCode")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored()
                         )))
@@ -147,11 +219,21 @@ public class ApiDocCreate {
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
-                                fieldWithPath("contact.title").description("todo"),
-                                fieldWithPath("contact.firstName").description("todo"),
-                                fieldWithPath("contact.lastName").description("todo"),
-                                fieldWithPath("contact.phoneNumber").description("todo"),
-                                fieldWithPath("contact.email").description("todo"),
+                                fieldWithPath("contact.title")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.\n* Must be in ('mister', 'madam').")),
+                                fieldWithPath("contact.firstName")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("contact.lastName")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("contact.phoneNumber")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
+                                fieldWithPath("contact.email")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application").ignored()
                         )))
                 .andDo(document("{method-name}-application", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
@@ -162,9 +244,15 @@ public class ApiDocCreate {
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored(),
-                                fieldWithPath("application.telephonic").description("todo"),
-                                fieldWithPath("application.written").description("todo"),
-                                fieldWithPath("application.electronic").description("todo")
+                                fieldWithPath("application.telephonic")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
+                                fieldWithPath("application.written")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
+                                fieldWithPath("application.electronic")
+                                        .description("todo")
+                                        .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1)."))
                         )));
 
         this.mockMvc.perform(get("/joboffers").with(apiTestHelper.getDefaultHttpBasic()))

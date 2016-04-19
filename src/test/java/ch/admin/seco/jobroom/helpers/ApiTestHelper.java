@@ -8,7 +8,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.restdocs.RestDocumentation;
-import org.springframework.restdocs.mockmvc.UriConfigurer;
+import org.springframework.restdocs.mockmvc.RestDocumentationMockMvcConfigurer;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -74,11 +74,13 @@ public class ApiTestHelper {
         return httpBasic(DEFAULT_USER, DEFAULT_PASSWORD);
     }
 
-    public UriConfigurer getDocumentationConfiguration(RestDocumentation restDocumentation) {
-        return documentationConfiguration(restDocumentation).uris()
-                .withScheme("http")
-                .withHost("api.job-room.ch")
-                .withPort(80);
+    public RestDocumentationMockMvcConfigurer getDocumentationConfiguration(RestDocumentation restDocumentation) {
+        RestDocumentationMockMvcConfigurer documentation = documentationConfiguration(restDocumentation);
+        documentation.uris()
+                    .withScheme("http")
+                    .withHost("api.job-room.ch")
+                    .withPort(80);
+        return documentation;
     }
 
     public RestAccessKey getDefaultRestAccessKey() {
