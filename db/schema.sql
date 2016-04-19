@@ -75,3 +75,14 @@ alter table joboffer_job_languageskills add (
 constraint languageskills_spokenlevel_ck check (spokenlevel in ('average', 'good', 'very_good')),
 constraint languageskills_writtenlevel_ck check (writtenlevel in ('average', 'good', 'very_good'))
 );
+
+create or replace trigger language_code_trg
+before update or insert on joboffer_job_languageskills
+for each row
+declare v_count varchar2(100 Char);
+begin
+    select count(*) into v_count from sprachen_v where id=:new.language;
+    if (v_count=0) then
+        raise_application_error(-20001, 'Invalid value for language code.');
+    end if;
+end;
