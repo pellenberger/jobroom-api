@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
 import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.DatasetTestHelper;
+import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -77,17 +77,17 @@ public class PublicationStartDateTest {
         apiTestHelper.authenticateDefault();
 
         // create default job offer
-        JobOffer defaultJob = DatasetTestHelper.getCompleteJobOffer();
+        JobOffer defaultJob = JobOfferDatasetHelper.get();
         defaultJob.setOwner(restAccessKey);
         idDefaultJob = jobOfferRepository.save(defaultJob).getId();
 
         // create job offer published since today
-        JobOffer publishedJobToday = DatasetTestHelper.getCompleteJobOffer(new LocalDate().toString());
+        JobOffer publishedJobToday = JobOfferDatasetHelper.getWithPublicationStartDate(new LocalDate().toString());
         publishedJobToday.setOwner(restAccessKey);
         idPublishedJobToday = jobOfferRepository.save(publishedJobToday).getId();
 
         // create job offer published since 10 day
-        JobOffer publishedJobNotToday = DatasetTestHelper.getCompleteJobOffer(new LocalDate().minusDays(MINUS_DAYS).toString());
+        JobOffer publishedJobNotToday = JobOfferDatasetHelper.getWithPublicationStartDate(new LocalDate().minusDays(MINUS_DAYS).toString());
         publishedJobNotToday.setOwner(restAccessKey);
         idPublishedJobNotToday = jobOfferRepository.save(publishedJobNotToday).getId();
 
@@ -113,7 +113,7 @@ public class PublicationStartDateTest {
         this.mockMvc.perform(post("/joboffers")
                 .with(apiTestHelper.getDefaultHttpBasic())
                 .contentType(apiTestHelper.getContentType())
-                .content(DatasetTestHelper.getCompleteJobOfferJson(getYesterdayDate()).toString()))
+                .content(JobOfferDatasetHelper.getJsonWithPublicationStartDate(getYesterdayDate()).toString()))
                 .andExpect(status().isBadRequest());
 
         // on POST : publication start date == current date -> OK
@@ -121,7 +121,7 @@ public class PublicationStartDateTest {
         this.mockMvc.perform(post("/joboffers")
                 .with(apiTestHelper.getDefaultHttpBasic())
                 .contentType(apiTestHelper.getContentType())
-                .content(DatasetTestHelper.getCompleteJobOfferJson(getCurrentDate()).toString()))
+                .content(JobOfferDatasetHelper.getJsonWithPublicationStartDate(getCurrentDate()).toString()))
                 .andExpect(status().isCreated());
 
         // on PATCH : publication start date < current date -> KO
@@ -129,7 +129,7 @@ public class PublicationStartDateTest {
         this.mockMvc.perform(patch("/joboffers/" + idDefaultJob)
                 .with(apiTestHelper.getDefaultHttpBasic())
                 .contentType(apiTestHelper.getContentType())
-                .content(DatasetTestHelper.getCompleteJobOfferJson(getYesterdayDate()).toString()))
+                .content(JobOfferDatasetHelper.getJsonWithPublicationStartDate(getYesterdayDate()).toString()))
                 .andExpect(status().isBadRequest());
 
         // on PATCH : publication start date == current date -> OK
@@ -137,7 +137,7 @@ public class PublicationStartDateTest {
         this.mockMvc.perform(patch("/joboffers/" + idDefaultJob)
                 .with(apiTestHelper.getDefaultHttpBasic())
                 .contentType(apiTestHelper.getContentType())
-                .content(DatasetTestHelper.getCompleteJobOfferJson(getCurrentDate()).toString()))
+                .content(JobOfferDatasetHelper.getJsonWithPublicationStartDate(getCurrentDate()).toString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -148,8 +148,8 @@ public class PublicationStartDateTest {
     @Test
     public void alreadyPublished() throws Exception {
 
-        JsonObject newPublicationDateJob = DatasetTestHelper.getCompleteJobOfferJson(new LocalDate().plusDays(15).toString());
-        JsonObject samePublicationDateJob = DatasetTestHelper.getCompleteJobOfferJson(new LocalDate().minusDays(MINUS_DAYS).toString());
+        JsonObject newPublicationDateJob = JobOfferDatasetHelper.getJsonWithPublicationStartDate(new LocalDate().plusDays(15).toString());
+        JsonObject samePublicationDateJob = JobOfferDatasetHelper.getJsonWithPublicationStartDate(new LocalDate().minusDays(MINUS_DAYS).toString());
 
         // job already published (publication start date == today) -> KO
         this.mockMvc.perform(patch("/joboffers/" + idPublishedJobToday)

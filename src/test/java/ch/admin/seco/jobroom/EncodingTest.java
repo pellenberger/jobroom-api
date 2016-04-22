@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
 import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.DatasetTestHelper;
+import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -55,7 +55,7 @@ public class EncodingTest {
         RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
 
-        JobOffer jobOffer = DatasetTestHelper.getCompleteJobOffer();
+        JobOffer jobOffer = JobOfferDatasetHelper.get();
         jobOffer.setOwner(restAccessKey);
 
         apiTestHelper.authenticateDefault();
@@ -87,7 +87,7 @@ public class EncodingTest {
     @Test
     public void encodingPost() throws Exception {
 
-        String jobOfferJson = DatasetTestHelper.getCompleteJobOfferJson().toString();
+        String jobOfferJson = JobOfferDatasetHelper.getJson().toString();
 
         this.mockMvc.perform(post("/joboffers")
                 .with(apiTestHelper.getDefaultHttpBasic())

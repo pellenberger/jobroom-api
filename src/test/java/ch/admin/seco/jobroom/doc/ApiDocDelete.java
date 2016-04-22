@@ -2,7 +2,7 @@ package ch.admin.seco.jobroom.doc;
 
 import ch.admin.seco.jobroom.ApiApplication;
 import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.DatasetTestHelper;
+import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -66,7 +66,7 @@ public class ApiDocDelete {
 
         apiTestHelper.authenticateDefault();
 
-        JobOffer jobOffer = DatasetTestHelper.getCompleteJobOffer();
+        JobOffer jobOffer = JobOfferDatasetHelper.get();
         jobOffer.setOwner(restAccessKey);
         idNewJobOffer = jobOfferRepository.save(jobOffer).getId();
 

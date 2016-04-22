@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
 import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.DatasetTestHelper;
+import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -59,7 +59,7 @@ public class PagingTest {
         apiTestHelper.authenticateDefault();
 
         for (int i = 0; i < 6; i ++) {
-            JobOffer jobOffer = DatasetTestHelper.getCompleteJobOffer();
+            JobOffer jobOffer = JobOfferDatasetHelper.get();
             jobOffer.setOwner(restAccessKey);
             jobOfferRepository.save(jobOffer);
         }

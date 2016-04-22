@@ -2,7 +2,7 @@ package ch.admin.seco.jobroom.doc;
 
 import ch.admin.seco.jobroom.ApiApplication;
 import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.DatasetTestHelper;
+import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
 import org.hamcrest.Matchers;
@@ -79,7 +79,7 @@ public class ApiDocCreate {
 
         // TODO add constraints in documentation (should be included using REST Docs mechanism : ConstraintDescriptions (JPA / SQL))
 
-        String jobOfferJson = DatasetTestHelper.getCompleteJobOfferJson().toString();
+        String jobOfferJson = JobOfferDatasetHelper.getJson().toString();
 
         this.mockMvc.perform(post("/joboffers") // FIXME design the "versioning approach" (externally?)
                 .with(apiTestHelper.getDefaultHttpBasic())
