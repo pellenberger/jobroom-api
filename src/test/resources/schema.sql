@@ -13,7 +13,7 @@ create table joboffer (
   publicationstartdate date not null,
   publicationenddate date,
   job_title varchar(255) not null,
-  job_description varchar(255) not null,
+  job_description varchar(15000) not null, -- length is intentionally false (test is to validate @Size annotation on JobOffer model)
   job_workingtimepercentagefrom integer not null,
   job_workingtimepercentageto integer not null,
   job_startdate date,

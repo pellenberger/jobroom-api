@@ -85,31 +85,11 @@ public final class JobOfferDatasetHelper {
     // ***** type JsonObject
     // ****************************************
 
-    private static JsonObjectBuilder createJobOfferBuilder() {
+    private static JsonObjectBuilder createJobOfferBuilder(JsonObjectBuilder jobBuilder) {
         JsonObjectBuilder jobOffer = Json.createObjectBuilder()
                 .add("publicationStartDate", "2116-02-15")
                 .add("publicationEndDate", "2116-04-01")
-                .add("job", Json.createObjectBuilder()
-                        .add("title", "Financial manager")
-                        .add("description", "You will have to assist executives in making decisions that affect the organization")
-                        .add("workingTimePercentageFrom", 60)
-                        .add("workingTimePercentageTo", 90)
-                        .add("startDate", "2116-03-01")
-                        .add("endDate", "2118-05-31")
-                        .add("location", Json.createObjectBuilder()
-                                .add("countryCode", "CH")
-                                .add("locality", "Lausanne")
-                                .add("postalCode", "1017")
-                                .add("additionalDetails", "Possibility of having interesting bonus"))
-                        .add("languageSkills", Json.createArrayBuilder()
-                                .add(Json.createObjectBuilder()
-                                        .add("language", "fr")
-                                        .add("spokenLevel", "very_good")
-                                        .add("writtenLevel", "very_good"))
-                                .add(Json.createObjectBuilder()
-                                        .add("language", "en")
-                                        .add("spokenLevel", "very_good")
-                                        .add("writtenLevel", "good"))))
+                .add("job", jobBuilder)
                 .add("company", Json.createObjectBuilder()
                         .add("name", "Mission Realty")
                         .add("countryCode", "CH")
@@ -137,14 +117,47 @@ public final class JobOfferDatasetHelper {
         return jobOffer;
     }
 
+    private static JsonObjectBuilder createJobBuilder() {
+        JsonObjectBuilder job = Json.createObjectBuilder()
+                .add("title", "Financial manager")
+                .add("description", "You will have to assist executives in making decisions that affect the organization")
+                .add("workingTimePercentageFrom", 60)
+                .add("workingTimePercentageTo", 90)
+                .add("startDate", "2116-03-01")
+                .add("endDate", "2118-05-31")
+                .add("location", Json.createObjectBuilder()
+                        .add("countryCode", "CH")
+                        .add("locality", "Lausanne")
+                        .add("postalCode", "1017")
+                        .add("additionalDetails", "Possibility of having interesting bonus"))
+                .add("languageSkills", Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                                .add("language", "fr")
+                                .add("spokenLevel", "very_good")
+                                .add("writtenLevel", "very_good"))
+                        .add(Json.createObjectBuilder()
+                                .add("language", "en")
+                                .add("spokenLevel", "very_good")
+                                .add("writtenLevel", "good")));
+        return job;
+    }
+
     public static JsonObject getJson() {
 
-        return createJobOfferBuilder().build();
+        return createJobOfferBuilder(createJobBuilder()).build();
     }
 
     public static JsonObject getJsonWithPublicationStartDate(String publicationStartDate) {
-        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder();
+        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(createJobBuilder());
         jobOfferBuilder.add("publicationStartDate", publicationStartDate);
+        return jobOfferBuilder.build();
+    }
+
+    public static JsonObject getJsonWithJobDescription(String jobDescription) {
+        JsonObjectBuilder jobBuilder = createJobBuilder();
+        jobBuilder.add("description", jobDescription);
+
+        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(jobBuilder);
         return jobOfferBuilder.build();
     }
 
