@@ -75,6 +75,31 @@ public class ConstraintsTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void sizeLanguageSkills() throws Exception {
+
+        // 0 languageSkills --> OK
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills(0).toString()))
+                .andExpect(status().isCreated());
+
+        // 5 languageSkills --> OK
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills(5).toString()))
+                .andExpect(status().isCreated());
+
+        // 6 languageSkills --> KO
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills(6).toString()))
+                .andExpect(status().isBadRequest());
+    }
+
     /**
      * @return 10001 characters text
      */

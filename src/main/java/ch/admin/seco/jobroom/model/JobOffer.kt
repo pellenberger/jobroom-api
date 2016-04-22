@@ -63,7 +63,7 @@ data class Job(
         @Embedded
         val location: Location,
 
-        @field:Size(min=2, max=5)
+        @field:Size(max=5)
         @ElementCollection(fetch = FetchType.EAGER)
         val languageSkills: Collection<LanguageSkill>
 

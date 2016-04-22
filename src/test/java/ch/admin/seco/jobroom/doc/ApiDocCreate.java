@@ -151,7 +151,7 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("job.languageSkills")
                                         .description("todo")
-                                        .attributes(key("constraints").value("* Not null.\n* Size must be between 2 and 5.")),
+                                        .attributes(key("constraints").value("* Not null.\n* Size must be between 0 and 5.")),
                                 fieldWithPath("job.languageSkills[].language")
                                         .description("todo")
                                         .attributes(key("constraints").value(
