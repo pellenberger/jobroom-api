@@ -1,6 +1,7 @@
+:contact-mail: mediamatik@seco.admin.ch
 = JobRoom API Documentation
-eGov Services <avam-mediamatik@seco.admin.ch>
-v0.0.1, April 2016
+eGov Services <{contact-mail}>
+v0.0.1
 :doctype: book
 :source-highlighter: highlightjs
 :toc: left
@@ -13,7 +14,17 @@ v0.0.1, April 2016
 
 = General
 
-JobRoom REST API exposes a simple way to manage job offers. It follows _RESTful_ standards like :
+JobRoom API provides a new way to publish job offers through the ALV system.
+
+It is an alternative to the existing web interface available at https://www.job-room.ch/pages/job/jobRegistration.xhtml
+
+When using the API, job offers are sended to x28 and then published to *JobRoom* (https://www.job-room.ch) and *JobDesk* (http://pilot.job-desk.ch).
+
+An access to the API can be requested by sending a mail to {contact-mail}
+
+== API
+
+JobRoom API exposes a simple way to manage job offers. It follows _RESTful_ standards like :
 
 * Actions on resources are performed through HTTP methods
 * Resources are exposed with JSON format
@@ -22,7 +33,7 @@ JobRoom REST API exposes a simple way to manage job offers. It follows _RESTful_
 * Explicit HTTP status codes
 * Pagination support
 
-Following chapters explain more precisely some of these concepts and provide examples in how to create, read, edit and delete some job offers.
+Following chapters explain more precisely some of these concepts and provide examples in how to create, read, edit and delete job offers.
 
 == HTTP verbs
 
@@ -42,7 +53,7 @@ Following verbs are fully supported :
 
 Status codes in HTTP responses follow REST standards.
 
-Following table describes examples and precisions related to JobRoom API :
+Following table describes examples and precisions specific to JobRoom API :
 
 [cols="20,20,60"]
 |===
@@ -54,10 +65,11 @@ Following table describes examples and precisions related to JobRoom API :
 | 400 | Bad request | Occurs when error in body using POST/PATCH (missing non nullable field, invalid JSON object, wrong object type, validation failed, etc.).
 | 401 | Unauthorized | Occurs when accessing to a protected resource with bad credentials.
 | 404 | Not Found | Occurs when requested resource does not exist or when accessing another user's resource.
-| 405 | Method Not Allowed | Occurs when HTTP verb cannot be applied to requested endpoint (e.g. `POST /joboffers/1`)
-| 406 | Not Acceptable | Occurs when format of `Accept` header is not supported (e.g. `Accept:application/xml`)
-| 412 | Precondition failed | Occurs when `If-Match` header does not match with current resource model (see section <<Optimistic locking>>)
-| 500 | Internal Server Error | Occurs when a request can't be executed (e.g. violation of database constraint)
+| 405 | Method Not Allowed | Occurs when HTTP verb cannot be applied to requested endpoint (e.g. `POST /joboffers/1`).
+| 406 | Not Acceptable | Occurs when format of `Accept` header is not supported (e.g. `Accept:application/xml`).
+| 409 | Conflict | Occurs when a request can't be executed due to failed validation (e.g. violation of database constraint).
+| 412 | Precondition failed | Occurs when `If-Match` header does not match with current resource model (see section <<Optimistic locking>>).
+| 500 | Internal Server Error | Server encountered an internal error.
 |===
 
 == Headers
@@ -155,8 +167,6 @@ Further information can be found in Spring Data REST documentation : http://docs
 
 = Job offers
 
-//TODO : explain what a job offer is (??)
-
 Following chapters provide examples of requests and responses used to manage job offers.
 
 == Create a job offer
@@ -169,8 +179,6 @@ include::{snippets}/create-job-offer/http-response.adoc[]
 
 === Request fields
 include::{snippets}/create-job-offer/request-fields.adoc[]
-
-//TODO : constraints
 
 ==== job
 include::{snippets}/create-job-offer-job/request-fields.adoc[]
@@ -211,13 +219,19 @@ include::{snippets}/get-all-job-offers/http-response.adoc[]
 === Response fields
 include::{snippets}/get-all-job-offers/response-fields.adoc[]
 
+NOTE: A complete description of the fields can be found in the section <<Create a job offer>>
+
 === curl request
 include::{snippets}/get-all-job-offers/curl-request.adoc[]
 
 == Edit a job offer
 
+NOTE: The updates will reflect only the day after on the publication medias.
+
 === HTTP request
 include::{snippets}/edit-job-offer/http-request.adoc[]
+
+IMPORTANT: Although partial update is allowed, you need to provide the full body when updating a subobject (e.g. _company_).
 
 === HTTP response
 include::{snippets}/edit-job-offer/http-response.adoc[]
@@ -287,4 +301,267 @@ Following codes are available to set the language in the _languageSkills_ object
 | 39 | Vietnamesisch | vietnamien | vietnamita
 | 40 | Rumänisch | roumain | rumeno
 |===
+
+== Country codes
+
+Following codes are available to set the country in the _location_ object :
+
+[cols="10,30,30,30"]
+|===
+| Code | Land | Pays | Paese
+| CH | Schweiz | Suisse | Svizzera
+| AL | Albanien | Albanie | Albania
+| AD | Andorra | Andorre | Andorra
+| BE | Belgien | Belgique | Belgio
+| BG | Bulgarien | Bulgarie | Bulgaria
+| DK | Dänemark | Danemark | Danimarca
+| DE | Deutschland | Allemagne | Germania
+| FO | Färöer | Iles Féroé | Faerøerne; Føroyar
+| FI | Finnland | Finlande | Finlandia
+| FR | Frankreich | France | Francia
+| GI | Gibraltar | Gibraltar | Gibilterra
+| GR | Griechenland | Grèce | Grecia
+| GB | Vereinigtes Königreich | Royaume-Uni | Regno Unito
+| IE | Irland | Irlande | Irlanda
+| IS | Island | Islande | Islanda
+| IT | Italien | Italie | Italia
+| LI | Liechtenstein | Liechtenstein | Liechtenstein
+| LU | Luxemburg | Luxembourg | Lussemburgo
+| MT | Malta | Malte | Malta
+| IM | Insel Man | Ile de Man | Isola di Man
+| MC | Monaco | Monaco | Monaco
+| NL | Niederlande | Pays-Bas | Paesi Bassi
+| NO | Norwegen | Norvège | Norvegia
+| AT | Österreich | Autriche | Austria
+| PL | Polen | Pologne | Polonia
+| PT | Portugal | Portugal | Portogallo
+| RO | Rumänien | Roumanie | Romania
+| SM | San Marino | Saint-Marin | San Marino
+| SE | Schweden | Suède | Svezia
+| ES | Spanien | Espagne | Spagna
+| TR | Türkei | Turquie | Turchia
+| HU | Ungarn | Hongrie | Ungheria
+| VA | Vatikanstadt (Heiliger Stuhl * ) | Cité du Vatican (Saint-Siège * ) | Città del Vaticano (Santa Sede * )
+| CY | Zypern | Chypre | Cipro
+| SK | Slowakei | Slovaquie | Slovacchia
+| CZ | Tschechische Republik | République tchèque | Repubblica ceca
+| HR | Kroatien | Croatie | Croazia
+| SI | Slowenien | Slovénie | Slovenia
+| BA | Bosnien und Herzegowina | Bosnie et Herzégovine | Bosnia e Erzegovina
+| MK | Mazedonien | Macédoine | Macedonia
+| EE | Estland | Estonie | Estonia
+| LV | Lettland | Lettonie | Lettonia
+| LT | Litauen | Lituanie | Lituania
+| MD | Moldova | Moldova | Moldova
+| RU | Russland | Russie | Russia
+| UA | Ukraine | Ukraine | Ucraina
+| BY | Belarus | Bélarus | Belarus; Bielorussia
+| UK | Alderney | Alderney | Alderney
+| JE | Jersey | Jersey | Jersey
+| GG | Guernsey | Guernesey | Guernsey
+| SJ | Svalbard und Jan Mayen | Svalbard et île Jan Mayen | Svalbard e Jan Mayen
+| AX | Alandinseln | Iles d'Aland | Isole di Aland
+| GQ | Äquatorialguinea | Guinée équatoriale | Guinea equatoriale
+| ET | Äthiopien | Ethiopie | Etiopia
+| DJ | Dschibuti | Djibouti | Gibuti
+| DZ | Algerien | Algérie | Algeria
+| AO | Angola | Angola | Angola
+| BW | Botsuana | Botswana | Botswana
+| BI | Burundi | Burundi | Burundi
+| BJ | Benin | Bénin | Benin
+| CI | Côte d'Ivoire | Côte d'Ivoire | Côte d'Ivoire
+| GA | Gabun | Gabon | Gabon
+| GM | Gambia | Gambie | Gambia
+| GH | Ghana | Ghana | Ghana
+| GW | Guinea-Bissau | Guinée-Bissau | Guinea-Bissau
+| GN | Guinea | Guinée | Guinea
+| CM | Kamerun | Cameroun | Camerun
+| IC | Kanarische Inseln | Iles Canaries | Isole Canarie
+| CV | Kap Verde | Cap-Vert | Capo Verde
+| KE | Kenia | Kenya | Kenia
+| KM | Komoren | Comores | Comore
+| CG | Kongo (Brazzaville) | Congo (Brazzaville) | Congo (Brazzaville)
+| CD | Kongo (Kinshasa) | Congo (Kinshasa) | Congo (Kinshasa)
+| LS | Lesotho | Lesotho | Lesotho
+| LR | Liberia | Libéria | Liberia
+| LY | Libyen | Libye | Libia
+| MG | Madagaskar | Madagascar | Madagascar
+| MW | Malawi | Malawi | Malawi
+| ML | Mali | Mali | Mali
+| MA | Marokko | Maroc | Marocco
+| MR | Mauretanien | Mauritanie | Mauritania
+| MU | Mauritius | Maurice | Maurizio; Mauritius
+| MZ | Mosambik | Mozambique | Mozambico
+| NE | Niger | Niger | Niger
+| NG | Nigeria | Nigéria | Nigeria
+| BF | Burkina Faso | Burkina Faso | Burkina Faso
+| RE | Reunion | Réunion | Riunione
+| ZW | Simbabwe | Zimbabwe | Zimbabwe
+| RW | Ruanda | Rwanda | Ruanda
+| ZM | Sambia | Zambie | Zambia
+| ST | São Tomé und Príncipe | Sao Tomé-et-Principe | São Tomé e Principe
+| SN | Senegal | Sénégal | Senegal
+| SC | Seychellen | Seychelles | Seicelle; Seychelles
+| SL | Sierra Leone | Sierra Leone | Sierra Leone
+| SO | Somalia | Somalie | Somalia
+| ZA | Südafrika | Afrique du Sud | Sudafrica
+| SD | Sudan | Soudan | Sudan
+| NA | Namibia | Namibie | Namibia
+| SZ | Swasiland | Swaziland | Swaziland
+| TZ | Tansania | Tanzanie | Tanzania
+| TG | Togo | Togo | Togo
+| TD | Tschad | Tchad | Ciad
+| TN | Tunesien | Tunisie | Tunisia
+| UG | Uganda | Ouganda | Uganda
+| EG | Ägypten | Egypte | Egitto
+| CF | Zentralafrikanische Republik | République centrafricaine | Repubblica centrafricana
+| YT | Mayotte | Mayotte | Mayotte
+| ER | Eritrea | Erythrée | Eritrea
+| IO | Britische Territorien im Indischen Ozean | Territoire britannique de l'Océan Indien | Territorio britannico dell'Oceano Indiano
+| EH | Westsahara | Sahara Occidental | Sahara Occidentale
+| SH | St. Helena | Sainte-Hélène | Sant'Elena
+| AR | Argentinien | Argentine | Argentina
+| BS | Bahamas | Bahamas | Bahamas
+| BB | Barbados | Barbade | Barbados
+| BM | Bermuda | Bermudes | Bermuda
+| BO | Bolivien | Bolivie | Bolivia
+| BR | Brasilien | Brésil | Brasile
+| CL | Chile | Chili | Cile
+| CR | Costa Rica | Costa Rica | Costa Rica
+| DO | Dominikanische Republik | République dominicaine | Repubblica dominicana
+| EC | Ecuador | Equateur | Ecuador
+| SV | El Salvador | El Salvador | El Salvador
+| FK | Falklandinseln | Iles Falkland | Isole Falkland; Isole Malvine
+| GL | Grönland | Groenland | Groenlandia
+| GP | Guadeloupe | Guadeloupe | Guadalupa
+| GT | Guatemala | Guatemala | Guatemala
+| GF | Französisch-Guyana; Französisch-Guayana | Guyane Française | Guiana Francese
+| GY | Guyana | Guyana | Guyana
+| HT | Haiti | Haïti | Haiti
+| BZ | Belize | Belize | Belize
+| HN | Honduras | Honduras | Honduras
+| JM | Jamaika | Jamaïque | Giamaica
+| CA | Kanada | Canada | Canada
+| CO | Kolumbien | Colombie | Colombia
+| CU | Kuba | Cuba | Cuba
+| MQ | Martinique | Martinique | Martinica
+| MX | Mexiko | Mexique | Messico
+| NI | Nicaragua | Nicaragua | Nicaragua
+| PA | Panama | Panama | Panama
+| PY | Paraguay | Paraguay | Paraguay
+| PE | Peru | Pérou | Perù
+| PR | Puerto Rico | Porto Rico | Portorico
+| PM | St. Pierre und Miquelon | Saint-Pierre-et-Miquelon | Saint-Pierre e Miquelon
+| SR | Suriname | Suriname | Suriname
+| VU | Vanuatu | Vanuatu | Vanuatu
+| NC | Neukaledonien | Nouvelle-Calédonie | Nuova Caledonia
+| NZ | Neuseeland | Nouvelle-Zélande | Nuova Zelanda
+| PG | Papua-Neuguinea | Papouasie-Nouvelle-Guinée | Papua Nuova Guinea
+| TO | Tonga | Tonga | Tonga
+| WF | Wallis und Futuna | Wallis-et-Futuna | Wallis e Futuna
+| WS | Samoa | Samoa | Samoa
+| SB | Salomoninseln | Iles Salomon | Isole Salomone
+| TV | Tuvalu | Tuvalu | Tuvalu
+| KI | Kiribati | Kiribati | Kiribati
+| MH | Marshallinseln | Iles Marshall | Isole Marshall
+| FM | Mikronesien | Micronésie | Micronesia
+| PW | Palau | Palaos; Belau; Palau | Palau
+| AS | Amerikanisch-Samoa | Samoa américaines | Samoa americane
+| MP | Nördliche Marianen | Mariannes du Nord | Marianne del Nord
+| GU | Guam | Guam | Guam
+| UM | Johnstoninsel | Ile Johnston | Isola Johnston
+| CC | Kokosinseln | Iles Cocos (Keeling) | Isole Cocos
+| HM | Heard und McDonaldinseln | Iles Heard et McDonald | Isole Heard e McDonald
+| NF | Norfolkinsel | Ile Norfolk | Isola Norfolk
+| CX | Weihnachtsinsel | Ile Christmas (Australie) | Isola Christmas
+| PF | Französisch-Polynesien | Polynésie française | Polinesia francese
+| CK | Cookinseln | Iles Cook | Isole Cook
+| NU | Niue | Nioué | Niue
+| TK | Tokelau | Tokélau; Tokélaou | Tokelau
+| PN | Pitcairninseln | Iles Pitcairn | Isole Pitcairn
+| AQ | Antarktis | Antarctique | Antartide
+| BV | Bouvetinsel | Ile Bouvet | Isola Bouvet
+| TF | Südliches Eismeer (F); Französische Süd- und Antarktisgebiete | Terres australes (F), TAAF | Territori australi francesi
+| XZ | Kosovo | Kosovo | Kosovo
+| RS | Serbien | Serbie | Serbia
+| ME | Montenegro | Monténégro | Montenegro
+| TT | Trinidad und Tobago | Trinité-et-Tobago | Trinidad e Tobago
+| UY | Uruguay | Uruguay | Uruguay
+| VE | Venezuela | Venezuela | Venezuela
+| US | Vereinigte Staaten | Etats-Unis | Stati Uniti (d'America)
+| DM | Dominica | Dominique | Dominica
+| GD | Grenada | Grenade | Grenada
+| AG | Antigua und Barbuda | Antigua-et-Barbuda | Antigua e Barbuda
+| LC | St. Lucia | Sainte-Lucie | Santa Lucia
+| VC | St. Vincent und die Grenadinen | Saint-Vincent-et-les Grenadines | Saint Vincent e Grenadine
+| KN | St. Kitts und Nevis | Saint-Kitts-et-Nevis | Saint Kitts e Nevis
+| AI | Anguilla | Anguilla | Anguilla
+| VI | Jungferninseln (USA) | Iles Vierges américaines | Isole Vergini americane
+| KY | Kaimaninseln | Iles Cayman | Isole Cayman
+| TC | Turks- und Caicosinseln | Iles Turques et Caïques; Iles Turks-et-Caicos | Isole Turks e Caicos
+| MS | Montserrat | Montserrat | Monserrat
+| VG | Jungferninseln (UK) | Iles Vierges britanniques | Isole Vergini britanniche
+| AN | Niederländische Antillen | Antilles néerlandaises | Antille olandesi
+| AW | Aruba | Aruba | Aruba
+| GS | Südgeorgien und Südliche Sandwichinseln | Géorgie du Sud et Iles Sandwich du Sud | Isole Georgia del Sud e Sandwich del Sud
+| AF | Afghanistan | Afghanistan | Afghanistan
+| BH | Bahrain | Bahreïn | Bahrein
+| BT | Bhutan | Bhoutan | Bhutan
+| BN | Brunei Darussalam | Brunéi Darussalam | Brunei Darussalam
+| MM | Myanmar | Myanmar | Myanmar
+| LK | Sri Lanka | Sri Lanka | Sri Lanka
+| TW | China (Taiwan) | Chine (Taïwan) | Cina (Taiwan)
+| CN | China | Chine | Cina
+| HK | Hongkong | Hong Kong | Hong Kong
+| IN | Indien | Inde | India
+| ID | Indonesien | Indonésie | Indonesia
+| IQ | Irak | Irak | Iraq
+| IR | Iran | Iran | Iran
+| IL | Israel | Israël | Israele
+| JP | Japan | Japon | Giappone
+| YE | Jemen | Yémen | Yemen
+| JO | Jordanien | Jordanie | Giordania
+| KH | Kambodscha | Cambodge | Cambogia
+| QA | Katar | Qatar | Qatar
+| KW | Kuwait | Koweït | Kuwait
+| LA | Laos | Laos | Laos
+| LB | Libanon | Liban | Libano
+| MO | Macao | Macao | Macao
+| MY | Malaysia | Malaisie | Malaysia
+| MV | Malediven | Maldives | Maldive
+| OM | Oman | Oman | Oman
+| MN | Mongolei | Mongolie | Mongolia
+| NP | Nepal | Népal | Nepal
+| KP | Korea (Nord-) | Corée (Nord) | Corea (Nord)
+| AE | Vereinigte Arabische Emirate | Emirats arabes unis | Emirati arabi uniti
+| PK | Pakistan | Pakistan | Pakistan
+| PH | Philippinen | Philippines | Filippine
+| SA | Saudi-Arabien | Arabie saoudite | Arabia Saudita
+| SG | Singapur | Singapour | Singapore
+| KR | Korea (Süd-) | Corée (Sud) | Corea (Sud)
+| SY | Syrien | Syrie | Siria
+| TH | Thailand | Thaïlande | Thailandia
+| VN | Vietnam | Vietnam; Viêt Nam | Vietnam
+| BD | Bangladesch | Bangladesh | Bangladesh
+| TL | Timor-Leste | Timor-Leste | Timor-Leste
+| PS | Palästina | Palestine | Palestina
+| AM | Armenien | Arménie | Armenia
+| AZ | Aserbaidschan | Azerbaïdjan | Azerbaigian
+| GE | Georgien | Géorgie | Georgia
+| KZ | Kasachstan | Kazakhstan | Kazakstan
+| KG | Kirgisistan | Kirghizistan | Kirghizistan
+| TJ | Tadschikistan | Tadjikistan | Tagikistan
+| TM | Turkmenistan | Turkménistan | Turkmenistan
+| UZ | Usbekistan | Ouzbékistan | Uzbekistan
+| AU | Australien | Australie | Australia
+| FJ | Fidschi-Inseln | Iles Fidji | Isole Figi
+| NR | Nauru | Nauru | Nauru
+| MF | Saint-Martin (Frankreich) | Saint-Martin (France) | Saint-Martin (Francia)
+| BL | Saint-Barthélemy | Saint-Barthélemy | Saint-Barthélemy
+| CW | Curaçao | Curaçao | Curaçao
+| SX | Sint Maarten (Niederlande) | Sint Maarten (Pays-Bas) | Sint Maarten (Paesi Bassi)
+| BQ | Bonaire, Saint Eustatius und Saba | Bonaire, Saint Eustatius et Saba | Bonaire, Saint Eustatius e Saba
+| SS | Südsudan | Soudan du Sud | Sudan del Sud
+|===
+
 

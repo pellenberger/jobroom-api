@@ -90,13 +90,14 @@ public class ApiDocCreate {
                 .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
                         requestFields(
                                 fieldWithPath("publicationStartDate")
-                                        .description("todo")
+                                        .description("Date from which the job offer is visible on the publication medias. " +
+                                                "Job offer is considered published once that publicationStartDate is smaller than current date.")
                                         .attributes(key("constraints").value(
                                                 "* Not null.\n" +
                                                 "* Cannot be smaller than current date.\n" +
                                                 "* Cannot be modified once that job offer has been published.")),
                                 fieldWithPath("publicationEndDate")
-                                        .description("todo")
+                                        .description("After this date, the job offer is removed from the publication medias.")
                                         .attributes(key("constraints").value("* Must be greater than publicationStartDate.")),
                                 fieldWithPath("job")
                                         .description("Description of the job\n\n(further information bellow)")
@@ -117,52 +118,54 @@ public class ApiDocCreate {
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("job.title")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("job.description")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.\n* Length max 10000 characters.")),
                                 fieldWithPath("job.workingTimePercentageFrom")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.\n* Must be greater than 0.")),
                                 fieldWithPath("job.workingTimePercentageTo")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value(
                                                 "* Not null.\n" +
                                                 "* Must be greater or equal than workingTimePercentageFrom.\n" +
                                                 "* Must be less or equal than 100.")),
                                 fieldWithPath("job.startDate")
-                                        .description("todo")
+                                        .description("When null, the job is supposed to start immediately.")
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("job.endDate")
-                                        .description("todo")
+                                        .description("When null, the job is considered as permanent.")
                                         .attributes(key("constraints").value("* Must be greater than startDate")),
                                 fieldWithPath("job.location.countryCode")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .description("")
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "* Must be one of authorized country codes (see section <<Country codes>>)")),
                                 fieldWithPath("job.location.locality")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("job.location.postalCode")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("job.location.additionalDetails")
-                                        .description("todo")
+                                        .description("More informations can be added as free text.")
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("job.languageSkills")
-                                        .description("todo")
+                                        .description("It is possible to define up to 5 language skills required by the job.")
                                         .attributes(key("constraints").value("* Not null.\n* Size must be between 0 and 5.")),
                                 fieldWithPath("job.languageSkills[].language")
-                                        .description("todo")
+                                        .description("Required language's code.")
                                         .attributes(key("constraints").value(
                                                 "* Not null.\n" +
                                                 "* Must be one of authorized language codes (see section <<Language codes>>)")),
                                 fieldWithPath("job.languageSkills[].spokenLevel")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.\n* Must be in ('average', 'good', 'very_good').")),
+                                        .description("Required spoken level.")
+                                        .attributes(key("constraints").value("* Not null.\n* Must be in ('no_knowledge', 'basic_knowledge', 'good', 'very_good').")),
                                 fieldWithPath("job.languageSkills[].writtenLevel")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.\n* Must be in ('average', 'good', 'very_good').")),
+                                        .description("Required written level.")
+                                        .attributes(key("constraints").value("* Not null.\n* Must be in ('no_knowledge', 'basic_knowledge', 'good', 'very_good').")),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored()
@@ -174,41 +177,43 @@ public class ApiDocCreate {
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("company.name")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("company.countryCode")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .description("")
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "* Must be one of authorized language codes (see section <<Language codes>>)")),
                                 fieldWithPath("company.street")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("company.houseNumber")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("company.locality")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("company.postalCode")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("company.phoneNumber")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .description("")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("company.email")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .description("")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("company.website")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .description("")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("company.postbox.number")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .description("")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("company.postbox.locality")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .description("")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("company.postbox.postalCode")
-                                        .description("todo")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .description("")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored()
                         )))
@@ -220,19 +225,19 @@ public class ApiDocCreate {
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("contact.title")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.\n* Must be in ('mister', 'madam').")),
                                 fieldWithPath("contact.firstName")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact.lastName")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact.phoneNumber")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact.email")
-                                        .description("todo")
+                                        .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application").ignored()
                         )))
@@ -245,16 +250,16 @@ public class ApiDocCreate {
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored(),
                                 fieldWithPath("application.telephonic")
-                                        .description("todo")
+                                        .description("It is tolerated to apply by telephonic way.")
                                         .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
                                 fieldWithPath("application.written")
-                                        .description("todo")
+                                        .description("It is tolerated to apply by written way.")
                                         .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
                                 fieldWithPath("application.electronic")
-                                        .description("todo")
+                                        .description("It is tolerated to apply by electronic way.")
                                         .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
                                 fieldWithPath("application.additionalDetails")
-                                        .description("todo")
+                                        .description("More informations can be added as free text.")
                                         .attributes(key("constraints").value(""))
                         )));
 
