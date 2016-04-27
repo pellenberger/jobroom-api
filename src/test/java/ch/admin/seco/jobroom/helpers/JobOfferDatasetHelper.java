@@ -46,8 +46,8 @@ public final class JobOfferDatasetHelper {
                                 "All day in an office"
                         ),
                         Arrays.asList(
-                                new LanguageSkill("de", LanguageSkill.Level.very_good, LanguageSkill.Level.good),
-                                new LanguageSkill("fr", LanguageSkill.Level.average, LanguageSkill.Level.average)
+                                new LanguageSkill("1", LanguageSkill.Level.very_good, LanguageSkill.Level.good),
+                                new LanguageSkill("2", LanguageSkill.Level.average, LanguageSkill.Level.average)
                         )
                 ),
                 new Company(
@@ -97,11 +97,36 @@ public final class JobOfferDatasetHelper {
         return jobOfferBuilder.build();
     }
 
+    public static JsonObject getJsonWithPublicationStartEndDate(String publicationStartDate, String publicationEndDate) {
+        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder();
+        jobOfferBuilder.add("publicationStartDate", publicationStartDate);
+        jobOfferBuilder.add("publicationEndDate", publicationEndDate);
+        return jobOfferBuilder.build();
+    }
+
     public static JsonObject getJsonWithJobDescription(String jobDescription) {
         JsonObjectBuilder jobBuilder = createJobBuilder();
         jobBuilder.add("description", jobDescription);
 
-        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(jobBuilder);
+        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(jobBuilder, createContactBuilder(), createApplicationBuilder());
+        return jobOfferBuilder.build();
+    }
+
+    public static JsonObject getJsonWithWorkingTimePercentage(int from, int to) {
+        JsonObjectBuilder jobBuilder = createJobBuilder()
+                .add("workingTimePercentageFrom", from)
+                .add("workingTimePercentageTo", to);
+
+        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(jobBuilder, createContactBuilder(), createApplicationBuilder());
+        return jobOfferBuilder.build();
+    }
+
+    public static JsonObject getJsonWithJobStartEndDate(String jobStartDate, String jobEndDate) {
+        JsonObjectBuilder jobBuilder = createJobBuilder()
+                .add("startDate", jobStartDate)
+                .add("endDate", jobEndDate);
+
+        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(jobBuilder, createContactBuilder(), createApplicationBuilder());
         return jobOfferBuilder.build();
     }
 
@@ -109,12 +134,38 @@ public final class JobOfferDatasetHelper {
         JsonArrayBuilder languageSkills = Json.createArrayBuilder();
         for (int i = 0; i < n; i ++) {
             languageSkills.add(Json.createObjectBuilder()
-                    .add("language", "fr")
+                    .add("language", "2")
                     .add("spokenLevel", "good")
                     .add("writtenLevel", "good"));
         }
 
-        return createJobOfferBuilder(createJobBuilder(languageSkills)).build();
+        return createJobOfferBuilder(createJobBuilder(languageSkills), createContactBuilder(), createApplicationBuilder()).build();
+    }
+
+    public static JsonObject getJsonWithLanguageSkills(String language, String spokenLevel, String writtenLevel) {
+        JsonArrayBuilder languageSkills = Json.createArrayBuilder()
+                .add(Json.createObjectBuilder()
+                        .add("language", language)
+                        .add("spokenLevel", spokenLevel)
+                        .add("writtenLevel", writtenLevel));
+        return createJobOfferBuilder(createJobBuilder(languageSkills), createContactBuilder(), createApplicationBuilder()).build();
+    }
+
+    public static JsonObject getJsonWithContactTitle(String title) {
+        JsonObjectBuilder contact = createContactBuilder();
+        contact.add("title", title);
+
+        JsonObject jobOffer = createJobOfferBuilder(createJobBuilder(), contact, createApplicationBuilder()).build();
+        return jobOffer;
+    }
+
+    public static JsonObject getJsonWithApplication(int telephonic, int written, int electronic) {
+        JsonObjectBuilder application = Json.createObjectBuilder()
+                .add("telephonic", telephonic)
+                .add("written", written)
+                .add("electronic", electronic);
+        JsonObject jobOffer = createJobOfferBuilder(createJobBuilder(), createContactBuilder(), application).build();
+        return jobOffer;
     }
 
     public static JsonObject getJsonIncomplete() {
@@ -129,10 +180,26 @@ public final class JobOfferDatasetHelper {
     public static JsonObject getJsonPartial() {
 
         JsonObject jobOffer = Json.createObjectBuilder()
-                .add("publicationStartDate", "2100-01-20")
                 .add("contact", Json.createObjectBuilder()
-                        .add("title", "madam"))
+                        .add("title", "madam")
+                        .add("firstName", "Alizée")
+                        .add("lastName", "Dupont")
+                        .add("phoneNumber", "0791234567")
+                        .add("email", "alizee.dupont@admin.ch"))
                 .build();
+
+        return jobOffer;
+    }
+
+    public static JsonObject getJsonInvalidLanguageSkill() {
+        JsonObject jobOffer = createJobOfferBuilder(
+                createJobBuilder(Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                                .add("language", "fr")
+                                .add("spokenLevel", "good")
+                                .add("writtenLevel", "good"))),
+                createContactBuilder(),
+                createApplicationBuilder()).build();
 
         return jobOffer;
     }
@@ -142,10 +209,13 @@ public final class JobOfferDatasetHelper {
     // ****************************************
 
     private static JsonObjectBuilder createJobOfferBuilder() {
-        return createJobOfferBuilder(createJobBuilder());
+        return createJobOfferBuilder(createJobBuilder(), createContactBuilder(), createApplicationBuilder());
     }
 
-    private static JsonObjectBuilder createJobOfferBuilder(JsonObjectBuilder jobBuilder) {
+    private static JsonObjectBuilder createJobOfferBuilder(
+            JsonObjectBuilder jobBuilder,
+            JsonObjectBuilder contactBuilder,
+            JsonObjectBuilder applicationBuilder) {
         JsonObjectBuilder jobOffer = Json.createObjectBuilder()
                 .add("publicationStartDate", "2116-02-15")
                 .add("publicationEndDate", "2116-04-01")
@@ -164,16 +234,8 @@ public final class JobOfferDatasetHelper {
                                 .add("number", "1234")
                                 .add("locality", "Genolier")
                                 .add("postalCode", "1272")))
-                .add("contact", Json.createObjectBuilder()
-                        .add("title", "mister")
-                        .add("firstName", "Bertrand")
-                        .add("lastName", "Boulé")
-                        .add("phoneNumber", "0795721186")
-                        .add("email", "bertrand.boule@missionrealty.ch"))
-                .add("application", Json.createObjectBuilder()
-                        .add("telephonic", 1)
-                        .add("written", 0)
-                        .add("electronic", 1));
+                .add("contact", contactBuilder)
+                .add("application", applicationBuilder);
         return jobOffer;
     }
 
@@ -201,14 +263,32 @@ public final class JobOfferDatasetHelper {
     private static JsonArrayBuilder createLanguageSkillsBuilder() {
         JsonArrayBuilder languageSkills = Json.createArrayBuilder()
                 .add(Json.createObjectBuilder()
-                        .add("language", "fr")
+                        .add("language", "2")
                         .add("spokenLevel", "very_good")
                         .add("writtenLevel", "very_good"))
                 .add(Json.createObjectBuilder()
-                        .add("language", "en")
+                        .add("language", "5")
                         .add("spokenLevel", "very_good")
                         .add("writtenLevel", "good"));
 
         return languageSkills;
+    }
+
+    private static JsonObjectBuilder createContactBuilder() {
+        JsonObjectBuilder contact = Json.createObjectBuilder()
+                .add("title", "mister")
+                .add("firstName", "Bertrand")
+                .add("lastName", "Boulé")
+                .add("phoneNumber", "0795721186")
+                .add("email", "bertrand.boule@missionrealty.ch");
+        return contact;
+    }
+
+    private static JsonObjectBuilder createApplicationBuilder() {
+        JsonObjectBuilder application = Json.createObjectBuilder()
+                .add("telephonic", 1)
+                .add("written", 0)
+                .add("electronic", 1);
+        return application;
     }
 }

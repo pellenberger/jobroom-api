@@ -23,10 +23,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+/**
+ * Test constraints that are defined on JPA level
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ApiApplication.class)
 @WebAppConfiguration
-public class ConstraintsTest {
+public class JpaConstraintsTest {
 
     private MockMvc mockMvc;
 
@@ -97,6 +100,34 @@ public class ConstraintsTest {
                 .with(apiTestHelper.getDefaultHttpBasic())
                 .contentType(apiTestHelper.getContentType())
                 .content(JobOfferDatasetHelper.getJsonWithLanguageSkills(6).toString()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void invalidContactTitle() throws Exception {
+
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithContactTitle("invalid_title").toString()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void invalidLanguageSkillsLevel() throws Exception {
+
+        // wrong spoken level
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills("1", "invalid_level", "good").toString()))
+                .andExpect(status().isBadRequest());
+
+        // wrong written level
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills("1", "good", "invalid_level").toString()))
                 .andExpect(status().isBadRequest());
     }
 
