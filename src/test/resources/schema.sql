@@ -43,6 +43,8 @@ create table joboffer (
   application_written integer not null,
   application_electronic integer not null,
   owner_id integer not null,
+  creationdate timestamp not null,
+  lastmodificationdate timestamp,
 
   primary key (id)
 );

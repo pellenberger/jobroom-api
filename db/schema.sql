@@ -1,5 +1,5 @@
 -- varchar2 lengths are the same as in table AOSTE, if existing
--- for other fields, length is by default 255 char 
+-- for other fields, length is by default 255 char
 -- for the moment, we don't care about BYTE/CHAR compatibility
 -- in comments are the aoste related fields
 create table joboffer (
@@ -37,7 +37,9 @@ create table joboffer (
   application_telephonic integer not null, -- bewer_telefonisch_b
   application_written integer not null, -- bewer_schriftlich_b
   application_electronic integer not null, -- bewer_elektronisch_b
-  owner_id integer not null
+  owner_id integer not null,
+  creationdate timestamp not null,
+  lastmodificationdate timestamp
 );
 
 alter table joboffer add (

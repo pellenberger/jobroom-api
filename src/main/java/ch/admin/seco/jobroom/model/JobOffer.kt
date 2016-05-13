@@ -1,11 +1,11 @@
 package ch.admin.seco.jobroom.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.joda.time.DateTime
 import java.sql.Date
+import java.sql.Timestamp
 import java.util.*
 import javax.persistence.*
-import javax.validation.Valid
-import javax.validation.constraints.Size
 
 // TODO: constraints like min/max should be (ONLY?) defined at SQL level!!!!
 // TODO: ideally the same data-centric approach for more advanced constraints (e.g. publicationDate update)
@@ -25,7 +25,7 @@ import javax.validation.constraints.Size
         var publicationEndDate: Date? = null,
 
         @Embedded
-        @get:Valid
+        @get:javax.validation.Valid
         val job: Job,
 
         @Embedded
@@ -40,10 +40,26 @@ import javax.validation.constraints.Size
         @ManyToOne
         @JoinColumn(name="owner_id")
         @JsonIgnore
-        var owner: RestAccessKey? = null
+        var owner: RestAccessKey? = null,
+
+        @JsonIgnore
+        var creationDate: Timestamp? = null,
+
+        @JsonIgnore
+        var lastModificationDate: Timestamp? = null
 ) {
     // This private "default" constructor is only used by JPA layer
-    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, Job(), Company(), Contact(), Application(), null)
+    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, Job(), Company(), Contact(), Application(), null, null, null)
+
+    @PrePersist
+    fun onCreate() {
+        creationDate = Timestamp(DateTime.now().millis)
+    }
+
+    @PreUpdate
+    fun onUpdate() {
+        lastModificationDate = Timestamp(DateTime.now().millis)
+    }
 }
 
 @Embeddable
@@ -52,7 +68,7 @@ data class Job(
         val title: String,
 
         @Lob
-        @field:Size(max = 10000)
+        @field:javax.validation.constraints.Size(max = 10000)
         val description: String,
 
         val workingTimePercentageFrom: Int,
@@ -63,7 +79,7 @@ data class Job(
         @Embedded
         val location: Location,
 
-        @field:Size(max=5)
+        @field:javax.validation.constraints.Size(max=5)
         @ElementCollection(fetch = FetchType.EAGER)
         val languageSkills: Collection<LanguageSkill>
 
