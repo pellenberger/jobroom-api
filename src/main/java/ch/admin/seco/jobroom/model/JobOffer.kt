@@ -121,10 +121,10 @@ data class Location(
         val countryCode: String,
         val locality: String,
         val postalCode: String,
-        var additionalDetails: String? = null
+        var additionalDetails: String? = ""
 ) {
     // This "default" constructor is only used by JPA layer
-    constructor() : this("", "", "", null);
+    constructor() : this("", "", "", "");
 }
 
 @Embeddable
@@ -136,9 +136,9 @@ data class Company (
         val houseNumber: String,
         val locality: String,
         val postalCode: String,
-        val phoneNumber: String,
-        val email: String,
-        val website: String,
+        var phoneNumber: String? = "",
+        var email: String? = "",
+        var website: String? = "",
 
         @Embedded
         val postbox: Postbox
@@ -151,9 +151,9 @@ data class Company (
 @Embeddable
 data class Postbox(
 
-        val number: String,
-        val locality: String,
-        val postalCode: String
+        var number: String? = "",
+        var locality: String? = "",
+        var postalCode: String? = ""
 ) {
     // This private "default" constructor is only used by JPA layer
     constructor() : this("", "", "")
@@ -186,8 +186,8 @@ data class Application(
         val telephonic: Int,
         val written: Int,
         val electronic: Int,
-        var additionalDetails: String? = null
+        var additionalDetails: String? = ""
 ) {
     // This private "default" constructor is only used by JPA layer
-    constructor() : this(0, 0, 0, null)
+    constructor() : this(0, 0, 0, "")
 }

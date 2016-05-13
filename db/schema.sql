@@ -23,12 +23,12 @@ create table joboffer (
   company_housenumber varchar2(50 char) not null, -- unt_haus_nr
   company_locality varchar2(100 char) not null, -- unt_ort
   company_postalcode varchar2(10 char) not null, -- unt_plz
-  company_phonenumber varchar2(50 char) not null, -- unt_telefon
-  company_email varchar2(50 char) not null, -- unt_email
-  company_website varchar2(255 char) not null, -- unt_url
-  company_postbox_number varchar2(6 char) not null, -- unt_postfach
-  company_postbox_locality varchar2(100 char) not null, -- unt_postfach_ort
-  company_postbox_postalcode varchar2(10 char) not null, -- unt_postfach_plz
+  company_phonenumber varchar2(50 char), -- unt_telefon
+  company_email varchar2(50 char), -- unt_email
+  company_website varchar2(255 char), -- unt_url
+  company_postbox_number varchar2(6 char), -- unt_postfach
+  company_postbox_locality varchar2(100 char), -- unt_postfach_ort
+  company_postbox_postalcode varchar2(10 char), -- unt_postfach_plz
   contact_title varchar2(255 char) not null,
   contact_firstname varchar2(255 char) not null, -- kp_vorname
   contact_lastname varchar2(255 char) not null, -- kp_name
