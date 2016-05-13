@@ -37,6 +37,7 @@ create table joboffer (
   application_telephonic integer not null, -- bewer_telefonisch_b
   application_written integer not null, -- bewer_schriftlich_b
   application_electronic integer not null, -- bewer_elektronisch_b
+  application_additionaldetails varchar2(255 char), -- bewer_angaben
   owner_id integer not null,
   creationdate timestamp not null,
   lastmodificationdate timestamp

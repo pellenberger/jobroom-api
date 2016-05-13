@@ -184,8 +184,9 @@ data class Application(
 
         val telephonic: Int,
         val written: Int,
-        val electronic: Int
+        val electronic: Int,
+        var additionalDetails: String? = null
 ) {
     // This private "default" constructor is only used by JPA layer
-    constructor() : this(0, 0, 0)
+    constructor() : this(0, 0, 0, null)
 }

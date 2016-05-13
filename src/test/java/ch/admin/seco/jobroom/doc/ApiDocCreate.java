@@ -252,7 +252,10 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
                                 fieldWithPath("application.electronic")
                                         .description("todo")
-                                        .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1)."))
+                                        .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
+                                fieldWithPath("application.additionalDetails")
+                                        .description("todo")
+                                        .attributes(key("constraints").value(""))
                         )));
 
         this.mockMvc.perform(get("/joboffers").with(apiTestHelper.getDefaultHttpBasic()))

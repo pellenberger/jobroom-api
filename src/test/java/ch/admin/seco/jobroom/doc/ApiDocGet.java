@@ -130,6 +130,7 @@ public class ApiDocGet {
                 .andExpect(jsonPath("$.application.telephonic", Matchers.is(0)))
                 .andExpect(jsonPath("$.application.written", Matchers.is(1)))
                 .andExpect(jsonPath("$.application.electronic", Matchers.is(1)))
+                .andExpect(jsonPath("$.application.additionalDetails", Matchers.is("Please apply online")))
 
                 .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
                         responseFields(
@@ -213,6 +214,7 @@ public class ApiDocGet {
                                 fieldWithPath("application.telephonic").ignored(),
                                 fieldWithPath("application.written").ignored(),
                                 fieldWithPath("application.electronic").ignored(),
+                                fieldWithPath("application.additionalDetails").ignored(),
                                 fieldWithPath("_links").ignored()
                         )));
     }

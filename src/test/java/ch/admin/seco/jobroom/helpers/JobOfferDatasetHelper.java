@@ -76,7 +76,8 @@ public final class JobOfferDatasetHelper {
                 new Application(
                         0,
                         1,
-                        1
+                        1,
+                        "Please apply online"
                 ),
                 null,
                 null,
@@ -290,7 +291,8 @@ public final class JobOfferDatasetHelper {
         JsonObjectBuilder application = Json.createObjectBuilder()
                 .add("telephonic", 1)
                 .add("written", 0)
-                .add("electronic", 1);
+                .add("electronic", 1)
+                .add("additionalDetails", "Please apply online");
         return application;
     }
 }
