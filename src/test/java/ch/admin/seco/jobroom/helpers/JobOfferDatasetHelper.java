@@ -47,7 +47,7 @@ public final class JobOfferDatasetHelper {
                         ),
                         Arrays.asList(
                                 new LanguageSkill("1", LanguageSkill.Level.very_good, LanguageSkill.Level.good),
-                                new LanguageSkill("2", LanguageSkill.Level.average, LanguageSkill.Level.average)
+                                new LanguageSkill("2", LanguageSkill.Level.basic_knowledge, LanguageSkill.Level.no_knowledge)
                         )
                 ),
                 new Company(

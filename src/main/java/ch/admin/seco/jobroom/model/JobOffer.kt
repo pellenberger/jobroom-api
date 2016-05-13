@@ -105,7 +105,8 @@ data class LanguageSkill(
         val writtenLevel: LanguageSkill.Level
 ) {
     enum class Level {
-        average,
+        no_knowledge,
+        basic_knowledge,
         good,
         very_good
     }

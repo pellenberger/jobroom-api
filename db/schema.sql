@@ -75,8 +75,8 @@ add constraint fk_joboffer
 foreign key (joboffer_id) references joboffer;
 
 alter table joboffer_job_languageskills add (
-constraint languageskills_spokenlevel_ck check (spokenlevel in ('average', 'good', 'very_good')),
-constraint languageskills_writtenlevel_ck check (writtenlevel in ('average', 'good', 'very_good'))
+constraint languageskills_spokenlevel_ck check (spokenlevel in ('no_knowledge', 'basic_knowledge', 'good', 'very_good')),
+constraint languageskills_writtenlevel_ck check (writtenlevel in ('no_knowledge', 'basic_knowledge', 'good', 'very_good'))
 );
 
 create or replace trigger language_code_trg
