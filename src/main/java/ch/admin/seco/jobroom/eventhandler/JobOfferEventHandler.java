@@ -27,7 +27,7 @@ public class JobOfferEventHandler {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails currentUser = (UserDetails) principal;
 
-        RestAccessKey restAccessKey = restAccessKeyRepository.findByKeyOwnerAndActive(currentUser.getUsername(), 1);
+        RestAccessKey restAccessKey = restAccessKeyRepository.findByOwnerEmailAndActive(currentUser.getUsername(), 1);
 
         jobOffer.setOwner(restAccessKey);
     }

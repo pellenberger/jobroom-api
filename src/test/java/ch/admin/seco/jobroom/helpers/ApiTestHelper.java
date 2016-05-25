@@ -30,7 +30,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 @Component
 public class ApiTestHelper {
 
-    private final static String DEFAULT_USER = "user";
+    private final static String DEFAULT_USER_EMAIL = "user";
+    private final static String DEFAULT_USER_NAME = "name";
     private final static String DEFAULT_PASSWORD = "password";
     private final static int DEFAULT_ACTIVE = 1;
 
@@ -71,7 +72,7 @@ public class ApiTestHelper {
     }
 
     public org.springframework.test.web.servlet.request.RequestPostProcessor getDefaultHttpBasic() {
-        return httpBasic(DEFAULT_USER, DEFAULT_PASSWORD);
+        return httpBasic(DEFAULT_USER_EMAIL, DEFAULT_PASSWORD);
     }
 
     public RestDocumentationMockMvcConfigurer getDocumentationConfiguration(RestDocumentation restDocumentation) {
@@ -84,7 +85,7 @@ public class ApiTestHelper {
     }
 
     public RestAccessKey getDefaultRestAccessKey() {
-        return new RestAccessKey(DEFAULT_PASSWORD, DEFAULT_USER, DEFAULT_ACTIVE);
+        return new RestAccessKey(DEFAULT_PASSWORD, DEFAULT_USER_EMAIL, DEFAULT_USER_NAME, DEFAULT_ACTIVE);
     }
 
     /**
@@ -92,7 +93,7 @@ public class ApiTestHelper {
      * Don't forget to unauthenticate when dataset is created
      */
     public void authenticateDefault() {
-        this.authenticate(DEFAULT_USER, DEFAULT_PASSWORD);
+        this.authenticate(DEFAULT_USER_EMAIL, DEFAULT_PASSWORD);
     }
 
     /**
@@ -100,7 +101,7 @@ public class ApiTestHelper {
      * Don't forget to unauthenticate when dataset is created
      */
     public void authenticate(RestAccessKey restAccessKey) {
-        this.authenticate(restAccessKey.getKeyOwner(), restAccessKey.getAccessKey());
+        this.authenticate(restAccessKey.getOwnerEmail(), restAccessKey.getAccessKey());
     }
 
     /**

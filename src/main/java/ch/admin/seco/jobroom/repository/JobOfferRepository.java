@@ -16,15 +16,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @RepositoryRestResource(path = "joboffers")
 public interface JobOfferRepository extends PagingAndSortingRepository<JobOffer, Integer> {
 
-    @Query("select j from JobOffer j where j.id = ?1 and j.owner.keyOwner = ?#{principal?.username}")
+    @Query("select j from JobOffer j where j.id = ?1 and j.owner.ownerEmail = ?#{principal?.username}")
     @Override
     JobOffer findOne(Integer integer);
 
-    @Query("select j from JobOffer j where j.owner.keyOwner = ?#{principal?.username}")
+    @Query("select j from JobOffer j where j.owner.ownerEmail = ?#{principal?.username}")
     @Override
     Page<JobOffer> findAll(Pageable pageable);
 
-    @Query("delete from JobOffer j where j.id = :#{#joboffer_id} and j.owner.keyOwner = ?#{principal?.username}")
+    @Query("delete from JobOffer j where j.id = :#{#joboffer_id} and j.owner.ownerEmail = ?#{principal?.username}")
     @Override
     void delete(@Param("joboffer_id") Integer integer);
 
@@ -32,7 +32,7 @@ public interface JobOfferRepository extends PagingAndSortingRepository<JobOffer,
     @Override
     void delete(JobOffer entity);
 
-    @PreAuthorize("#joboffer.owner.keyOwner == principal.username")
+    @PreAuthorize("#joboffer.owner.ownerEmail == principal.username")
     @Override
     <S extends JobOffer> S save(@Param("joboffer") S entity);
 
