@@ -100,16 +100,16 @@ public class ApiDocCreate {
                                         .description("After this date, the job offer is removed from the publication medias.")
                                         .attributes(key("constraints").value("* Must be greater than publicationStartDate.")),
                                 fieldWithPath("job")
-                                        .description("Description of the job\n\n(further information bellow)")
+                                        .description("Description of the job\n\n(further information below)")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("company")
-                                        .description("The company that offers the job\n\n(further information bellow)")
+                                        .description("The company that offers the job\n\n(further information below)")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact")
-                                        .description("Contact person about the job offer\n\n(further information bellow)")
+                                        .description("Contact person about the job offer\n\n(further information below)")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application")
-                                        .description("Support for submitting the job application\n\n(further information bellow")
+                                        .description("Support for submitting the job application\n\n(further information below")
                                         .attributes(key("constraints").value("* Not null"))
                         )))
                 .andDo(document("{method-name}-job", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
@@ -150,7 +150,7 @@ public class ApiDocCreate {
                                         .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("job.location.additionalDetails")
-                                        .description("More informations can be added as free text.")
+                                        .description("More information can be added as free text.")
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("job.languageSkills")
                                         .description("It is possible to define up to 5 language skills required by the job.")
@@ -162,10 +162,14 @@ public class ApiDocCreate {
                                                 "* Must be one of authorized language codes (see section <<Language codes>>)")),
                                 fieldWithPath("job.languageSkills[].spokenLevel")
                                         .description("Required spoken level.")
-                                        .attributes(key("constraints").value("* Not null.\n* Must be in ('no_knowledge', 'basic_knowledge', 'good', 'very_good').")),
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "* Must be in ('no_knowledge', 'basic_knowledge', 'good', 'very_good').")),
                                 fieldWithPath("job.languageSkills[].writtenLevel")
                                         .description("Required written level.")
-                                        .attributes(key("constraints").value("* Not null.\n* Must be in ('no_knowledge', 'basic_knowledge', 'good', 'very_good').")),
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "* Must be in ('no_knowledge', 'basic_knowledge', 'good', 'very_good').")),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored()
@@ -259,7 +263,7 @@ public class ApiDocCreate {
                                         .description("It is tolerated to apply by electronic way.")
                                         .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
                                 fieldWithPath("application.additionalDetails")
-                                        .description("More informations can be added as free text.")
+                                        .description("More information can be added as free text.")
                                         .attributes(key("constraints").value(""))
                         )));
 

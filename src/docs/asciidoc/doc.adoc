@@ -18,9 +18,9 @@ JobRoom API provides a new way to publish job offers through the ALV system.
 
 It is an alternative to the existing web interface available at https://www.job-room.ch/pages/job/jobRegistration.xhtml
 
-When using the API, job offers are sended to x28 and then published to *JobRoom* (https://www.job-room.ch) and *JobDesk* (http://pilot.job-desk.ch).
+When using the API, job offers are published to *JobRoom* (https://www.job-room.ch) and *JobDesk* (http://pilot.job-desk.ch).
 
-An access to the API can be requested by sending a mail to {contact-mail}
+Access to the API can be requested by sending a mail to {contact-mail}
 
 == API
 
@@ -33,11 +33,11 @@ JobRoom API exposes a simple way to manage job offers. It follows _RESTful_ stan
 * Explicit HTTP status codes
 * Pagination support
 
-Following chapters explain more precisely some of these concepts and provide examples in how to create, read, edit and delete job offers.
+The following chapters explain more precisely some of these concepts and provide examples in how to create, read, edit and delete job offers.
 
 == HTTP verbs
 
-Following verbs are fully supported :
+The following verbs are fully supported :
 
 [cols="20,80"]
 |===
@@ -53,7 +53,7 @@ Following verbs are fully supported :
 
 Status codes in HTTP responses follow REST standards.
 
-Following table describes examples and precisions specific to JobRoom API :
+The following table describes examples and precisions specific to JobRoom API :
 
 [cols="20,20,60"]
 |===
@@ -74,7 +74,7 @@ Following table describes examples and precisions specific to JobRoom API :
 
 == Headers
 
-Following headers have to be set for some requests in order to use the API :
+The following headers have to be set for some requests in order to use the API :
 
 [cols="20,35,45"]
 |===
@@ -82,13 +82,13 @@ Following headers have to be set for some requests in order to use the API :
 
 | `Content-Type` | `application/json;charset=UTF-8` | On POST/PATCH (every request that contains a JSON body).
 | `If-Match` | `<value of previous ETag>` | On PATCH when supporting _Optimistic locking_ (see section <<Optimistic locking>>).
-| `Authorization` | `Basic <Base64 encoded credentials>` | Always, every API endpoints require authentication (see section <<Authentication>>).
+| `Authorization` | `Basic <Base64 encoded credentials>` | Always, all API endpoints require authentication (see section <<Authentication>>).
 | `Accept` | `application/json;charset=UTF-8` | Always.
 |===
 
 == Authentication
 
-NOTE: First, you need to get a pair of username/password.
+NOTE: First, you need to get a username and password.
 
 Authentication is done using HTTP Basic Auth.
 
@@ -104,8 +104,8 @@ The value of the `Authorization` header will be `Basic dXNlcjpwYXNzd29yZA==`.
 
 == Optimistic locking
 
-When two clients edit the same resource at the same time, the API doesn't prevent these ones to override the other's work.
-It is up to the client to take the duty of always being up to date before edit an existing resource.
+When two clients edit the same resource at the same time, the API doesn't prevent the one to override the other's work.
+It is up to the client to take the duty of always being up to date before editing an existing resource.
 A proper way to do this is to use the optimistic locking provided by the API.
 
 When retrieving a resource using :
@@ -167,7 +167,7 @@ Further information can be found in Spring Data REST documentation : http://docs
 
 = Job offers
 
-Following chapters provide examples of requests and responses used to manage job offers.
+The following chapters provide examples of requests and responses used to manage job offers.
 
 == Create a job offer
 
@@ -254,7 +254,7 @@ include::{snippets}/delete-job-offer/curl-request.adoc[]
 
 == Language codes
 
-Following codes are available to set the language in the _languageSkills_ object :
+The following codes are available to set the language in the _languageSkills_ object :
 
 [cols="10,30,30,30"]
 |===
@@ -304,7 +304,7 @@ Following codes are available to set the language in the _languageSkills_ object
 
 == Country codes
 
-Following codes are available to set the country in the _location_ object :
+The following codes are available to set the country in the _location_ object :
 
 [cols="10,30,30,30"]
 |===

@@ -231,7 +231,8 @@ public class ApiDocGet {
                         responseFields(
                                 fieldWithPath("_embedded.jobOffers").description("Contains all job offers associated to the current user"),
                                 fieldWithPath("_links").ignored(),
-                                fieldWithPath("page").description("Provides informations and links used to manage pagination (see chapter <<Paging>>)")
+                                fieldWithPath("page").
+                                        description("Provides informations and links used to manage pagination (see chapter <<Paging>>)")
                         )));
     }
 }
