@@ -1,29 +1,41 @@
 sudo: false
 
 language: java
-jdk:      oraclejdk8
+
+jdk: oraclejdk8
 
 before_install:
-  # Use Gradle daemon since we're calling it more than once
-  - echo "org.gradle.daemon=true" >> ~/.gradle/gradle.properties
+- echo "org.gradle.daemon=true" >> ~/.gradle/gradle.properties
 
-install:  ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD clean assemble
-script:   ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD check
+install: "./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD
+  clean assemble"
+
+script: "./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD
+  check"
 
 before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 
 cache:
   directories:
-    - $HOME/.m2/
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/native/
-    - $HOME/.gradle/wrapper/
+  - "$HOME/.m2/"
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/native/"
+  - "$HOME/.gradle/wrapper/"
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
+- ls $TRAVIS_BUILD_DIR/build/libs
 
 notifications:
   webhooks:
-    # Trigger Buildtime Trend Service to parse Travis CI log
-    - https://buildtimetrend.herokuapp.com/travis
+  - https://buildtimetrend.herokuapp.com/travis
+
+deploy:
+  provider: releases
+  api_key:
+    secure: 2+/QxB6yIesn19cfXuZh3Xr6O4ZCPR81Zx2XlVqSTZJCMGCpK4vpaeAALBOWS1fdlzOmtJ+U2WgP4ykXg7FsJfVhrMk7KmimBGSePjmKk/k4YH7vt9Sx8K6gA5BnwMOnoxzdrIhl2hE52lWJgmEBpM5yeLcpDrdcZAXGqYbGjxZMQQJaBNq5IY2bM/acLE3sG7QwUa3bw7sWwOZOoaeIOmQTTUHqsH/Z1hPtP+FtwNxFxnjSbPUhhO/cZGbBAiPcTTL1GFsistrgBnzZ/HThg2xQhL7GZ5zJlJRKeENg5np3vW1Qh6ZYbhvBuaqYSH5STkQg/dJdhSfMWNY6NGkFPd9c0C1YO+ZS8WiPXsMQtoTGMB9m9oL+2G8JBShmdN75CepEkCpS23KGbaUKPkEfUM9v/VI0ASWM967bGTxWHEN7ucjDIS7NhJ/ju+3QKu5ssB1U2E8HOkYbCctNsti3xzG8YrZBP0VSDG6vHkTvIEILqtbB3WTXwHpKqvCBE3PRLt5VjPGj11FuIJ1WCSV7kGeAeoH0KaV2tvrzWRye7nsb/aN0/F8ktbMIlPV1kf/VORZuA/Mh6bKG9VHUAPQFkd2tG2PaXAEP5xOsHGNLhFSSVz3JyDrapGmszIpjvNEYUH0Xjd1ugdQdDp2M82y5wpi7r2IZdxbxDslVNFhzfLE=
+  file: $TRAVIS_BUILD_DIR/build/libs/$TRAVIS_TAG.jar
+  skip_cleanup: true
+  on:
+    tags: true

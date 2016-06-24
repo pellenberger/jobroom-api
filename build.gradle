@@ -35,7 +35,7 @@ apply plugin: 'org.asciidoctor.convert'
 
 
 jar {
-    baseName = 'jobroom-api'
+    baseName = ''
     version = '0.2.0-SNAPSHOT'
 
     dependsOn asciidoctor
