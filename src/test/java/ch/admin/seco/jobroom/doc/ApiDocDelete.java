@@ -21,8 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -76,17 +79,28 @@ public class ApiDocDelete {
     @After
     public void cleanup() {
 
+        apiTestHelper.authenticateDefault();
+        jobOfferRepository.deleteAll();
         restAccessKeyRepository.deleteAll();
         apiTestHelper.unAuthenticate();
     }
 
     @Test
-    public void deleteJobOffer() throws Exception {
+    public void cancelJobOffer() throws Exception {
 
-        this.mockMvc.perform(delete("/joboffers/" + idNewJobOffer)
-                .with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(post("/joboffers/" + idNewJobOffer + "/cancel")
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .param("reasonCode", "1"))
                 .andExpect(status().isNoContent())
 
-                .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse()));
+                .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                        requestParameters(
+                                parameterWithName("reasonCode")
+                                        .description("Reason why the joboffer must be cancelled.")
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "* Must be one of authorized reason codes (see section <<Cancellation reason codes>>)"
+                                        )
+                                        ))));
     }
 }

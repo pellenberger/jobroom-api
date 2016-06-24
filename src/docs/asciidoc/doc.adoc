@@ -33,7 +33,7 @@ JobRoom API exposes a simple way to manage job offers. It follows _RESTful_ stan
 * Explicit HTTP status codes
 * Pagination support
 
-The following chapters explain more precisely some of these concepts and provide examples in how to create, read, edit and delete job offers.
+The following chapters explain more precisely some of these concepts and provide examples in how to create, read, edit and cancel job offers.
 
 == HTTP verbs
 
@@ -46,7 +46,6 @@ The following verbs are fully supported :
 | GET | Used for retrieving resources, either a single object or a collection.
 | POST | Used for creating new resources.
 | PATCH | Used for updating existing resources with partial JSON data.
-| DELETE | Used for deleting resources.
 |===
 
 == HTTP response status codes
@@ -61,7 +60,7 @@ The following table describes examples and precisions specific to JobRoom API :
 
 | 200 | OK | Success using GET for retrieving resources.
 | 201 | Created | Success using POST for creating new resources.
-| 204 | No Content | Success using DELETE or PATCH for deleting or updating resources.
+| 204 | No Content | Success PATCH for updating resources.
 | 400 | Bad request | Occurs when error in body using POST/PATCH (missing non nullable field, invalid JSON object, wrong object type, validation failed, etc.).
 | 401 | Unauthorized | Occurs when accessing to a protected resource with bad credentials.
 | 404 | Not Found | Occurs when requested resource does not exist or when accessing another user's resource.
@@ -239,16 +238,23 @@ include::{snippets}/edit-job-offer/http-response.adoc[]
 === curl request
 include::{snippets}/edit-job-offer/curl-request.adoc[]
 
-== Delete a job offer
+== Cancel a job offer
+
+A job offer can't be directly deleted. Instead, it can be cancelled and won't appear anymore on publication medias.
+
+NOTE: Update will be visible the day after the cancellation.
 
 === HTTP request
-include::{snippets}/delete-job-offer/http-request.adoc[]
+include::{snippets}/cancel-job-offer/http-request.adoc[]
 
 === HTTP response
-include::{snippets}/delete-job-offer/http-response.adoc[]
+include::{snippets}/cancel-job-offer/http-response.adoc[]
+
+=== Request parameters
+include::{snippets}/cancel-job-offer/request-parameters.adoc[]
 
 === curl request
-include::{snippets}/delete-job-offer/curl-request.adoc[]
+include::{snippets}/cancel-job-offer/curl-request.adoc[]
 
 = Appendix
 
@@ -562,6 +568,19 @@ The following codes are available to set the country in the _location_ object :
 | SX | Sint Maarten (Niederlande) | Sint Maarten (Pays-Bas) | Sint Maarten (Paesi Bassi)
 | BQ | Bonaire, Saint Eustatius und Saba | Bonaire, Saint Eustatius et Saba | Bonaire, Saint Eustatius e Saba
 | SS | Südsudan | Soudan du Sud | Sudan del Sud
+|===
+
+== Cancellation reason codes
+
+The following codes are available to set the cancellation reason :
+
+[cols="10,90"]
+|===
+| Code | Reason
+
+| 1 | The position has been filled
+| 2 | Enough candidates have been found
+| 3 | Other reason
 |===
 
 

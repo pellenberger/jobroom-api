@@ -24,14 +24,6 @@ public interface JobOfferRepository extends PagingAndSortingRepository<JobOffer,
     @Override
     Page<JobOffer> findAll(Pageable pageable);
 
-    @Query("delete from JobOffer j where j.id = :#{#joboffer_id} and j.owner.ownerEmail = ?#{principal?.username}")
-    @Override
-    void delete(@Param("joboffer_id") Integer integer);
-
-    // used by method delete(Integer integer)
-    @Override
-    void delete(JobOffer entity);
-
     @PreAuthorize("#joboffer.owner.ownerEmail == principal.username")
     @Override
     <S extends JobOffer> S save(@Param("joboffer") S entity);
@@ -55,6 +47,14 @@ public interface JobOfferRepository extends PagingAndSortingRepository<JobOffer,
     @RestResource(exported = false)
     @Override
     long count();
+
+    @RestResource(exported = false)
+    @Override
+    void delete(Integer integer);
+
+    @RestResource(exported = false)
+    @Override
+    void delete(JobOffer entity);
 
     @RestResource(exported = false)
     @Override

@@ -47,6 +47,8 @@ create table joboffer (
   owner_id integer not null,
   creationdate timestamp not null,
   lastmodificationdate timestamp,
+  cancellationdate timestamp,
+  cancellationreasoncode varchar(255),
 
   primary key (id)
 );

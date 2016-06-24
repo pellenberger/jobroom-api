@@ -46,10 +46,16 @@ import javax.persistence.*
         var creationDate: Timestamp? = null,
 
         @JsonIgnore
-        var lastModificationDate: Timestamp? = null
+        var lastModificationDate: Timestamp? = null,
+
+        @JsonIgnore
+        var cancellationDate: Timestamp? = null,
+
+        @JsonIgnore
+        var cancellationReasonCode: String? = null
 ) {
     // This private "default" constructor is only used by JPA layer
-    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, Job(), Company(), Contact(), Application(), null, null, null)
+    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, Job(), Company(), Contact(), Application(), null, null, null, null, null)
 
     @PrePersist
     fun onCreate() {

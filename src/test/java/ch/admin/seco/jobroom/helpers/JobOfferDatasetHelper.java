@@ -81,6 +81,8 @@ public final class JobOfferDatasetHelper {
                 ),
                 null,
                 null,
+                null,
+                null,
                 null
         );
     }
