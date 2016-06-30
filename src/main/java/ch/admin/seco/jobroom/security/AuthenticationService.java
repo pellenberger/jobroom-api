@@ -27,9 +27,9 @@ public class AuthenticationService implements UserDetailsService {
 
         GrantedAuthority authority = new SimpleGrantedAuthority(ROLE);
 
-        RestAccessKey restAccessKey = restAccessKeyRepository.findByOwnerEmailAndActive(username, IS_ACTIVE);
+        RestAccessKey restAccessKey = restAccessKeyRepository.findByOwnerNameAndActive(username, IS_ACTIVE);
 
-        UserDetails userDetails = new User(restAccessKey.getOwnerEmail(), restAccessKey.getAccessKey(), Arrays.asList(authority));
+        UserDetails userDetails = new User(restAccessKey.getOwnerName(), restAccessKey.getAccessKey(), Arrays.asList(authority));
 
         return userDetails;
     }

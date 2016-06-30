@@ -12,15 +12,15 @@ import javax.persistence.*
         @field:Column(name = "ACCESSKEY")
         val accessKey: String,
 
-        @field:Column(name = "OWNER_EMAIL")
-        val ownerEmail: String,
+        @field:javax.persistence.Column(name = "OWNER_NAME")
+        var ownerName: String,
 
-        @field:Column(name = "OWNER_NAME")
-        var ownerName: String? = null,
+        @field:Column(name = "OWNER_EMAIL")
+        val ownerEmail: String? = null,
 
         @field:Column(name = "ACTIVE")
         var active: Int? = null
 ) {
         private constructor() : this(null, "", "", null, null)
-        constructor(accessKey: String, ownerEmail: String, ownerName: String, active: Int) : this(null, accessKey, ownerEmail, ownerName, active)
+        constructor(accessKey: String, ownerName: String, ownerEmail: String, active: Int) : this(null, accessKey, ownerName, ownerEmail, active)
 }

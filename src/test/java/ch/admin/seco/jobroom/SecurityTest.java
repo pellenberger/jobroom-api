@@ -70,9 +70,9 @@ public class SecurityTest {
         // 2 active users + 1 inactive user containing each 3 joboffers
         //
 
-        user1 = new RestAccessKey("key1", "ownerEmail1", "ownerName1", 1);
-        user2 = new RestAccessKey("key2", "ownerEmail2", "ownerName2", 1);
-        user3 = new RestAccessKey("key3", "ownerEmail3", "ownerName3", 1);
+        user1 = new RestAccessKey("key1", "ownerName1", "ownerEmail1", 1);
+        user2 = new RestAccessKey("key2", "ownerName2", "ownerEmail2", 1);
+        user3 = new RestAccessKey("key3", "ownerName3", "ownerEmail3", 1);
 
         users = new ArrayList<>(Arrays.asList(
                 user1,
@@ -146,10 +146,10 @@ public class SecurityTest {
 
         // correct user but wrong password (GET / POST)
 
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(user1.getOwnerEmail(), "wrong_password")))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user1.getOwnerName(), "wrong_password")))
                 .andExpect(status().isUnauthorized());
 
-        this.mockMvc.perform(post("/joboffers").with(httpBasic(user1.getOwnerEmail(), "wrong_password"))
+        this.mockMvc.perform(post("/joboffers").with(httpBasic(user1.getOwnerName(), "wrong_password"))
                 .contentType(apiTestHelper.getContentType())
                 .content(JobOfferDatasetHelper.get().toString()))
                 .andExpect(status().isUnauthorized());
@@ -158,13 +158,13 @@ public class SecurityTest {
     @Test
     public void restAccessKeys() throws Exception {
         // RestAccessKey resource must not be exposed through API
-        this.mockMvc.perform(get("/restAccessKeys").with(httpBasic(user1.getOwnerEmail(), user1.getAccessKey())))
+        this.mockMvc.perform(get("/restAccessKeys").with(httpBasic(user1.getOwnerName(), user1.getAccessKey())))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void getOnlyOwningJobs() throws Exception {
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(user1.getOwnerEmail(), user1.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user1.getOwnerName(), user1.getAccessKey())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(3)));
     }
@@ -172,18 +172,18 @@ public class SecurityTest {
     @Test
     public void postJob() throws Exception {
         this.mockMvc.perform(post("/joboffers")
-                .with(httpBasic(user1.getOwnerEmail(), user1.getAccessKey()))
+                .with(httpBasic(user1.getOwnerName(), user1.getAccessKey()))
                 .contentType(apiTestHelper.getContentType())
                 .content(JobOfferDatasetHelper.getJson().toString()))
                 .andExpect(status().isCreated());
 
         // user that created the job has one more job on its collection
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(user1.getOwnerEmail(), user1.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user1.getOwnerName(), user1.getAccessKey())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(4)));
 
         // other user has always the same number of jobs
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(user2.getOwnerEmail(), user2.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user2.getOwnerName(), user2.getAccessKey())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(3)));
     }
@@ -194,21 +194,21 @@ public class SecurityTest {
     @Test
     public void accessNotOwningJob() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers/" + String.valueOf(idJobUser1)).with(httpBasic(user1.getOwnerEmail(), user1.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers/" + String.valueOf(idJobUser1)).with(httpBasic(user1.getOwnerName(), user1.getAccessKey())))
                 .andExpect(status().isOk());
 
         // try to access job of other owner (GET)
-        this.mockMvc.perform(get("/joboffers/" + String.valueOf(idJobUser2)).with(httpBasic(user1.getOwnerEmail(), user1.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers/" + String.valueOf(idJobUser2)).with(httpBasic(user1.getOwnerName(), user1.getAccessKey())))
                 .andExpect(status().isNotFound());
 
         // try to access job of other owner (POST /cancel)
         this.mockMvc.perform(post("/joboffers/" + String.valueOf(idJobUser2) + "/cancel")
-                .with(httpBasic(user1.getOwnerEmail(), user1.getAccessKey())))
+                .with(httpBasic(user1.getOwnerName(), user1.getAccessKey())))
                 .andExpect(status().isNotFound());
 
         // try to access job of other owner (PATCH)
         this.mockMvc.perform(patch("/joboffers/" + String.valueOf(idJobUser2))
-                .with(httpBasic(user1.getOwnerEmail(), user1.getAccessKey()))
+                .with(httpBasic(user1.getOwnerName(), user1.getAccessKey()))
                 .contentType(apiTestHelper.getContentType())
                 .content(JobOfferDatasetHelper.get().toString()))
                 .andExpect(status().isNotFound());
@@ -217,13 +217,13 @@ public class SecurityTest {
     @Test
     public void accessWithInactiveKey() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(user3.getOwnerEmail(), user3.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user3.getOwnerName(), user3.getAccessKey())))
                 .andExpect(status().isUnauthorized());
 
         user3.setActive(1);
         restAccessKeyRepository.save(user3);
 
-        this.mockMvc.perform(get("/joboffers").with(httpBasic(user3.getOwnerEmail(), user3.getAccessKey())))
+        this.mockMvc.perform(get("/joboffers").with(httpBasic(user3.getOwnerName(), user3.getAccessKey())))
                 .andExpect(status().isOk());
     }
 }

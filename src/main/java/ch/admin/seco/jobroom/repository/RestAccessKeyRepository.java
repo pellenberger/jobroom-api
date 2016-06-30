@@ -8,5 +8,5 @@ import org.springframework.data.rest.core.annotation.RestResource;
 @RestResource(exported = false)
 public interface RestAccessKeyRepository extends JpaRepository<RestAccessKey, Long> {
 
-    RestAccessKey findByOwnerEmailAndActive(String ownerEmail, int active);
+    RestAccessKey findByOwnerNameAndActive(String ownerName, int active);
 }
