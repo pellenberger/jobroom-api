@@ -32,6 +32,7 @@ public final class JobOfferDatasetHelper {
                 null,
                 Date.valueOf(publicationStartDate),
                 Date.valueOf("2101-02-02"),
+                "ref-284956",
                 new Job(
                         "Software engineer",
                         "Development of eGov applications",
@@ -224,6 +225,7 @@ public final class JobOfferDatasetHelper {
         JsonObjectBuilder jobOffer = Json.createObjectBuilder()
                 .add("publicationStartDate", "2116-02-15")
                 .add("publicationEndDate", "2116-04-01")
+                .add("reference", "REF-847265")
                 .add("job", jobBuilder)
                 .add("company", Json.createObjectBuilder()
                         .add("name", "Mission Realty")

@@ -24,6 +24,8 @@ import javax.persistence.*
 
         var publicationEndDate: Date? = null,
 
+        var reference: String? = null,
+
         @Embedded
         @get:javax.validation.Valid
         val job: Job,
@@ -55,7 +57,7 @@ import javax.persistence.*
         var cancellationReasonCode: String? = null
 ) {
     // This private "default" constructor is only used by JPA layer
-    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, Job(), Company(), Contact(), Application(), null, null, null, null, null)
+    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, null, Job(), Company(), Contact(), Application(), null, null, null, null, null)
 
     @PrePersist
     fun onCreate() {

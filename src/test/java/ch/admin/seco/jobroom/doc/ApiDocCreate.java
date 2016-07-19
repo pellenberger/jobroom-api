@@ -99,6 +99,9 @@ public class ApiDocCreate {
                                 fieldWithPath("publicationEndDate")
                                         .description("After this date, the job offer is removed from the publication medias.")
                                         .attributes(key("constraints").value("* Must be greater than publicationStartDate.")),
+                                fieldWithPath("reference")
+                                        .description("External reference (e.g. can be used to link API's jobs to another id system).")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("job")
                                         .description("Description of the job\n\n(further information below)")
                                         .attributes(key("constraints").value("* Not null.")),
@@ -116,6 +119,7 @@ public class ApiDocCreate {
                         requestFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
+                                fieldWithPath("reference").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("job.title")
                                         .description("")
@@ -178,6 +182,7 @@ public class ApiDocCreate {
                         requestFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
+                                fieldWithPath("reference").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("company.name")
@@ -225,6 +230,7 @@ public class ApiDocCreate {
                         requestFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
+                                fieldWithPath("reference").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
@@ -249,6 +255,7 @@ public class ApiDocCreate {
                         requestFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
+                                fieldWithPath("reference").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
