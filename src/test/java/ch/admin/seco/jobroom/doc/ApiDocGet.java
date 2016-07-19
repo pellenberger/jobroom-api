@@ -94,6 +94,7 @@ public class ApiDocGet {
                 .andExpect(jsonPath("$.publicationStartDate", Matchers.is("2100-01-01")))
                 .andExpect(jsonPath("$.publicationEndDate", Matchers.is("2101-02-02")))
                 .andExpect(jsonPath("$.reference", Matchers.is("ref-284956")))
+                .andExpect(jsonPath("$.url", Matchers.is("https://www.seco.admin.ch/jobs/284956")))
                 .andExpect(jsonPath("$.job.title", Matchers.is("Software engineer")))
                 .andExpect(jsonPath("$.job.description", Matchers.is("Development of eGov applications")))
                 .andExpect(jsonPath("$.job.workingTimePercentageFrom", Matchers.is(80)))
@@ -132,12 +133,14 @@ public class ApiDocGet {
                 .andExpect(jsonPath("$.application.written", Matchers.is(1)))
                 .andExpect(jsonPath("$.application.electronic", Matchers.is(1)))
                 .andExpect(jsonPath("$.application.additionalDetails", Matchers.is("Please apply online")))
+                .andExpect(jsonPath("$.application.url", Matchers.is("https://www.seco.admin.ch/jobs/284956/apply")))
 
                 .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
                         responseFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("reference").ignored(),
+                                fieldWithPath("url").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
@@ -149,6 +152,7 @@ public class ApiDocGet {
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("reference").ignored(),
+                                fieldWithPath("url").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("job.title").ignored(),
                                 fieldWithPath("job.description").ignored(),
@@ -174,6 +178,7 @@ public class ApiDocGet {
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("reference").ignored(),
+                                fieldWithPath("url").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("company.name").ignored(),
@@ -197,6 +202,7 @@ public class ApiDocGet {
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("reference").ignored(),
+                                fieldWithPath("url").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
@@ -213,6 +219,7 @@ public class ApiDocGet {
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("reference").ignored(),
+                                fieldWithPath("url").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
@@ -221,6 +228,7 @@ public class ApiDocGet {
                                 fieldWithPath("application.written").ignored(),
                                 fieldWithPath("application.electronic").ignored(),
                                 fieldWithPath("application.additionalDetails").ignored(),
+                                fieldWithPath("application.url").ignored(),
                                 fieldWithPath("_links").ignored()
                         )));
     }

@@ -14,6 +14,7 @@ create table joboffer (
   publicationstartdate date not null,
   publicationenddate date,
   reference varchar(255),
+  url varchar(255),
   job_title varchar(255) not null,
   job_description varchar(15000) not null, -- length is intentionally false (test is to validate @Size annotation on JobOffer model)
   job_workingtimepercentagefrom integer not null,
@@ -45,6 +46,7 @@ create table joboffer (
   application_written integer not null,
   application_electronic integer not null,
   application_additionaldetails varchar(255),
+  application_url varchar(255),
   owner_id integer not null,
   creationdate timestamp not null,
   lastmodificationdate timestamp,

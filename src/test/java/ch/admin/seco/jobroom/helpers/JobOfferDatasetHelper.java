@@ -33,6 +33,7 @@ public final class JobOfferDatasetHelper {
                 Date.valueOf(publicationStartDate),
                 Date.valueOf("2101-02-02"),
                 "ref-284956",
+                "https://www.seco.admin.ch/jobs/284956",
                 new Job(
                         "Software engineer",
                         "Development of eGov applications",
@@ -78,7 +79,8 @@ public final class JobOfferDatasetHelper {
                         0,
                         1,
                         1,
-                        "Please apply online"
+                        "Please apply online",
+                        "https://www.seco.admin.ch/jobs/284956/apply"
                 ),
                 null,
                 null,
@@ -226,6 +228,7 @@ public final class JobOfferDatasetHelper {
                 .add("publicationStartDate", "2116-02-15")
                 .add("publicationEndDate", "2116-04-01")
                 .add("reference", "REF-847265")
+                .add("url", "https://www.missionrealty.ch/jobs/financial-manager/preview")
                 .add("job", jobBuilder)
                 .add("company", Json.createObjectBuilder()
                         .add("name", "Mission Realty")
@@ -296,7 +299,8 @@ public final class JobOfferDatasetHelper {
                 .add("telephonic", 1)
                 .add("written", 0)
                 .add("electronic", 1)
-                .add("additionalDetails", "Please apply online");
+                .add("additionalDetails", "Please apply online")
+                .add("url", "https://www.missionrealty.ch/jobs/financial-manager/apply");
         return application;
     }
 }

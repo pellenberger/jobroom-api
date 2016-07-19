@@ -102,6 +102,9 @@ public class ApiDocCreate {
                                 fieldWithPath("reference")
                                         .description("External reference (e.g. can be used to link API's jobs to another id system).")
                                         .attributes(key("constraints").value("")),
+                                fieldWithPath("url")
+                                        .description("Link to the original webpage of the job offer.")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("job")
                                         .description("Description of the job\n\n(further information below)")
                                         .attributes(key("constraints").value("* Not null.")),
@@ -120,6 +123,7 @@ public class ApiDocCreate {
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("reference").ignored(),
+                                fieldWithPath("url").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("job.title")
                                         .description("")
@@ -183,6 +187,7 @@ public class ApiDocCreate {
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("reference").ignored(),
+                                fieldWithPath("url").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("company.name")
@@ -231,6 +236,7 @@ public class ApiDocCreate {
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("reference").ignored(),
+                                fieldWithPath("url").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
@@ -256,6 +262,7 @@ public class ApiDocCreate {
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
                                 fieldWithPath("reference").ignored(),
+                                fieldWithPath("url").ignored(),
                                 fieldWithPath("job").ignored(),
                                 fieldWithPath("company").ignored(),
                                 fieldWithPath("contact").ignored(),
@@ -271,6 +278,9 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
                                 fieldWithPath("application.additionalDetails")
                                         .description("More information can be added as free text.")
+                                        .attributes(key("constraints").value("")),
+                                fieldWithPath("application.url")
+                                        .description("Link to the webpage containing an application form.")
                                         .attributes(key("constraints").value(""))
                         )));
 
