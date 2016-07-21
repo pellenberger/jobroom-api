@@ -211,10 +211,10 @@ public class ApiDocCreate {
                                         .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("company.phoneNumber")
-                                        .description("")
+                                        .description("Used as contact when application.telephonic is set to 1.")
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("company.email")
-                                        .description("")
+                                        .description("Used as contact when application.electronic is set to 1.")
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("company.website")
                                         .description("")
