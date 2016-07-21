@@ -36,7 +36,7 @@ apply plugin: 'org.asciidoctor.convert'
 
 jar {
     baseName = ''
-    version = '0.2.0-SNAPSHOT'
+    version = '0.2.0-SNAPSHOT-201607211333'
 
     dependsOn asciidoctor
     from ("${asciidoctor.outputDir}/html5") {
