@@ -28,6 +28,15 @@ public class JobOfferController {
     @RequestMapping(value = "/joboffers/{id}/cancel", method = RequestMethod.POST)
     public ResponseEntity<?> cancelJoboffer(@PathVariable("id") int id, HttpServletRequest request) {
 
+        JobOffer jobOffer = jobOfferRepository.findOne(id);
+
+        // job offer doesn't exist or is owned by another user
+        if (jobOffer == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+
         String cancellationReasonCode = request.getParameter("reasonCode");
 
         if (cancellationReasonCode == null || cancellationReasonCode.isEmpty()) {
@@ -38,7 +47,6 @@ public class JobOfferController {
 
         //TODO add more validation
 
-        JobOffer jobOffer = jobOfferRepository.findOne(id);
         jobOffer.setCancellationReasonCode(cancellationReasonCode);
         jobOffer.setCancellationDate(new Timestamp(DateTime.now().getMillis()));
 
