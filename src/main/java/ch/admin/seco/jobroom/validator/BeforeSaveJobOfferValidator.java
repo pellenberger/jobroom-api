@@ -35,6 +35,7 @@ public class BeforeSaveJobOfferValidator implements Validator {
         JobOffer jobOffer = (JobOffer) target;
 
         validatePublicationStartDateChangedOnPublishedJob(jobOffer, errors);
+        CommonJobOfferValidator.validateCompanyInformations(jobOffer, errors);
     }
 
     /**

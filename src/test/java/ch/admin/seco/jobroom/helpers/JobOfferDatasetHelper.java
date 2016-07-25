@@ -16,17 +16,18 @@ import java.util.Arrays;
 public final class JobOfferDatasetHelper {
 
     private static final String DEFAULT_PUBLICATION_START_DATE = "2100-01-01";
+    private static final Application DEFAULT_APPLICATION = new Application(
+            0,
+            1,
+            1,
+            "Please apply online",
+            "https://www.seco.admin.ch/jobs/284956/apply");
 
     // ****************************************
     // ***** type JobOffer
     // ****************************************
 
-    public static JobOffer get() {
-
-        return getWithPublicationStartDate(DEFAULT_PUBLICATION_START_DATE);
-    }
-
-    public static JobOffer getWithPublicationStartDate(String publicationStartDate) {
+    private static JobOffer createJobOffer(String publicationStartDate, Application application) {
         return new JobOffer(
                 null,
                 null,
@@ -75,19 +76,25 @@ public final class JobOfferDatasetHelper {
                         "0791234567",
                         "alizee.dupont@seco.admin.ch"
                 ),
-                new Application(
-                        0,
-                        1,
-                        1,
-                        "Please apply online",
-                        "https://www.seco.admin.ch/jobs/284956/apply"
-                ),
+                application,
                 null,
                 null,
                 null,
                 null,
                 null
         );
+    }
+
+    public static JobOffer get() {
+        return createJobOffer(DEFAULT_PUBLICATION_START_DATE, DEFAULT_APPLICATION);
+    }
+
+    public static JobOffer getWithPublicationStartDate(String publicationStartDate) {
+        return createJobOffer(publicationStartDate, DEFAULT_APPLICATION);
+    }
+
+    public static JobOffer getWithApplication(Application application) {
+        return createJobOffer(DEFAULT_PUBLICATION_START_DATE, application);
     }
 
     // ****************************************
@@ -116,7 +123,8 @@ public final class JobOfferDatasetHelper {
         JsonObjectBuilder jobBuilder = createJobBuilder();
         jobBuilder.add("description", jobDescription);
 
-        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(jobBuilder, createContactBuilder(), createApplicationBuilder());
+        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(
+                jobBuilder, createContactBuilder(), createApplicationBuilder(), createCompanyBuilder());
         return jobOfferBuilder.build();
     }
 
@@ -125,7 +133,8 @@ public final class JobOfferDatasetHelper {
                 .add("workingTimePercentageFrom", from)
                 .add("workingTimePercentageTo", to);
 
-        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(jobBuilder, createContactBuilder(), createApplicationBuilder());
+        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(
+                jobBuilder, createContactBuilder(), createApplicationBuilder(), createCompanyBuilder());
         return jobOfferBuilder.build();
     }
 
@@ -134,7 +143,8 @@ public final class JobOfferDatasetHelper {
                 .add("startDate", jobStartDate)
                 .add("endDate", jobEndDate);
 
-        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(jobBuilder, createContactBuilder(), createApplicationBuilder());
+        JsonObjectBuilder jobOfferBuilder = createJobOfferBuilder(
+                jobBuilder, createContactBuilder(), createApplicationBuilder(), createCompanyBuilder());
         return jobOfferBuilder.build();
     }
 
@@ -147,7 +157,8 @@ public final class JobOfferDatasetHelper {
                     .add("writtenLevel", "good"));
         }
 
-        return createJobOfferBuilder(createJobBuilder(languageSkills), createContactBuilder(), createApplicationBuilder()).build();
+        return createJobOfferBuilder(
+                createJobBuilder(languageSkills), createContactBuilder(), createApplicationBuilder(), createCompanyBuilder()).build();
     }
 
     public static JsonObject getJsonWithLanguageSkills(String language, String spokenLevel, String writtenLevel) {
@@ -156,14 +167,16 @@ public final class JobOfferDatasetHelper {
                         .add("language", language)
                         .add("spokenLevel", spokenLevel)
                         .add("writtenLevel", writtenLevel));
-        return createJobOfferBuilder(createJobBuilder(languageSkills), createContactBuilder(), createApplicationBuilder()).build();
+        return createJobOfferBuilder(
+                createJobBuilder(languageSkills), createContactBuilder(), createApplicationBuilder(), createCompanyBuilder()).build();
     }
 
     public static JsonObject getJsonWithContactTitle(String title) {
         JsonObjectBuilder contact = createContactBuilder();
         contact.add("title", title);
 
-        JsonObject jobOffer = createJobOfferBuilder(createJobBuilder(), contact, createApplicationBuilder()).build();
+        JsonObject jobOffer = createJobOfferBuilder(
+                createJobBuilder(), contact, createApplicationBuilder(), createCompanyBuilder()).build();
         return jobOffer;
     }
 
@@ -172,7 +185,18 @@ public final class JobOfferDatasetHelper {
                 .add("telephonic", telephonic)
                 .add("written", written)
                 .add("electronic", electronic);
-        JsonObject jobOffer = createJobOfferBuilder(createJobBuilder(), createContactBuilder(), application).build();
+        JsonObject jobOffer = createJobOfferBuilder(
+                createJobBuilder(), createContactBuilder(), application, createCompanyBuilder()).build();
+        return jobOffer;
+    }
+
+    public static JsonObject getJsonWithCompanyInformations(String email, String phoneNumber) {
+        JsonObjectBuilder company = createCompanyBuilder();
+        company.add("email", email);
+        company.add("phoneNumber", phoneNumber);
+
+        JsonObject jobOffer = createJobOfferBuilder(
+                createJobBuilder(), createContactBuilder(), createApplicationBuilder(), company).build();
         return jobOffer;
     }
 
@@ -207,7 +231,8 @@ public final class JobOfferDatasetHelper {
                                 .add("spokenLevel", "good")
                                 .add("writtenLevel", "good"))),
                 createContactBuilder(),
-                createApplicationBuilder()).build();
+                createApplicationBuilder(),
+                createCompanyBuilder()).build();
 
         return jobOffer;
     }
@@ -217,33 +242,21 @@ public final class JobOfferDatasetHelper {
     // ****************************************
 
     private static JsonObjectBuilder createJobOfferBuilder() {
-        return createJobOfferBuilder(createJobBuilder(), createContactBuilder(), createApplicationBuilder());
+        return createJobOfferBuilder(createJobBuilder(), createContactBuilder(), createApplicationBuilder(), createCompanyBuilder());
     }
 
     private static JsonObjectBuilder createJobOfferBuilder(
             JsonObjectBuilder jobBuilder,
             JsonObjectBuilder contactBuilder,
-            JsonObjectBuilder applicationBuilder) {
+            JsonObjectBuilder applicationBuilder,
+            JsonObjectBuilder companyBuilder) {
         JsonObjectBuilder jobOffer = Json.createObjectBuilder()
                 .add("publicationStartDate", "2116-02-15")
                 .add("publicationEndDate", "2116-04-01")
                 .add("reference", "REF-847265")
                 .add("url", "https://www.missionrealty.ch/jobs/financial-manager/preview")
                 .add("job", jobBuilder)
-                .add("company", Json.createObjectBuilder()
-                        .add("name", "Mission Realty")
-                        .add("countryCode", "CH")
-                        .add("street", "Glennerstrasse")
-                        .add("houseNumber", "62")
-                        .add("locality", "Genolier")
-                        .add("postalCode", "1272")
-                        .add("phoneNumber", "0225176355")
-                        .add("email", "info@missionrealty.ch")
-                        .add("website", "www.missionrealty.ch")
-                        .add("postbox", Json.createObjectBuilder()
-                                .add("number", "1234")
-                                .add("locality", "Genolier")
-                                .add("postalCode", "1272")))
+                .add("company", companyBuilder)
                 .add("contact", contactBuilder)
                 .add("application", applicationBuilder);
         return jobOffer;
@@ -302,5 +315,23 @@ public final class JobOfferDatasetHelper {
                 .add("additionalDetails", "Please apply online")
                 .add("url", "https://www.missionrealty.ch/jobs/financial-manager/apply");
         return application;
+    }
+
+    private static JsonObjectBuilder createCompanyBuilder() {
+        JsonObjectBuilder company = Json.createObjectBuilder()
+                .add("name", "Mission Realty")
+                .add("countryCode", "CH")
+                .add("street", "Glennerstrasse")
+                .add("houseNumber", "62")
+                .add("locality", "Genolier")
+                .add("postalCode", "1272")
+                .add("phoneNumber", "0225176355")
+                .add("email", "info@missionrealty.ch")
+                .add("website", "www.missionrealty.ch")
+                .add("postbox", Json.createObjectBuilder()
+                        .add("number", "1234")
+                        .add("locality", "Genolier")
+                        .add("postalCode", "1272"));
+        return company;
     }
 }
