@@ -68,7 +68,7 @@ public class SqlConstraintsTest {
 
         //FIXME test fails
 
-        //TODO make the validation trigger raise an error that produces the same behaviour as other SQL constraints
+        //TODO make the validation trigger raise an error that produces the same behaviour as other SQL constraints (currently produces an error 500)
 
         this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
                 .with(apiTestHelper.getDefaultHttpBasic())

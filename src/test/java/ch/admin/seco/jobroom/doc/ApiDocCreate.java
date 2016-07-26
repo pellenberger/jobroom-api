@@ -77,11 +77,9 @@ public class ApiDocCreate {
     @Test
     public void createJobOffer() throws Exception {
 
-        // TODO add constraints in documentation (should be included using REST Docs mechanism : ConstraintDescriptions (JPA / SQL))
-
         String jobOfferJson = JobOfferDatasetHelper.getJson().toString();
 
-        this.mockMvc.perform(post("/joboffers") // FIXME design the "versioning approach" (externally?)
+        this.mockMvc.perform(post("/joboffers")
                 .with(apiTestHelper.getDefaultHttpBasic())
                 .contentType(apiTestHelper.getContentType())
                 .content(jobOfferJson))

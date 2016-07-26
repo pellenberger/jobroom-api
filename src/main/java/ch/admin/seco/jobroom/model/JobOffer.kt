@@ -7,9 +7,6 @@ import java.sql.Timestamp
 import java.util.*
 import javax.persistence.*
 
-// TODO: constraints like min/max should be (ONLY?) defined at SQL level!!!!
-// TODO: ideally the same data-centric approach for more advanced constraints (e.g. publicationDate update)
-
 @Entity data class JobOffer(
 
         @Id
