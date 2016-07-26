@@ -16,11 +16,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @RepositoryRestResource(path = "joboffers")
 public interface JobOfferRepository extends PagingAndSortingRepository<JobOffer, Integer> {
 
-    @Query("select j from JobOffer j where j.id = ?1 and j.owner.ownerName = ?#{principal?.username}")
+    @Query("select j from JobOffer j where j.id = ?1 and j.owner.ownerName = ?#{principal?.username} and j.cancellationDate = null")
     @Override
     JobOffer findOne(Integer integer);
 
-    @Query("select j from JobOffer j where j.owner.ownerName = ?#{principal?.username}")
+    @Query("select j from JobOffer j where j.owner.ownerName = ?#{principal?.username} and j.cancellationDate = null")
     @Override
     Page<JobOffer> findAll(Pageable pageable);
 

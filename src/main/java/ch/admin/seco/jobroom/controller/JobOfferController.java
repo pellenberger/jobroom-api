@@ -13,9 +13,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 
 @BasePathAwareController
 public class JobOfferController {
+
+    public static List<String> authorizedCancellationReasonCodes = Arrays.asList("1", "2", "3");
 
     @Autowired
     JobOfferRepository jobOfferRepository;
@@ -45,7 +49,11 @@ public class JobOfferController {
                     .body("Missing reasonCode");
         }
 
-        //TODO add more validation
+        if (!authorizedCancellationReasonCodes.contains(cancellationReasonCode)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("reasonCode is not valid");
+        }
 
         jobOffer.setCancellationReasonCode(cancellationReasonCode);
         jobOffer.setCancellationDate(new Timestamp(DateTime.now().getMillis()));
