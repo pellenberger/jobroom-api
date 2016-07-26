@@ -180,11 +180,12 @@ public final class JobOfferDatasetHelper {
         return jobOffer;
     }
 
-    public static JsonObject getJsonWithApplication(int telephonic, int written, int electronic) {
+    public static JsonObject getJsonWithApplication(int telephonic, int written, int electronic, String additionalDetails) {
         JsonObjectBuilder application = Json.createObjectBuilder()
                 .add("telephonic", telephonic)
                 .add("written", written)
-                .add("electronic", electronic);
+                .add("electronic", electronic)
+                .add("additionalDetails", additionalDetails);
         JsonObject jobOffer = createJobOfferBuilder(
                 createJobBuilder(), createContactBuilder(), application, createCompanyBuilder()).build();
         return jobOffer;

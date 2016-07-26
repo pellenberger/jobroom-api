@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 /**
- * Test constraints that are defined on SQL level 
+ * Test constraints that are defined on SQL level
  * IMPORTANT : Tests have been validated with a local Oracle database but are now ignored to not fail the CI build process
  */
 @Ignore
@@ -77,12 +77,13 @@ public class SqlConstraintsTest {
                 .content(JobOfferDatasetHelper.getJsonWithLanguageSkills("41", "good", "good").toString()))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     public void invalidApplication() throws Exception {
 
-        JsonObject invalidTelephonic = JobOfferDatasetHelper.getJsonWithApplication(2, 0, 0);
-        JsonObject invalidWritten = JobOfferDatasetHelper.getJsonWithApplication(0, 2, 0);
-        JsonObject invalidElectronic = JobOfferDatasetHelper.getJsonWithApplication(0, 0, 2);
+        JsonObject invalidTelephonic = JobOfferDatasetHelper.getJsonWithApplication(2, 0, 0, "");
+        JsonObject invalidWritten = JobOfferDatasetHelper.getJsonWithApplication(0, 2, 0, "");
+        JsonObject invalidElectronic = JobOfferDatasetHelper.getJsonWithApplication(0, 0, 2, "");
 
         this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
                 .with(apiTestHelper.getDefaultHttpBasic())
@@ -151,5 +152,24 @@ public class SqlConstraintsTest {
                 .content(JobOfferDatasetHelper.getJsonWithPublicationStartEndDate("2200-04-25", "2200-04-20").toString()))
                 .andExpect(status().isConflict());
 
+    }
+
+    @Test
+    public void lengthExceeded() throws Exception {
+
+        String longAdditionalDetails = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                "Etiam vitae finibus nunc. Nulla tristique molestie massa eget molestie. Cras luctus vehicula " +
+                "ex. Integer tristique tempor facilisis. Mauris lacus mi, facilisis in ex tristique, " +
+                "tristique turpis duis.";
+
+        Assert.assertEquals(256, longAdditionalDetails.length());
+
+        JsonObject jsonJobOffer = JobOfferDatasetHelper.getJsonWithApplication(0, 0, 0, longAdditionalDetails);
+
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(jsonJobOffer.toString()))
+                .andExpect(status().isBadRequest());
     }
 }
