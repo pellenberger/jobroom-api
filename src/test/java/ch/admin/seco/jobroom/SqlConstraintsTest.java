@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 /**
- * Test constraints that are defined on SQL level *
+ * Test constraints that are defined on SQL level 
  * IMPORTANT : Tests have been validated with a local Oracle database but are now ignored to not fail the CI build process
  */
 @Ignore
@@ -62,21 +62,21 @@ public class SqlConstraintsTest {
         restAccessKeyRepository.deleteAll();
     }
 
-    @Ignore
     @Test
     public void invalidLanguageSkill() throws Exception {
-
-        //FIXME test fails
-
-        //TODO make the validation trigger raise an error that produces the same behaviour as other SQL constraints (currently produces an error 500)
 
         this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
                 .with(apiTestHelper.getDefaultHttpBasic())
                 .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonInvalidLanguageSkill().toString()))
-                .andExpect(status().isInternalServerError());
-    }
+                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills("fr", "good", "good").toString()))
+                .andExpect(status().isBadRequest());
 
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills("41", "good", "good").toString()))
+                .andExpect(status().isBadRequest());
+    }
     @Test
     public void invalidApplication() throws Exception {
 

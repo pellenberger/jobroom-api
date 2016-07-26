@@ -223,20 +223,6 @@ public final class JobOfferDatasetHelper {
         return jobOffer;
     }
 
-    public static JsonObject getJsonInvalidLanguageSkill() {
-        JsonObject jobOffer = createJobOfferBuilder(
-                createJobBuilder(Json.createArrayBuilder()
-                        .add(Json.createObjectBuilder()
-                                .add("language", "fr")
-                                .add("spokenLevel", "good")
-                                .add("writtenLevel", "good"))),
-                createContactBuilder(),
-                createApplicationBuilder(),
-                createCompanyBuilder()).build();
-
-        return jobOffer;
-    }
-
     // ****************************************
     // ***** builders
     // ****************************************
