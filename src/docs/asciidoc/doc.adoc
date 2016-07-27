@@ -230,7 +230,8 @@ NOTE: The updates will reflect only the day after on the publication medias.
 === HTTP request
 include::{snippets}/edit-job-offer/http-request.adoc[]
 
-IMPORTANT: Although partial update is allowed, you need to provide the full body when updating a subobject (e.g. _company_).
+IMPORTANT: Although partial update is allowed, you need to provide the full body when updating a *subobject* (e.g. on object _company_, all *non-nullable* fields - like _company.name_ - have to be specified).
+Furthermore, all *nullable* fields (like _company.email_) are automatically set to NULL if not specified, even when a value is already defined in the database.
 
 === HTTP response
 include::{snippets}/edit-job-offer/http-response.adoc[]
