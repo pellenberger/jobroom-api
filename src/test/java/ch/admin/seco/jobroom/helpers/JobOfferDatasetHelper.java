@@ -158,7 +158,8 @@ public final class JobOfferDatasetHelper {
         }
 
         return createJobOfferBuilder(
-                createJobBuilder(languageSkills), createContactBuilder(), createApplicationBuilder(), createCompanyBuilder()).build();
+                createJobBuilder(languageSkills, createLocationBuilder()),
+                createContactBuilder(), createApplicationBuilder(), createCompanyBuilder()).build();
     }
 
     public static JsonObject getJsonWithLanguageSkills(String language, String spokenLevel, String writtenLevel) {
@@ -168,7 +169,8 @@ public final class JobOfferDatasetHelper {
                         .add("spokenLevel", spokenLevel)
                         .add("writtenLevel", writtenLevel));
         return createJobOfferBuilder(
-                createJobBuilder(languageSkills), createContactBuilder(), createApplicationBuilder(), createCompanyBuilder()).build();
+                createJobBuilder(languageSkills, createLocationBuilder()),
+                createContactBuilder(), createApplicationBuilder(), createCompanyBuilder()).build();
     }
 
     public static JsonObject getJsonWithContactTitle(String title) {
@@ -198,6 +200,27 @@ public final class JobOfferDatasetHelper {
 
         JsonObject jobOffer = createJobOfferBuilder(
                 createJobBuilder(), createContactBuilder(), createApplicationBuilder(), company).build();
+        return jobOffer;
+    }
+
+    public static JsonObject getJsonWithCompanyCountryCode(String countryCode) {
+        JsonObjectBuilder company = createCompanyBuilder();
+        company.add("countryCode", countryCode);
+
+        JsonObject jobOffer = createJobOfferBuilder(
+                createJobBuilder(), createContactBuilder(), createApplicationBuilder(), company).build();
+        return jobOffer;
+    }
+
+    public static JsonObject getJsonWithJobLocation(String countryCode, String locality, String postalCode) {
+        JsonObjectBuilder location = createLocationBuilder();
+        location.add("countryCode", countryCode);
+        location.add("locality", locality);
+        location.add("postalCode", postalCode);
+
+        JsonObject jobOffer = createJobOfferBuilder(
+                createJobBuilder(createLanguageSkillsBuilder(), location),
+                createContactBuilder(), createApplicationBuilder(), createCompanyBuilder()).build();
         return jobOffer;
     }
 
@@ -250,10 +273,10 @@ public final class JobOfferDatasetHelper {
     }
 
     private static JsonObjectBuilder createJobBuilder() {
-        return createJobBuilder(createLanguageSkillsBuilder());
+        return createJobBuilder(createLanguageSkillsBuilder(), createLocationBuilder());
     }
 
-    private static JsonObjectBuilder createJobBuilder(JsonArrayBuilder languageSkillsBuilder) {
+    private static JsonObjectBuilder createJobBuilder(JsonArrayBuilder languageSkillsBuilder, JsonObjectBuilder locationBuilder) {
         JsonObjectBuilder job = Json.createObjectBuilder()
                 .add("title", "Financial manager")
                 .add("description", "You will have to assist executives in making decisions that affect the organization")
@@ -261,11 +284,7 @@ public final class JobOfferDatasetHelper {
                 .add("workingTimePercentageTo", 90)
                 .add("startDate", "2116-03-01")
                 .add("endDate", "2118-05-31")
-                .add("location", Json.createObjectBuilder()
-                        .add("countryCode", "CH")
-                        .add("locality", "Lausanne")
-                        .add("postalCode", "1017")
-                        .add("additionalDetails", "Possibility of having interesting bonus"))
+                .add("location", locationBuilder)
                 .add("languageSkills", languageSkillsBuilder);
         return job;
     }
@@ -320,5 +339,15 @@ public final class JobOfferDatasetHelper {
                         .add("locality", "Genolier")
                         .add("postalCode", "1272"));
         return company;
+    }
+
+    private static JsonObjectBuilder createLocationBuilder() {
+        JsonObjectBuilder location = Json.createObjectBuilder()
+                .add("countryCode", "CH")
+                .add("locality", "Lausanne")
+                .add("postalCode", "1017")
+                .add("additionalDetails", "Possibility of having interesting bonus");
+
+        return location;
     }
 }

@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  * Test constraints that are defined on SQL level
  * IMPORTANT : Tests have been validated with a local Oracle database but are now ignored to not fail the CI build process
  */
-@Ignore
+//@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ApiApplication.class)
 @WebAppConfiguration
@@ -170,6 +170,26 @@ public class SqlConstraintsTest {
                 .with(apiTestHelper.getDefaultHttpBasic())
                 .contentType(apiTestHelper.getContentType())
                 .content(jsonJobOffer.toString()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void invalidCountryCode() throws Exception {
+
+        String invalidCountryCode = "XX";
+
+        // test on job location
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithJobLocation(invalidCountryCode, "Bern", "3010").toString()))
+                .andExpect(status().isBadRequest());
+
+        // test on company
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithCompanyCountryCode(invalidCountryCode).toString()))
                 .andExpect(status().isBadRequest());
     }
 }

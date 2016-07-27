@@ -310,7 +310,7 @@ The following codes are available to set the language in the _languageSkills_ ob
 
 == Country codes
 
-The following codes are available to set the country in the _location_ object :
+The following codes are available to set the country in _job location_ and _company_ objects :
 
 [cols="10,30,30,30"]
 |===
