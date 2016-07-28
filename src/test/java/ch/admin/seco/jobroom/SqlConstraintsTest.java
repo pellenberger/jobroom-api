@@ -189,7 +189,36 @@ public class SqlConstraintsTest {
         this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
                 .with(apiTestHelper.getDefaultHttpBasic())
                 .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithCompanyCountryCode(invalidCountryCode).toString()))
+                .content(JobOfferDatasetHelper.getJsonWithCompanyLocation(invalidCountryCode, "3010").toString()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void invalidPostalCode() throws Exception {
+
+        // warning : locations used in tests have to be located in Switzerland (countryCode = CH)
+
+        String invalidPostalCode = "1111";
+
+        // test on job location
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithJobLocation("CH", "Bern", invalidPostalCode).toString()))
+                .andExpect(status().isBadRequest());
+
+        // test on company
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithCompanyLocation("CH", invalidPostalCode).toString()))
+                .andExpect(status().isBadRequest());
+
+        // test on company postbox
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithCompanyPostbox("12", "Bern", invalidPostalCode).toString()))
                 .andExpect(status().isBadRequest());
     }
 }

@@ -203,9 +203,10 @@ public final class JobOfferDatasetHelper {
         return jobOffer;
     }
 
-    public static JsonObject getJsonWithCompanyCountryCode(String countryCode) {
+    public static JsonObject getJsonWithCompanyLocation(String countryCode, String postalCode) {
         JsonObjectBuilder company = createCompanyBuilder();
         company.add("countryCode", countryCode);
+        company.add("postalCode", postalCode);
 
         JsonObject jobOffer = createJobOfferBuilder(
                 createJobBuilder(), createContactBuilder(), createApplicationBuilder(), company).build();
@@ -221,6 +222,22 @@ public final class JobOfferDatasetHelper {
         JsonObject jobOffer = createJobOfferBuilder(
                 createJobBuilder(createLanguageSkillsBuilder(), location),
                 createContactBuilder(), createApplicationBuilder(), createCompanyBuilder()).build();
+        return jobOffer;
+    }
+
+    public static JsonObject getJsonWithCompanyPostbox(String number, String locality, String postalCode) {
+        JsonObjectBuilder company = createCompanyBuilder();
+        JsonObjectBuilder postbox = Json.createObjectBuilder();
+        postbox.add("number", number);
+        postbox.add("locality", locality);
+        postbox.add("postalCode", postalCode);
+        company.add("postbox", postbox);
+
+        JsonObject jobOffer = createJobOfferBuilder(createJobBuilder(),
+                createContactBuilder(),
+                createApplicationBuilder(),
+                company).build();
+
         return jobOffer;
     }
 

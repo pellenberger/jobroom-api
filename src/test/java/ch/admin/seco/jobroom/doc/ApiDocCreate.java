@@ -154,7 +154,9 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("job.location.postalCode")
                                         .description("")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "If job is located in Switzerland, must be a valid swiss postal code")),
                                 fieldWithPath("job.location.additionalDetails")
                                         .description("More information can be added as free text.")
                                         .attributes(key("constraints").value("")),
@@ -207,7 +209,9 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("company.postalCode")
                                         .description("")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .attributes(key("constraints").value(
+                                                "* Not null.\n" +
+                                                "If company is located in Switzerland, must be a valid swiss postal code")),
                                 fieldWithPath("company.phoneNumber")
                                         .description("Used as contact when application.telephonic is set to 1.")
                                         .attributes(key("constraints").value("")),
@@ -225,7 +229,8 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("company.postbox.postalCode")
                                         .description("")
-                                        .attributes(key("constraints").value("")),
+                                        .attributes(key("constraints").value(
+                                                "If company is located in Switzerland, must be a valid swiss postal code")),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored()
                         )))
