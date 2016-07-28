@@ -14,6 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentation;
@@ -42,6 +43,9 @@ public class ApiDocGet {
     private MockMvc mockMvc;
 
     private int idNewJobOffer;
+
+    @Value("${api.basePath}")
+    private String basePath;
 
     @Rule
     public final RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");
@@ -89,7 +93,10 @@ public class ApiDocGet {
     @Test
     public void getJobOffer() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers/" + idNewJobOffer).accept(MediaType.APPLICATION_JSON_UTF8).with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(get(basePath + "/joboffers/" + idNewJobOffer)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contextPath(basePath))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.publicationStartDate", Matchers.is("2100-01-01")))
                 .andExpect(jsonPath("$.publicationEndDate", Matchers.is("2101-02-02")))
@@ -236,7 +243,9 @@ public class ApiDocGet {
     @Test
     public void getAllJobOffers() throws Exception {
 
-        this.mockMvc.perform(get("/joboffers").with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(get(basePath + "/joboffers")
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contextPath(basePath))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$.page", Matchers.notNullValue()))

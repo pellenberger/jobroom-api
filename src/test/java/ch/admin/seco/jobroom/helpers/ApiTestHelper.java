@@ -3,6 +3,7 @@ package ch.admin.seco.jobroom.helpers;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -22,9 +23,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
 @Component
@@ -34,6 +33,9 @@ public class ApiTestHelper {
     private final static String DEFAULT_USER_NAME = "user";
     private final static String DEFAULT_PASSWORD = "password";
     private final static int DEFAULT_ACTIVE = 1;
+
+    @Value( "${api.host}" )
+    private String host;
 
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
@@ -79,7 +81,7 @@ public class ApiTestHelper {
         RestDocumentationMockMvcConfigurer documentation = documentationConfiguration(restDocumentation);
         documentation.uris()
                     .withScheme("http")
-                    .withHost("api.job-room.ch")
+                    .withHost(host)
                     .withPort(80);
         return documentation;
     }

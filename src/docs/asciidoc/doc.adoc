@@ -1,7 +1,6 @@
 :contact-mail: mediamatik@seco.admin.ch
 = JobRoom API Documentation
 eGov Services <{contact-mail}>
-v0.0.1
 :doctype: book
 :source-highlighter: highlightjs
 :toc: left
@@ -10,15 +9,13 @@ v0.0.1
 :sectnums:
 :sectnumlevels: 2
 
-:base-url: http://api.job-room.ch
-
 = General
 
 JobRoom API provides a new way to publish job offers through the ALV system.
 
 It is an alternative to the existing web interface available at https://www.job-room.ch/pages/job/jobRegistration.xhtml
 
-When using the API, job offers are published to *JobRoom* (https://www.job-room.ch) and *JobDesk* (http://pilot.job-desk.ch).
+When using the API, job offers are published to *Job-Room* (https://www.job-room.ch) and *Job-Desk* (http://pilot.job-desk.ch).
 
 Access to the API can be requested by sending a mail to {contact-mail}
 

@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -39,6 +40,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 public class ApiDocCreate {
 
     private MockMvc mockMvc;
+
+    @Value("${api.basePath}")
+    private String basePath;
 
     @Rule
     public final RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");
@@ -79,8 +83,9 @@ public class ApiDocCreate {
 
         String jobOfferJson = JobOfferDatasetHelper.getJson().toString();
 
-        this.mockMvc.perform(post("/joboffers")
+        this.mockMvc.perform(post(basePath + "/joboffers")
                 .with(apiTestHelper.getDefaultHttpBasic())
+                .contextPath(basePath)
                 .contentType(apiTestHelper.getContentType())
                 .content(jobOfferJson))
                 .andExpect(status().isCreated())
@@ -214,10 +219,12 @@ public class ApiDocCreate {
                                                 "* If company is located in Switzerland, must be a valid swiss postal code")),
                                 fieldWithPath("company.phoneNumber")
                                         .description("Used as contact when application.telephonic is set to 1.")
-                                        .attributes(key("constraints").value("")),
+                                        .attributes(key("constraints").value("" +
+                                                "* Can't be null if application.telephonic is set to 1.")),
                                 fieldWithPath("company.email")
                                         .description("Used as contact when application.electronic is set to 1.")
-                                        .attributes(key("constraints").value("")),
+                                        .attributes(key("constraints").value("" +
+                                                "* Can't be null if application.electronic is set to 1.")),
                                 fieldWithPath("company.website")
                                         .description("")
                                         .attributes(key("constraints").value("")),
@@ -287,7 +294,9 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value(""))
                         )));
 
-        this.mockMvc.perform(get("/joboffers").with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(get(basePath + "/joboffers")
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contextPath(basePath))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(1)));
     }

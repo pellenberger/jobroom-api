@@ -13,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,6 +38,9 @@ public class ApiDocEdit {
     private MockMvc mockMvc;
 
     private int idNewJobOffer;
+
+    @Value("${api.basePath}")
+    private String basePath;
 
     @Rule
     public final RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");
@@ -86,8 +90,9 @@ public class ApiDocEdit {
 
         String jobOfferJson = JobOfferDatasetHelper.getJsonPartial().toString();
 
-        this.mockMvc.perform(patch("/joboffers/" + idNewJobOffer)
+        this.mockMvc.perform(patch(basePath + "/joboffers/" + idNewJobOffer)
                 .with(apiTestHelper.getDefaultHttpBasic())
+                .contextPath(basePath)
                 .contentType(apiTestHelper.getContentType())
                 .content(jobOfferJson))
                 .andExpect(status().isNoContent())

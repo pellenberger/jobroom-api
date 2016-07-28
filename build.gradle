@@ -1,4 +1,3 @@
-
 buildscript {
 
     ext {
@@ -32,7 +31,6 @@ apply plugin: 'spring-boot'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
 apply plugin: 'org.asciidoctor.convert'
-
 
 jar {
     baseName = ''
@@ -114,6 +112,8 @@ task wrapper(type: Wrapper) {
 
 ext {
     snippetsDir = file('build/generated-snippets')
+    host='test-api.job-room.ch'
+    basePath='/api/v0.2'
 }
 
 test {
@@ -122,6 +122,21 @@ test {
 
 asciidoctor {
     attributes 'snippets': snippetsDir
+    attributes 'base-url': host + basePath
     inputs.dir snippetsDir
     dependsOn test
+}
+
+processResources {
+    filesMatching('**/*.properties') { expand([
+            host: host,
+            basePath: basePath
+    ])}
+}
+
+processTestResources {
+    filesMatching('**/*.properties') { expand([
+            host: host,
+            basePath: basePath
+    ])}
 }

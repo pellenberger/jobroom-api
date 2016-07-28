@@ -13,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,6 +41,9 @@ public class ApiDocDelete {
     private MockMvc mockMvc;
 
     private int idNewJobOffer;
+
+    @Value("${api.basePath}")
+    private String basePath;
 
     @Rule
     public final RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");
@@ -88,8 +92,9 @@ public class ApiDocDelete {
     @Test
     public void cancelJobOffer() throws Exception {
 
-        this.mockMvc.perform(post("/joboffers/" + idNewJobOffer + "/cancel")
+        this.mockMvc.perform(post(basePath + "/joboffers/" + idNewJobOffer + "/cancel")
                 .with(apiTestHelper.getDefaultHttpBasic())
+                .contextPath(basePath)
                 .param("reasonCode", "1"))
                 .andExpect(status().isNoContent())
 
