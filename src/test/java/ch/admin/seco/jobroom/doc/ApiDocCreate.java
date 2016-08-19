@@ -163,7 +163,9 @@ public class ApiDocCreate {
                                                 "* Not null.\n" +
                                                 "* If job is located in Switzerland, must be a valid swiss postal code")),
                                 fieldWithPath("job.location.additionalDetails")
-                                        .description("More information can be added as free text.")
+                                        .description(
+                                                "More information about job location can be added as free text.\n" +
+                                                "Note : *this property is currently not shown on the publication medias*. Work is in progress in order to integrate this feature.")
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("job.languageSkills")
                                         .description("It is possible to define up to 5 language skills required by the job.")
