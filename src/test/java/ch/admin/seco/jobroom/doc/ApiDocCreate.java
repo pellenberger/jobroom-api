@@ -165,7 +165,8 @@ public class ApiDocCreate {
                                 fieldWithPath("job.location.additionalDetails")
                                         .description(
                                                 "More information about job location can be added as free text.\n" +
-                                                "Note : *this property is currently not shown on the publication medias*. Work is in progress in order to integrate this feature.")
+                                                "Note : *this property is currently not shown on the publication medias*. " +
+                                                        "Work is in progress in order to integrate this feature.")
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("job.languageSkills")
                                         .description("It is possible to define up to 5 language skills required by the job.")
