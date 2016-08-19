@@ -22,7 +22,6 @@ public class BeforeCreateJobOfferValidator implements Validator {
         JobOffer jobOffer = (JobOffer) target;
 
         validatePublicationStartDate(jobOffer, errors);
-        CommonJobOfferValidator.validateCompanyInformations(jobOffer, errors);
     }
 
     /**

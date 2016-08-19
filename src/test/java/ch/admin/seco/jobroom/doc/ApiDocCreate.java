@@ -221,13 +221,11 @@ public class ApiDocCreate {
                                                 "* Not null.\n" +
                                                 "* If company is located in Switzerland, must be a valid swiss postal code")),
                                 fieldWithPath("company.phoneNumber")
-                                        .description("Used as contact when application.telephonic is set to 1.")
-                                        .attributes(key("constraints").value("" +
-                                                "* Can't be null if application.telephonic is set to 1.")),
+                                        .description("")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("company.email")
-                                        .description("Used as contact when application.electronic is set to 1.")
-                                        .attributes(key("constraints").value("" +
-                                                "* Can't be null if application.electronic is set to 1.")),
+                                        .description("")
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("company.website")
                                         .description("")
                                         .attributes(key("constraints").value("")),
@@ -263,10 +261,10 @@ public class ApiDocCreate {
                                         .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact.phoneNumber")
-                                        .description("")
+                                        .description("Used as contact when application.telephonic is set to 1.")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact.email")
-                                        .description("")
+                                        .description("Used as contact when application.electronic is set to 1.")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application").ignored()
                         )))
