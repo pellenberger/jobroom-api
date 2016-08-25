@@ -199,6 +199,7 @@ public class SqlConstraintsTest {
         // warning : locations used in tests have to be located in Switzerland (countryCode = CH)
 
         String invalidPostalCode = "1111";
+        String nonNumericPostalCode = "ABC123";
 
         // test on job location
         this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
@@ -220,5 +221,19 @@ public class SqlConstraintsTest {
                 .contentType(apiTestHelper.getContentType())
                 .content(JobOfferDatasetHelper.getJsonWithCompanyPostbox("12", "Bern", invalidPostalCode).toString()))
                 .andExpect(status().isBadRequest());
+
+        // postal code can contain non-numeric values in other countries
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithJobLocation("FR", "Nice", nonNumericPostalCode).toString()))
+                .andExpect(status().isCreated());
+
+        // postal code can contain non-numeric values in other countries
+        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
+                .with(apiTestHelper.getDefaultHttpBasic())
+                .contentType(apiTestHelper.getContentType())
+                .content(JobOfferDatasetHelper.getJsonWithCompanyLocation("FR", nonNumericPostalCode).toString()))
+                .andExpect(status().isCreated());
     }
 }
