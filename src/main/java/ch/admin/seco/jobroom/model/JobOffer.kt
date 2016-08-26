@@ -190,12 +190,12 @@ data class Contact(
 @Embeddable
 data class Application(
 
-        val telephonic: Int,
-        val written: Int,
-        val electronic: Int,
+        val telephonic: Boolean,
+        val written: Boolean,
+        val electronic: Boolean,
         var additionalDetails: String? = "",
         var url: String? = ""
 ) {
     // This private "default" constructor is only used by JPA layer
-    constructor() : this(0, 0, 0, "", "")
+    constructor() : this(false, false, false, "", "")
 }

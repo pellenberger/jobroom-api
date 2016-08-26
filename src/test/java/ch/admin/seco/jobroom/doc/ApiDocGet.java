@@ -136,9 +136,9 @@ public class ApiDocGet {
                 .andExpect(jsonPath("$.contact.lastName", Matchers.is("Dupont")))
                 .andExpect(jsonPath("$.contact.phoneNumber", Matchers.is("0791234567")))
                 .andExpect(jsonPath("$.contact.email", Matchers.is("alizee.dupont@seco.admin.ch")))
-                .andExpect(jsonPath("$.application.telephonic", Matchers.is(0)))
-                .andExpect(jsonPath("$.application.written", Matchers.is(1)))
-                .andExpect(jsonPath("$.application.electronic", Matchers.is(1)))
+                .andExpect(jsonPath("$.application.telephonic", Matchers.is(false)))
+                .andExpect(jsonPath("$.application.written", Matchers.is(true)))
+                .andExpect(jsonPath("$.application.electronic", Matchers.is(true)))
                 .andExpect(jsonPath("$.application.additionalDetails", Matchers.is("Please apply online")))
                 .andExpect(jsonPath("$.application.url", Matchers.is("https://www.seco.admin.ch/jobs/284956/apply")))
 

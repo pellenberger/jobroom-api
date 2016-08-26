@@ -79,32 +79,6 @@ public class SqlConstraintsTest {
     }
 
     @Test
-    public void invalidApplication() throws Exception {
-
-        JsonObject invalidTelephonic = JobOfferDatasetHelper.getJsonWithApplication(2, 0, 0, "");
-        JsonObject invalidWritten = JobOfferDatasetHelper.getJsonWithApplication(0, 2, 0, "");
-        JsonObject invalidElectronic = JobOfferDatasetHelper.getJsonWithApplication(0, 0, 2, "");
-
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(invalidTelephonic.toString()))
-                .andExpect(status().isConflict());
-
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(invalidWritten.toString()))
-                .andExpect(status().isConflict());
-
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(invalidElectronic.toString()))
-                .andExpect(status().isConflict());
-    }
-
-    @Test
     public void invalidJobStartEndDate() throws Exception {
 
         String jobStartDate = "2300-01-15";
@@ -164,7 +138,7 @@ public class SqlConstraintsTest {
 
         Assert.assertEquals(256, longAdditionalDetails.length());
 
-        JsonObject jsonJobOffer = JobOfferDatasetHelper.getJsonWithApplication(0, 0, 0, longAdditionalDetails);
+        JsonObject jsonJobOffer = JobOfferDatasetHelper.getJsonWithApplication(false, false, false, longAdditionalDetails);
 
         this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
                 .with(apiTestHelper.getDefaultHttpBasic())

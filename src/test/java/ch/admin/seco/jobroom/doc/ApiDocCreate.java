@@ -280,13 +280,13 @@ public class ApiDocCreate {
                                 fieldWithPath("application").ignored(),
                                 fieldWithPath("application.telephonic")
                                         .description("It is tolerated to apply by telephonic way.")
-                                        .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
+                                        .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application.written")
                                         .description("It is tolerated to apply by written way.")
-                                        .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
+                                        .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application.electronic")
                                         .description("It is tolerated to apply by electronic way.")
-                                        .attributes(key("constraints").value("* Not null.\n* Must be in (0, 1).")),
+                                        .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application.additionalDetails")
                                         .description("More information can be added as free text.")
                                         .attributes(key("constraints").value("")),

@@ -17,9 +17,9 @@ public final class JobOfferDatasetHelper {
 
     private static final String DEFAULT_PUBLICATION_START_DATE = "2100-01-01";
     private static final Application DEFAULT_APPLICATION = new Application(
-            0,
-            1,
-            1,
+            false,
+            true,
+            true,
             "Please apply online",
             "https://www.seco.admin.ch/jobs/284956/apply");
 
@@ -182,7 +182,7 @@ public final class JobOfferDatasetHelper {
         return jobOffer;
     }
 
-    public static JsonObject getJsonWithApplication(int telephonic, int written, int electronic, String additionalDetails) {
+    public static JsonObject getJsonWithApplication(boolean telephonic, boolean written, boolean electronic, String additionalDetails) {
         JsonObjectBuilder application = Json.createObjectBuilder()
                 .add("telephonic", telephonic)
                 .add("written", written)
@@ -332,9 +332,9 @@ public final class JobOfferDatasetHelper {
 
     private static JsonObjectBuilder createApplicationBuilder() {
         JsonObjectBuilder application = Json.createObjectBuilder()
-                .add("telephonic", 1)
-                .add("written", 0)
-                .add("electronic", 1)
+                .add("telephonic", true)
+                .add("written", false)
+                .add("electronic", true)
                 .add("additionalDetails", "Please apply online")
                 .add("url", "https://www.missionrealty.ch/jobs/financial-manager/apply");
         return application;
