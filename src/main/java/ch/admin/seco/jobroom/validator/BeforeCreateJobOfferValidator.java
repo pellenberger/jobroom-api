@@ -30,9 +30,8 @@ public class BeforeCreateJobOfferValidator implements Validator {
     private void validatePublicationStartDate(JobOffer jobOffer, Errors errors) {
 
         LocalDate today = new LocalDate();
-        LocalDate publicationStartDay = new LocalDate(jobOffer.getPublicationStartDate());
 
-        if (publicationStartDay.isBefore(today)) {
+        if (jobOffer.getPublicationStartDate().isBefore(today)) {
             errors.rejectValue("publicationStartDate",
                     String.valueOf(HttpStatus.BAD_REQUEST.value()),
                     "publicationStartDate cannot be smaller than current date");

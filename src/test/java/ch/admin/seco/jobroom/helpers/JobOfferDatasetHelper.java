@@ -1,12 +1,12 @@
 package ch.admin.seco.jobroom.helpers;
 
 import ch.admin.seco.jobroom.model.*;
+import org.joda.time.LocalDate;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.sql.Date;
 import java.util.Arrays;
 
 /**
@@ -31,8 +31,8 @@ public final class JobOfferDatasetHelper {
         return new JobOffer(
                 null,
                 null,
-                Date.valueOf(publicationStartDate),
-                Date.valueOf("2101-02-02"),
+                LocalDate.parse(publicationStartDate),
+                LocalDate.parse("2101-02-02"),
                 "ref-284956",
                 "https://www.seco.admin.ch/jobs/284956",
                 new Job(
@@ -40,8 +40,8 @@ public final class JobOfferDatasetHelper {
                         "Development of eGov applications",
                         80,
                         100,
-                        Date.valueOf("2100-03-01"),
-                        Date.valueOf("2102-04-02"),
+                        LocalDate.parse("2100-03-01"),
+                        LocalDate.parse("2102-04-02"),
                         new Location(
                                 "CH",
                                 "Bern",

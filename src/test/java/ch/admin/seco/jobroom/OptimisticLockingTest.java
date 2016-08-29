@@ -6,6 +6,7 @@ import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
+import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,7 +85,7 @@ public class OptimisticLockingTest {
 
         // update resource (change version)
         apiTestHelper.authenticateDefault();
-        jobOffer.setPublicationEndDate(java.sql.Date.valueOf("2101-02-03"));
+        jobOffer.setPublicationEndDate(LocalDate.parse("2101-02-03"));
         jobOfferRepository.save(jobOffer);
         apiTestHelper.unAuthenticate();
 

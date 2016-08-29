@@ -2,10 +2,10 @@ package ch.admin.seco.jobroom.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.joda.time.DateTime
-import java.sql.Date
+import org.joda.time.LocalDate
 import java.sql.Timestamp
-import java.util.*
 import javax.persistence.*
+
 
 @Entity data class JobOffer(
 
@@ -17,9 +17,9 @@ import javax.persistence.*
         @Version
         var version: Int? = null,
 
-        val publicationStartDate: Date,
+        val publicationStartDate: LocalDate,
 
-        var publicationEndDate: Date? = null,
+        var publicationEndDate: LocalDate? = null,
 
         var reference: String? = "",
 
@@ -56,7 +56,7 @@ import javax.persistence.*
         var cancellationReasonCode: String? = null
 ) {
     // This private "default" constructor is only used by JPA layer
-    private constructor() : this(null,  null, Date(Calendar.getInstance().getTime().time), null, "", "", Job(), Company(), Contact(), Application(), null, null, null, null, null)
+    private constructor() : this(null,  null, LocalDate.now(), null, "", "", Job(), Company(), Contact(), Application(), null, null, null, null, null)
 
     @PrePersist
     fun onCreate() {
@@ -80,8 +80,8 @@ data class Job(
 
         val workingTimePercentageFrom: Int,
         val workingTimePercentageTo: Int,
-        var startDate: Date? = null,
-        var endDate: Date? = null,
+        var startDate: LocalDate? = null,
+        var endDate: LocalDate? = null,
 
         @Embedded
         val location: Location,
