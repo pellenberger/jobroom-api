@@ -41,8 +41,8 @@ The following verbs are fully supported :
 | Verb | Description
 
 | GET | Used for retrieving resources, either a single object or a collection.
-| POST | Used for creating new resources.
-| PATCH | Used for updating existing resources with partial JSON data.
+| POST | Used for creating new resources or performing actions on resources.
+| PATCH | Used for updating existing resources.
 |===
 
 == HTTP response status codes
@@ -57,7 +57,7 @@ The following table describes examples and precisions specific to JobRoom API :
 
 | 200 | OK | Success using GET for retrieving resources.
 | 201 | Created | Success using POST for creating new resources.
-| 204 | No Content | Success PATCH for updating resources.
+| 204 | No Content | Success using PATCH for updating resources or success using POST for performing actions.
 | 400 | Bad request | Occurs when error in body using POST/PATCH (missing non nullable field, invalid JSON object, wrong object type, validation failed, etc.).
 | 401 | Unauthorized | Occurs when accessing to a protected resource with bad credentials.
 | 404 | Not Found | Occurs when requested resource does not exist or when accessing another user's resource.
@@ -77,6 +77,7 @@ The following headers have to be set for some requests in order to use the API :
 | Header name | Value | When to use ?
 
 | `Content-Type` | `application/json;charset=UTF-8` | On POST/PATCH (every request that contains a JSON body).
+| `Content-Type` | `application/x-www-form-urlencoded` | On job offer cancellation (see section <<Cancel a job offer>>).
 | `If-Match` | `<value of previous ETag>` | On PATCH when supporting _Optimistic locking_ (see section <<Optimistic locking>>).
 | `Authorization` | `Basic <Base64 encoded credentials>` | Always, all API endpoints require authentication (see section <<Authentication>>).
 | `Accept` | `application/json;charset=UTF-8` | Always.
@@ -313,6 +314,7 @@ The following codes are available to set the country in _job location_ and _comp
 [cols="10,30,30,30"]
 |===
 | Code | Land | Pays | Paese
+
 | CH | Schweiz | Suisse | Svizzera
 | AL | Albanien | Albanie | Albania
 | AD | Andorra | Andorre | Andorra

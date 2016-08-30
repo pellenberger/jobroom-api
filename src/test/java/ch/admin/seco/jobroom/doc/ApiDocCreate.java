@@ -94,7 +94,7 @@ public class ApiDocCreate {
                         requestFields(
                                 fieldWithPath("publicationStartDate")
                                         .description("Date from which the job offer is visible on the publication medias. " +
-                                                "Job offer is considered published once that publicationStartDate is smaller than current date.")
+                                                "Job offer is published once that publicationStartDate is smaller than current date.")
                                         .attributes(key("constraints").value(
                                                 "* Not null.\n" +
                                                 "* Cannot be smaller than current date.\n" +
@@ -132,7 +132,7 @@ public class ApiDocCreate {
                                         .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("job.description")
-                                        .description("")
+                                        .description("Job description can contain basic HTML formatting.")
                                         .attributes(key("constraints").value("* Not null.\n* Length max 10000 characters.")),
                                 fieldWithPath("job.workingTimePercentageFrom")
                                         .description("")
@@ -170,7 +170,7 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("job.languageSkills")
                                         .description("It is possible to define up to 5 language skills required by the job.")
-                                        .attributes(key("constraints").value("* Not null.\n* Size must be between 0 and 5.")),
+                                        .attributes(key("constraints").value("* Size must be between 0 and 5.")),
                                 fieldWithPath("job.languageSkills[].language")
                                         .description("Required language's code.")
                                         .attributes(key("constraints").value(
@@ -261,10 +261,10 @@ public class ApiDocCreate {
                                         .description("")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact.phoneNumber")
-                                        .description("Used as contact when application.telephonic is set to 1.")
+                                        .description("Used as contact when application.telephonic is true.")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact.email")
-                                        .description("Used as contact when application.electronic is set to 1.")
+                                        .description("Used as contact when application.electronic is true.")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application").ignored()
                         )))
