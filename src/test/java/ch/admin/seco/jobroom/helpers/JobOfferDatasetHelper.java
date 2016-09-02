@@ -225,6 +225,16 @@ public final class JobOfferDatasetHelper {
         return jobOffer;
     }
 
+    public static JsonObject getJsonWithJobLocation(String countryCode) {
+        JsonObjectBuilder location = createLocationBuilder();
+        location.add("countryCode", countryCode);
+
+        JsonObject jobOffer = createJobOfferBuilder(
+                createJobBuilder(createLanguageSkillsBuilder(), location),
+                createContactBuilder(), createApplicationBuilder(), createCompanyBuilder()).build();
+        return jobOffer;
+    }
+
     public static JsonObject getJsonWithCompanyPostbox(String number, String locality, String postalCode) {
         JsonObjectBuilder company = createCompanyBuilder();
         JsonObjectBuilder postbox = Json.createObjectBuilder();

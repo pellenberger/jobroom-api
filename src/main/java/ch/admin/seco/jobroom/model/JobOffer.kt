@@ -126,8 +126,8 @@ data class LanguageSkill(
 data class Location(
 
         val countryCode: String,
-        val locality: String,
-        val postalCode: String,
+        val locality: String? = "",
+        val postalCode: String? = "",
         var additionalDetails: String? = ""
 ) {
     // This "default" constructor is only used by JPA layer
