@@ -109,17 +109,17 @@ public class ApiDocCreate {
                                         .description("Link to the original webpage of the job offer.")
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("job")
-                                        .description("Description of the job\n\n(further information below)")
+                                        .description("Description of the job.\n\n(further information below)")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("company")
-                                        .description("The company that offers the job\n\n(further information below)")
+                                        .description("The company that offers the job.\n\n(further information below)")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("contact")
-                                        .description("Contact person about the job offer\n\n(further information below)")
+                                        .description("Contact person about the job offer.\n\n(further information below)")
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application")
-                                        .description("Support for submitting the job application\n\n(further information below")
-                                        .attributes(key("constraints").value("* Not null"))
+                                        .description("Support for submitting the job application.\n\n(further information below)")
+                                        .attributes(key("constraints").value("* Not null."))
                         )))
                 .andDo(document("{method-name}-job", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
                         requestFields(
@@ -148,20 +148,19 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value("")),
                                 fieldWithPath("job.endDate")
                                         .description("When null, the job is considered as permanent.")
-                                        .attributes(key("constraints").value("* Must be greater than startDate")),
+                                        .attributes(key("constraints").value("* Must be greater than startDate.")),
                                 fieldWithPath("job.location.countryCode")
                                         .description("")
                                         .attributes(key("constraints").value(
                                                 "* Not null.\n" +
-                                                "* Must be one of authorized country codes (see section <<Country codes>>)")),
+                                                "* Must be one of authorized country codes (see section <<Country codes>>).")),
                                 fieldWithPath("job.location.locality")
                                         .description("")
-                                        .attributes(key("constraints").value("* Not null.")),
+                                        .attributes(key("constraints").value("")),
                                 fieldWithPath("job.location.postalCode")
                                         .description("")
                                         .attributes(key("constraints").value(
-                                                "* Not null.\n" +
-                                                "* If job is located in Switzerland, must be a valid swiss postal code")),
+                                                "* If not null, must be a valid swiss postal code if the job is located in Switzerland.")),
                                 fieldWithPath("job.location.additionalDetails")
                                         .description(
                                                 "More information about job location can be added as free text.\n" +
@@ -175,7 +174,7 @@ public class ApiDocCreate {
                                         .description("Required language's code.")
                                         .attributes(key("constraints").value(
                                                 "* Not null.\n" +
-                                                "* Must be one of authorized language codes (see section <<Language codes>>)")),
+                                                "* Must be one of authorized language codes (see section <<Language codes>>).")),
                                 fieldWithPath("job.languageSkills[].spokenLevel")
                                         .description("Required spoken level.")
                                         .attributes(key("constraints").value(
@@ -205,7 +204,7 @@ public class ApiDocCreate {
                                         .description("")
                                         .attributes(key("constraints").value(
                                                 "* Not null.\n" +
-                                                "* Must be one of authorized language codes (see section <<Language codes>>)")),
+                                                "* Must be one of authorized language codes (see section <<Language codes>>).")),
                                 fieldWithPath("company.street")
                                         .description("")
                                         .attributes(key("constraints").value("* Not null.")),
@@ -219,7 +218,7 @@ public class ApiDocCreate {
                                         .description("")
                                         .attributes(key("constraints").value(
                                                 "* Not null.\n" +
-                                                "* If company is located in Switzerland, must be a valid swiss postal code")),
+                                                "* If company is located in Switzerland, must be a valid swiss postal code.")),
                                 fieldWithPath("company.phoneNumber")
                                         .description("")
                                         .attributes(key("constraints").value("")),
@@ -238,7 +237,7 @@ public class ApiDocCreate {
                                 fieldWithPath("company.postbox.postalCode")
                                         .description("")
                                         .attributes(key("constraints").value(
-                                                "* If company is located in Switzerland, must be a valid swiss postal code")),
+                                                "* If company is located in Switzerland, must be a valid swiss postal code.")),
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored()
                         )))

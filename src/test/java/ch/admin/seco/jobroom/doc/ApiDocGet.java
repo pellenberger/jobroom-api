@@ -252,10 +252,10 @@ public class ApiDocGet {
 
                 .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
                         responseFields(
-                                fieldWithPath("_embedded.jobOffers").description("Contains all job offers associated to the current user"),
+                                fieldWithPath("_embedded.jobOffers").description("Contains all job offers associated to the current user."),
                                 fieldWithPath("_links").ignored(),
                                 fieldWithPath("page").
-                                        description("Provides informations and links used to manage pagination (see chapter <<Paging>>)")
+                                        description("Provides informations and links used to manage pagination (see chapter <<Paging>>).")
                         )));
     }
 }

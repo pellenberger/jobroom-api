@@ -104,7 +104,7 @@ public class ApiDocDelete {
                                         .description("Reason why the joboffer must be cancelled.")
                                         .attributes(key("constraints").value(
                                                 "* Not null.\n" +
-                                                "* Must be one of authorized reason codes (see section <<Cancellation reason codes>>)"
+                                                "* Must be one of authorized reason codes (see section <<Cancellation reason codes>>)."
                                         )
                                         ))));
     }
