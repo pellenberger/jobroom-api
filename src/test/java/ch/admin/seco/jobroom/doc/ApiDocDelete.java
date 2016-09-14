@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.restdocs.RestDocumentation;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ApiApplication.class)
+@SpringBootTest(classes = ApiApplication.class)
 @WebAppConfiguration
 /**
  * This class generates doc snippets to be included in Asciidoc documentation
@@ -46,7 +46,8 @@ public class ApiDocDelete {
     private String basePath;
 
     @Rule
-    public final RestDocumentation restDocumentation = new RestDocumentation("build/generated-snippets");
+    public JUnitRestDocumentation restDocumentation =
+            new JUnitRestDocumentation("build/generated-snippets");
 
     @Autowired
     private WebApplicationContext webApplicationContext;

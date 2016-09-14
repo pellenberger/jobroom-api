@@ -40,19 +40,19 @@ import javax.persistence.*
 
         @ManyToOne
         @JoinColumn(name="owner_id")
-        @JsonIgnore
+        @get:JsonIgnore
         var owner: RestAccessKey? = null,
 
-        @JsonIgnore
+        @get:JsonIgnore
         var creationDate: Timestamp? = null,
 
-        @JsonIgnore
+        @get:JsonIgnore
         var lastModificationDate: Timestamp? = null,
 
-        @JsonIgnore
+        @get:JsonIgnore
         var cancellationDate: Timestamp? = null,
 
-        @JsonIgnore
+        @get:JsonIgnore
         var cancellationReasonCode: String? = null
 ) {
     // This private "default" constructor is only used by JPA layer

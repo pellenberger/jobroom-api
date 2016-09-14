@@ -8,8 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
-import org.springframework.restdocs.RestDocumentation;
-import org.springframework.restdocs.mockmvc.RestDocumentationMockMvcConfigurer;
+import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentationConfigurer;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -77,8 +77,8 @@ public class ApiTestHelper {
         return httpBasic(DEFAULT_USER_NAME, DEFAULT_PASSWORD);
     }
 
-    public RestDocumentationMockMvcConfigurer getDocumentationConfiguration(RestDocumentation restDocumentation) {
-        RestDocumentationMockMvcConfigurer documentation = documentationConfiguration(restDocumentation);
+    public MockMvcRestDocumentationConfigurer getDocumentationConfiguration(JUnitRestDocumentation restDocumentation) {
+        MockMvcRestDocumentationConfigurer documentation = documentationConfiguration(restDocumentation);
         documentation.uris()
                     .withScheme("http")
                     .withHost(host)
