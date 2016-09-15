@@ -6,24 +6,23 @@ import org.joda.time.LocalDate
 import java.sql.Timestamp
 import javax.persistence.*
 
-
 @Entity data class JobOffer(
 
         @Id
         @GeneratedValue(generator="joboffer_gen")
         @SequenceGenerator(name="joboffer_gen", sequenceName="aoste_seq")
-        var id: Int? = null,
+        var id: Int?,
 
         @Version
-        var version: Int? = null,
+        var version: Int?,
 
         val publicationStartDate: LocalDate,
 
-        var publicationEndDate: LocalDate? = null,
+        var publicationEndDate: LocalDate?,
 
-        var reference: String? = "",
+        var reference: String?,
 
-        var url: String? = "",
+        var url: String?,
 
         @Embedded
         @get:javax.validation.Valid
@@ -41,22 +40,22 @@ import javax.persistence.*
         @ManyToOne
         @JoinColumn(name="owner_id")
         @get:JsonIgnore
-        var owner: RestAccessKey? = null,
+        var owner: RestAccessKey?,
 
         @get:JsonIgnore
-        var creationDate: Timestamp? = null,
+        var creationDate: Timestamp?,
 
         @get:JsonIgnore
-        var lastModificationDate: Timestamp? = null,
+        var lastModificationDate: Timestamp?,
 
         @get:JsonIgnore
-        var cancellationDate: Timestamp? = null,
+        var cancellationDate: Timestamp?,
 
         @get:JsonIgnore
-        var cancellationReasonCode: String? = null
+        var cancellationReasonCode: String?
 ) {
-    // This private "default" constructor is only used by JPA layer
-    private constructor() : this(null,  null, LocalDate.now(), null, "", "", Job(), Company(), Contact(), Application(), null, null, null, null, null)
+    // This default constructor is required by JPA
+    constructor() : this(null,  null, LocalDate.now(), null, null, null, Job(), Company(), Contact(), Application(), null, null, null, null, null)
 
     @PrePersist
     fun onCreate() {
@@ -80,19 +79,19 @@ data class Job(
 
         val workingTimePercentageFrom: Int,
         val workingTimePercentageTo: Int,
-        var startDate: LocalDate? = null,
-        var endDate: LocalDate? = null,
+        var startDate: LocalDate?,
+        var endDate: LocalDate?,
 
         @Embedded
         val location: Location,
 
         @field:javax.validation.constraints.Size(max=5)
         @ElementCollection(fetch = FetchType.EAGER)
-        val languageSkills: Collection<LanguageSkill>
+        var languageSkills: Collection<LanguageSkill>?
 
 ) {
-    // This "default" constructor is only used by JPA layer
-    constructor() : this("", "", 0, 0, null, null, Location(), listOf())
+    // This default constructor is required by JPA
+    constructor() : this("", "", 0, 0, null, null, Location(), null)
 }
 
 @Embeddable
@@ -118,7 +117,7 @@ data class LanguageSkill(
         very_good
     }
 
-    // This "default" constructor is only used by JPA layer
+    // This default constructor is required by JPA
     constructor() : this("", Level.good, Level.good)
 }
 
@@ -126,12 +125,12 @@ data class LanguageSkill(
 data class Location(
 
         val countryCode: String,
-        val locality: String? = "",
-        val postalCode: String? = "",
-        var additionalDetails: String? = ""
+        var locality: String?,
+        var postalCode: String?,
+        var additionalDetails: String?
 ) {
-    // This "default" constructor is only used by JPA layer
-    constructor() : this("", "", "", "");
+    // This default constructor is required by JPA
+    constructor() : this("", null, null, null)
 }
 
 @Embeddable
@@ -143,27 +142,27 @@ data class Company (
         val houseNumber: String,
         val locality: String,
         val postalCode: String,
-        var phoneNumber: String? = "",
-        var email: String? = "",
-        var website: String? = "",
+        var phoneNumber: String?,
+        var email: String?,
+        var website: String?,
 
         @Embedded
-        val postbox: Postbox
+        var postbox: Postbox?
 ){
-    // This "default" constructor is only used by JPA layer
-    constructor() : this("", "", "", "", "", "", "", "", "", Postbox())
+    // This default constructor is required by JPA
+    constructor() : this("", "", "", "", "", "", null, null, null, null)
 }
 
 
 @Embeddable
 data class Postbox(
 
-        var number: String? = "",
-        var locality: String? = "",
-        var postalCode: String? = ""
+        var number: String?,
+        var locality: String?,
+        var postalCode: String?
 ) {
-    // This private "default" constructor is only used by JPA layer
-    constructor() : this("", "", "")
+    // This default constructor is required by JPA
+    constructor() : this(null, null, null)
 }
 
 
@@ -183,7 +182,7 @@ data class Contact(
         madam
     }
 
-    // This private "default" constructor is only used by JPA layer
+    // This default constructor is required by JPA
     constructor() : this(Title.mister, "", "", "", "")
 }
 
@@ -193,9 +192,9 @@ data class Application(
         val telephonic: Boolean,
         val written: Boolean,
         val electronic: Boolean,
-        var additionalDetails: String? = "",
-        var url: String? = ""
+        var additionalDetails: String?,
+        var url: String?
 ) {
-    // This private "default" constructor is only used by JPA layer
-    constructor() : this(false, false, false, "", "")
+    // This default constructor is required by JPA
+    constructor() : this(false, false, false, null, null)
 }
