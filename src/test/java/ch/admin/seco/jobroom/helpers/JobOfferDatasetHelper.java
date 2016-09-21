@@ -2,6 +2,7 @@ package ch.admin.seco.jobroom.helpers;
 
 import ch.admin.seco.jobroom.model.*;
 import org.joda.time.LocalDate;
+import org.json.JSONObject;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -98,7 +99,7 @@ public final class JobOfferDatasetHelper {
     }
 
     // ****************************************
-    // ***** type JsonObject
+    // ***** type javax.json.JsonObject (immutable)
     // ****************************************
 
     public static JsonObject getJson() {
@@ -275,7 +276,7 @@ public final class JobOfferDatasetHelper {
     }
 
     // ****************************************
-    // ***** builders
+    // ***** builders JsonObject
     // ****************************************
 
     private static JsonObjectBuilder createJobOfferBuilder() {
@@ -376,5 +377,14 @@ public final class JobOfferDatasetHelper {
                 .add("additionalDetails", "Possibility of having interesting bonus");
 
         return location;
+    }
+
+    // ****************************************
+    // ***** type org.json.JSONObject (mutable)
+    // ****************************************
+
+    public static JSONObject getMutableJson() {
+        JSONObject json = new JSONObject(getJson().toString());
+        return json;
     }
 }
