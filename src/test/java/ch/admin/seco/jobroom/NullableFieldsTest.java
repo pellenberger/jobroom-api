@@ -125,10 +125,10 @@ public class NullableFieldsTest {
     }
 
     /**
-     * Create JobOffer without "job.workingTimePercentageFrom" (data type : Int)
+     * Create JobOffer without "job.workingTimePercentageFrom" (data type : Integer)
      */
     @Test
-    public void missingInt() throws Exception {
+    public void missingInteger() throws Exception {
 
         JSONObject json = JobOfferDatasetHelper.getMutableJson();
         json.getJSONObject("job").remove("workingTimePercentageFrom");

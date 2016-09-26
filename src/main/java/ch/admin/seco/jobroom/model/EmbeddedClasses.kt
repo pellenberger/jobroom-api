@@ -1,72 +1,7 @@
 package ch.admin.seco.jobroom.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import java.sql.Timestamp
 import javax.persistence.*
-
-@Entity data class JobOffer(
-
-        @Id
-        @GeneratedValue(generator="joboffer_gen")
-        @SequenceGenerator(name="joboffer_gen", sequenceName="aoste_seq")
-        var id: Int?,
-
-        @Version
-        var version: Int?,
-
-        val publicationStartDate: LocalDate,
-
-        var publicationEndDate: LocalDate?,
-
-        var reference: String?,
-
-        var url: String?,
-
-        @Embedded
-        @get:javax.validation.Valid
-        val job: Job,
-
-        @Embedded
-        val company: Company,
-
-        @Embedded
-        val contact: Contact,
-
-        @Embedded
-        val application: Application,
-
-        @ManyToOne
-        @JoinColumn(name="owner_id")
-        @get:JsonIgnore
-        var owner: RestAccessKey?,
-
-        @get:JsonIgnore
-        var creationDate: Timestamp?,
-
-        @get:JsonIgnore
-        var lastModificationDate: Timestamp?,
-
-        @get:JsonIgnore
-        var cancellationDate: Timestamp?,
-
-        @get:JsonIgnore
-        var cancellationReasonCode: String?
-) {
-    // This default constructor is required by JPA
-    constructor() : this(null,  null, LocalDate.now(), null, null, null, Job(), Company(), Contact(), Application(), null, null, null, null, null)
-
-    @PrePersist
-    fun onCreate() {
-        creationDate = Timestamp(DateTime.now().millis)
-    }
-
-    @PreUpdate
-    fun onUpdate() {
-        lastModificationDate = Timestamp(DateTime.now().millis)
-    }
-}
 
 @Embeddable
 data class Job(
@@ -86,7 +21,7 @@ data class Job(
         val location: Location,
 
         @field:javax.validation.constraints.Size(max=5)
-        @ElementCollection(fetch = FetchType.EAGER)
+        @ElementCollection(fetch = javax.persistence.FetchType.EAGER)
         var languageSkills: Collection<LanguageSkill>?
 
 ) {
@@ -103,11 +38,11 @@ data class LanguageSkill(
         val language: String,
 
         @Column(name="spokenlevel")
-        @Enumerated(EnumType.STRING)
+        @Enumerated(javax.persistence.EnumType.STRING)
         val spokenLevel: LanguageSkill.Level,
 
         @Column(name="writtenlevel")
-        @Enumerated(EnumType.STRING)
+        @Enumerated(javax.persistence.EnumType.STRING)
         val writtenLevel: LanguageSkill.Level
 ) {
     enum class Level {
@@ -169,7 +104,7 @@ data class Postbox(
 @Embeddable
 data class Contact(
 
-        @Enumerated(EnumType.STRING)
+        @Enumerated(javax.persistence.EnumType.STRING)
         val title: Contact.Title,
 
         val firstName: String,
