@@ -11,7 +11,7 @@ public class JacksonConfig extends RepositoryRestConfigurerAdapter {
     @Override
     public void configureJacksonObjectMapper(ObjectMapper objectMapper) {
         objectMapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);
     }
-
 }
 
