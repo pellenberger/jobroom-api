@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -30,13 +30,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 public class EncodingPostTest {
 
     private MockMvc mockMvc;
-    private int idJob;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -51,26 +50,26 @@ public class EncodingPostTest {
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
     @Test
     public void encodingPost() throws Exception {
 
-        String jobOfferJson = JobOfferDatasetHelper.getJson().toString();
+        String jobOfferJson = DatasetHelper.getJson().toString();
 
         this.mockMvc.perform(post("/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .content(jobOfferJson))
                 .andExpect(status().isCreated())
@@ -78,10 +77,10 @@ public class EncodingPostTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(header().string("Content-Type", "application/json;charset=UTF-8"));
 
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         assertEquals(1, jobOfferRepository.count());
         JobOffer job = jobOfferRepository.findAll().iterator().next();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
 
         assertEquals("Boulé", job.getContact().getLastName());
     }

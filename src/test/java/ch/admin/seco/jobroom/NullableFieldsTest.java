@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
@@ -41,7 +41,7 @@ public class NullableFieldsTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -56,22 +56,22 @@ public class NullableFieldsTest {
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
     private void performTest(String json) throws Exception {
         this.mockMvc.perform(post("/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .content(json))
                 .andExpect(status().isBadRequest());
     }
@@ -82,7 +82,7 @@ public class NullableFieldsTest {
     @Test
     public void missingObject() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.remove("job");
 
         performTest(json.toString());
@@ -94,7 +94,7 @@ public class NullableFieldsTest {
     @Test
     public void missingLocalDate() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.remove("publicationStartDate");
 
         performTest(json.toString());
@@ -106,7 +106,7 @@ public class NullableFieldsTest {
     @Test
     public void missingEnumType() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.getJSONObject("contact").remove("title");
 
         performTest(json.toString());
@@ -118,7 +118,7 @@ public class NullableFieldsTest {
     @Test
     public void missingString() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.getJSONObject("job").remove("title");
 
         performTest(json.toString());
@@ -130,7 +130,7 @@ public class NullableFieldsTest {
     @Test
     public void missingInteger() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.getJSONObject("job").remove("workingTimePercentageFrom");
 
         performTest(json.toString());
@@ -142,7 +142,7 @@ public class NullableFieldsTest {
     @Test
     public void missingBoolean() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.getJSONObject("application").remove("telephonic");
 
         performTest(json.toString());
@@ -154,7 +154,7 @@ public class NullableFieldsTest {
     @Test
     public void nullableFields() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
 
         json.remove("publicationEndDate");
         json.remove("reference");
@@ -173,8 +173,8 @@ public class NullableFieldsTest {
         json.getJSONObject("application").remove("url");
 
         this.mockMvc.perform(post("/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .content(json.toString()))
                 .andExpect(status().isCreated());
     }

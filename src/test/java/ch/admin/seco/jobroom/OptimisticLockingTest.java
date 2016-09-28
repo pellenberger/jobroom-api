@@ -1,12 +1,13 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
 import org.joda.time.LocalDate;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class OptimisticLockingTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -54,23 +55,23 @@ public class OptimisticLockingTest {
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
 
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
 
-        jobOffer = JobOfferDatasetHelper.get();
+        jobOffer = DatasetHelper.get();
         jobOffer.setOwner(restAccessKey);
         idNewJobOffer = jobOfferRepository.save(jobOffer).getId();
 
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
@@ -78,29 +79,29 @@ public class OptimisticLockingTest {
     public void optimisticLocking() throws Exception {
 
         // validate presence and value of ETag header
-        this.mockMvc.perform(get("/joboffers/" + idNewJobOffer).with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(get("/joboffers/" + idNewJobOffer).with(testHelper.getDefaultHttpBasic()))
                 .andExpect(status().isOk())
                 .andExpect(header().string("ETag", "\"0\""));
 
         // update resource (change version)
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOffer.setPublicationEndDate(LocalDate.parse("2101-02-03"));
         jobOfferRepository.save(jobOffer);
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
 
         // try to patch with previous version tag
-        String jobOfferJson = JobOfferDatasetHelper.getJsonPartial().toString();
-        this.mockMvc.perform(patch("/joboffers/" + idNewJobOffer).with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+        JSONObject jobOfferJson = DatasetHelper.getJsonPartial();
+        this.mockMvc.perform(patch("/joboffers/" + idNewJobOffer).with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .header("If-Match", "0")
-                .content(jobOfferJson))
+                .content(jobOfferJson.toString()))
                 .andExpect(status().isPreconditionFailed());
 
         // try to patch with correct version tag
-        this.mockMvc.perform(patch("/joboffers/" + idNewJobOffer).with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+        this.mockMvc.perform(patch("/joboffers/" + idNewJobOffer).with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .header("If-Match", "1")
-                .content(jobOfferJson))
+                .content(jobOfferJson.toString()))
                 .andExpect(status().isNoContent());
     }
 }

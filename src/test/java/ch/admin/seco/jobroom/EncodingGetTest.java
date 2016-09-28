@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -36,7 +36,7 @@ public class EncodingGetTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -51,22 +51,22 @@ public class EncodingGetTest {
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
 
-        JobOffer jobOffer = JobOfferDatasetHelper.get();
+        JobOffer jobOffer = DatasetHelper.get();
         jobOffer.setOwner(restAccessKey);
 
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         idJob = jobOfferRepository.save(jobOffer).getId();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
@@ -74,7 +74,7 @@ public class EncodingGetTest {
     public void encodingGet() throws Exception {
 
         this.mockMvc.perform(get("/joboffers/" + idJob)
-                .with(apiTestHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(content().encoding("UTF-8"))

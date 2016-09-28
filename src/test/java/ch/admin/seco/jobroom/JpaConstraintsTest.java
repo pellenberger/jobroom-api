@@ -1,9 +1,11 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,8 +17,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
-
-import javax.json.JsonObject;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,7 +37,7 @@ public class JpaConstraintsTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -52,14 +52,14 @@ public class JpaConstraintsTest {
                 .apply(springSecurity())
                 .build();
 
-        restAccessKeyRepository.save(apiTestHelper.getDefaultRestAccessKey());
+        restAccessKeyRepository.save(testHelper.getDefaultRestAccessKey());
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
@@ -69,11 +69,12 @@ public class JpaConstraintsTest {
         String jobDescription = getLongJobDescription();
         Assert.assertEquals(10001, jobDescription.length());
 
-        JsonObject jobOffer = JobOfferDatasetHelper.getJsonWithJobDescription(jobDescription);
+        JSONObject jobOffer = DatasetHelper.getJson();
+        jobOffer.getJSONObject("job").put("description", jobDescription);
 
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+        this.mockMvc.perform(post("/joboffers").with(testHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .content(jobOffer.toString()))
                 .andExpect(status().isBadRequest());
     }
@@ -82,34 +83,37 @@ public class JpaConstraintsTest {
     public void sizeLanguageSkills() throws Exception {
 
         // 0 languageSkills --> OK
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills(0).toString()))
+        this.mockMvc.perform(post("/joboffers").with(testHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(getJsonWithLanguageSkills(0)))
                 .andExpect(status().isCreated());
 
         // 5 languageSkills --> OK
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills(5).toString()))
+        this.mockMvc.perform(post("/joboffers").with(testHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(getJsonWithLanguageSkills(5)))
                 .andExpect(status().isCreated());
 
         // 6 languageSkills --> KO
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills(6).toString()))
+        this.mockMvc.perform(post("/joboffers").with(testHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(getJsonWithLanguageSkills(6)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void invalidContactTitle() throws Exception {
 
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithContactTitle("invalid_title").toString()))
+        JSONObject jobOffer = DatasetHelper.getJson();
+        jobOffer.getJSONObject("contact").put("title", "invalid_title");
+
+        this.mockMvc.perform(post("/joboffers").with(testHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(jobOffer.toString()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -117,18 +121,36 @@ public class JpaConstraintsTest {
     public void invalidLanguageSkillsLevel() throws Exception {
 
         // wrong spoken level
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills("1", "invalid_level", "good").toString()))
+        this.mockMvc.perform(post("/joboffers").with(testHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(DatasetHelper.getJsonWithLanguageSkills("1", "invalid_level", "good").toString()))
                 .andExpect(status().isBadRequest());
 
         // wrong written level
-        this.mockMvc.perform(post("/joboffers").with(apiTestHelper.getDefaultHttpBasic())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithLanguageSkills("1", "good", "invalid_level").toString()))
+        this.mockMvc.perform(post("/joboffers").with(testHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(DatasetHelper.getJsonWithLanguageSkills("1", "good", "invalid_level").toString()))
                 .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * @return JobOffer containing n language skills
+     */
+    private String getJsonWithLanguageSkills(int n) {
+        JSONArray languageSkills = new JSONArray();
+        for (int i = 0; i < n; i ++) {
+            languageSkills.put(new JSONObject()
+                    .put("language", "2")
+                    .put("spokenLevel", "good")
+                    .put("writtenLevel", "good"));
+        }
+
+        JSONObject jobOffer = DatasetHelper.getJson();
+        jobOffer.getJSONObject("job").put("languageSkills", languageSkills);
+
+        return jobOffer.toString();
     }
 
     /**

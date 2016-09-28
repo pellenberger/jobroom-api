@@ -1,8 +1,8 @@
 package ch.admin.seco.jobroom.doc;
 
 import ch.admin.seco.jobroom.ApiApplication;
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -55,49 +55,50 @@ public class ApiDocEdit {
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
 
+
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Before
     public void setup() throws Exception {
 
         this.mockMvc = webAppContextSetup(webApplicationContext)
-                .apply(apiTestHelper.getDocumentationConfiguration(restDocumentation))
+                .apply(testHelper.getDocumentationConfiguration(restDocumentation))
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
 
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
 
-        JobOffer jobOffer = JobOfferDatasetHelper.get();
+        JobOffer jobOffer = DatasetHelper.get();
         jobOffer.setOwner(restAccessKey);
         idNewJobOffer = jobOfferRepository.save(jobOffer).getId();
 
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
         restAccessKeyRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @Test
     public void editJobOffer() throws Exception {
 
-        String jobOfferJson = JobOfferDatasetHelper.getJsonPartial().toString();
+        String jobOfferJson = DatasetHelper.getJsonPartial().toString();
 
         this.mockMvc.perform(patch(basePath + "/joboffers/" + idNewJobOffer)
-                .with(apiTestHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
                 .contextPath(basePath)
-                .contentType(apiTestHelper.getContentType())
+                .contentType(testHelper.getContentType())
                 .content(jobOfferJson))
                 .andExpect(status().isNoContent())
 
-                .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse()));
+                .andDo(document("{method-name}", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse()));
     }
 }

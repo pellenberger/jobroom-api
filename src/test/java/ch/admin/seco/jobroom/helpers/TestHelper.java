@@ -27,7 +27,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
 @Component
-public class ApiTestHelper {
+public class TestHelper {
 
     private final static String DEFAULT_USER_EMAIL = "email";
     private final static String DEFAULT_USER_NAME = "user";

@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -36,7 +36,7 @@ public class AuditFieldsTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -51,15 +51,15 @@ public class AuditFieldsTest {
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
@@ -68,14 +68,14 @@ public class AuditFieldsTest {
 
         // create new job offer
         this.mockMvc.perform(post("/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJson().toString()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(DatasetHelper.getJson().toString()))
                 .andExpect(status().isCreated());
 
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         JobOffer jobOffer = jobOfferRepository.findAll().iterator().next();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
 
         // expect creationDate to be "now"
         int dSeconds = 5;
@@ -88,9 +88,9 @@ public class AuditFieldsTest {
 
         // update job offer
         this.mockMvc.perform(patch("/joboffers/" + jobOffer.getId())
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonPartial().toString()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(DatasetHelper.getJsonPartial().toString()))
                 .andExpect(status().isNoContent());
 
         // expect lastModificationDate to be "now"

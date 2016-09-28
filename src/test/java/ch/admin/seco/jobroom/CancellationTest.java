@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -38,7 +38,7 @@ public class CancellationTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -53,27 +53,27 @@ public class CancellationTest {
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
 
         // create 2 jobs
-        JobOffer job1 = JobOfferDatasetHelper.get();
+        JobOffer job1 = DatasetHelper.get();
         job1.setOwner(restAccessKey);
         idJob1 = jobOfferRepository.save(job1).getId();
 
-        JobOffer job2 = JobOfferDatasetHelper.get();
+        JobOffer job2 = DatasetHelper.get();
         job2.setOwner(restAccessKey);
         idJob2 = jobOfferRepository.save(job2).getId();
 
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
@@ -83,39 +83,39 @@ public class CancellationTest {
         // GET /joboffers should 2 elements
 
         this.mockMvc.perform(get("/joboffers/")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(2)));
 
         // POST /cancel without reasonCode
 
         this.mockMvc.perform(post("/joboffers/" + idJob1 + "/cancel")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType()))
                 .andExpect(status().isBadRequest());
 
         // POST /cancel
 
         this.mockMvc.perform(post("/joboffers/" + idJob1 + "/cancel")
-                .with(apiTestHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
                 .param("reasonCode", "1")
-                .contentType(apiTestHelper.getContentType()))
+                .contentType(testHelper.getContentType()))
                 .andExpect(status().isNoContent());
 
         // POST /cancel on already-cancelled-job
 
         this.mockMvc.perform(post("/joboffers/" + idJob1 + "/cancel")
-                .with(apiTestHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
                 .param("reasonCode", "1")
-                .contentType(apiTestHelper.getContentType()))
+                .contentType(testHelper.getContentType()))
                 .andExpect(status().isNotFound());
 
         // GET /joboffers should now return only 1 element
 
         this.mockMvc.perform(get("/joboffers/")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(1)));
 
@@ -124,17 +124,17 @@ public class CancellationTest {
     @Test
     public void deleteNotAllowed() throws Exception {
         this.mockMvc.perform(delete("/joboffers/" + idJob2)
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType()))
                 .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
     public void authorizedCancellationReasonCode() throws Exception {
         this.mockMvc.perform(post("/joboffers/" + idJob2 + "/cancel")
-                .with(apiTestHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
                 .param("reasonCode", "4")
-                .contentType(apiTestHelper.getContentType()))
+                .contentType(testHelper.getContentType()))
                 .andExpect(status().isBadRequest());
 
     }

@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
@@ -36,7 +36,7 @@ public class JsonIgnoredFieldsTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -51,22 +51,22 @@ public class JsonIgnoredFieldsTest {
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
     private void performTest(String json) throws Exception {
         this.mockMvc.perform(post("/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .content(json))
                 .andExpect(status().isBadRequest());
     }
@@ -74,7 +74,7 @@ public class JsonIgnoredFieldsTest {
     @Test
     public void jsonIgnoredVersion() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.put("version", 10);
 
         performTest(json.toString());
@@ -83,7 +83,7 @@ public class JsonIgnoredFieldsTest {
     @Test
     public void jsonIgnoredOwner() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.put("owner", new JSONObject().put("accessKey", "password123").put("ownerName", "Bob").put("active", 1));
 
         performTest(json.toString());
@@ -92,7 +92,7 @@ public class JsonIgnoredFieldsTest {
     @Test
     public void jsonIgnoredCreationDate() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.put("creationDate", "2016-01-01");
 
         performTest(json.toString());
@@ -101,7 +101,7 @@ public class JsonIgnoredFieldsTest {
     @Test
     public void jsonIgnoredLastModificationDate() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.put("lastModificationDate", "2016-01-01");
 
         performTest(json.toString());
@@ -110,7 +110,7 @@ public class JsonIgnoredFieldsTest {
     @Test
     public void jsonIgnoredCancellationDate() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.put("cancellationDate", "2016-01-01");
 
         performTest(json.toString());
@@ -119,7 +119,7 @@ public class JsonIgnoredFieldsTest {
     @Test
     public void jsonIgnoredCancellationReasonCode() throws Exception {
 
-        JSONObject json = JobOfferDatasetHelper.getMutableJson();
+        JSONObject json = DatasetHelper.getJson();
         json.put("cancellationReasonCode", "2016-01-01");
 
         performTest(json.toString());

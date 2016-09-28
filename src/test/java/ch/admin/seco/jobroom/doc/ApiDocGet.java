@@ -1,8 +1,8 @@
 package ch.admin.seco.jobroom.doc;
 
 import ch.admin.seco.jobroom.ApiApplication;
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -61,34 +61,34 @@ public class ApiDocGet {
     RestAccessKeyRepository restAccessKeyRepository;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Before
     public void setup() throws Exception {
 
         this.mockMvc = webAppContextSetup(webApplicationContext)
-                .apply(apiTestHelper.getDocumentationConfiguration(restDocumentation))
+                .apply(testHelper.getDocumentationConfiguration(restDocumentation))
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
 
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
 
-        JobOffer jobOffer = JobOfferDatasetHelper.get();
+        JobOffer jobOffer = DatasetHelper.get();
         jobOffer.setOwner(restAccessKey);
         idNewJobOffer = jobOfferRepository.save(jobOffer).getId();
 
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticate("user", "password");
+        testHelper.authenticate("user", "password");
         jobOfferRepository.deleteAll();
         restAccessKeyRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ApiDocGet {
 
         this.mockMvc.perform(get(basePath + "/joboffers/" + idNewJobOffer)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .with(apiTestHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
                 .contextPath(basePath))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.publicationStartDate", Matchers.is("2100-01-01")))
@@ -143,7 +143,7 @@ public class ApiDocGet {
                 .andExpect(jsonPath("$.application.additionalDetails", Matchers.is("Please apply online")))
                 .andExpect(jsonPath("$.application.url", Matchers.is("https://www.seco.admin.ch/jobs/284956/apply")))
 
-                .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         responseFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
@@ -155,7 +155,7 @@ public class ApiDocGet {
                                 fieldWithPath("application").ignored(),
                                 fieldWithPath("_links").ignored()
                         )))
-                .andDo(document("{method-name}-job", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}-job", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         responseFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
@@ -181,7 +181,7 @@ public class ApiDocGet {
                                 fieldWithPath("application").ignored(),
                                 fieldWithPath("_links").ignored()
                         )))
-                .andDo(document("{method-name}-company", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}-company", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         responseFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
@@ -205,7 +205,7 @@ public class ApiDocGet {
                                 fieldWithPath("application").ignored(),
                                 fieldWithPath("_links").ignored()
                         )))
-                .andDo(document("{method-name}-contact", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}-contact", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         responseFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
@@ -222,7 +222,7 @@ public class ApiDocGet {
                                 fieldWithPath("application").ignored(),
                                 fieldWithPath("_links").ignored()
                         )))
-                .andDo(document("{method-name}-application", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}-application", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         responseFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
@@ -245,13 +245,13 @@ public class ApiDocGet {
     public void getAllJobOffers() throws Exception {
 
         this.mockMvc.perform(get(basePath + "/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
                 .contextPath(basePath))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$.page", Matchers.notNullValue()))
 
-                .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         responseFields(
                                 fieldWithPath("_embedded.jobOffers").description("Contains all job offers associated to the current user."),
                                 fieldWithPath("_links").ignored(),

@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -40,7 +40,7 @@ public class SecurityTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -82,10 +82,10 @@ public class SecurityTest {
         for (int i = 0; i < 3; i ++) {
             RestAccessKey user = users.get(i);
             restAccessKeyRepository.save(user);
-            apiTestHelper.authenticate(user);
+            testHelper.authenticate(user);
 
             for(int j = 0; j < 3; j ++) {
-                JobOffer job = JobOfferDatasetHelper.get();
+                JobOffer job = DatasetHelper.get();
                 job.setOwner(user);
                 jobOfferRepository.save(job);
 
@@ -101,7 +101,7 @@ public class SecurityTest {
         user3.setActive(0);
         restAccessKeyRepository.save(user3);
 
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @After
@@ -111,11 +111,11 @@ public class SecurityTest {
         restAccessKeyRepository.save(user3);
 
         for (int i = 0; i < 3; i ++) {
-            apiTestHelper.authenticate(users.get(i));
+            testHelper.authenticate(users.get(i));
             jobOfferRepository.deleteAll();
         }
         restAccessKeyRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @Test
@@ -125,8 +125,8 @@ public class SecurityTest {
                 .andExpect(status().isUnauthorized());
 
         this.mockMvc.perform(post("/joboffers")
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.get().toString()))
+                .contentType(testHelper.getContentType())
+                .content(DatasetHelper.getJson().toString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -139,8 +139,8 @@ public class SecurityTest {
                 .andExpect(status().isUnauthorized());
 
         this.mockMvc.perform(post("/joboffers").with(httpBasic("wrong_user", "wrong_password"))
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.get().toString()))
+                .contentType(testHelper.getContentType())
+                .content(DatasetHelper.getJson().toString()))
                 .andExpect(status().isUnauthorized());
 
         // correct user but wrong password (GET / POST)
@@ -149,8 +149,8 @@ public class SecurityTest {
                 .andExpect(status().isUnauthorized());
 
         this.mockMvc.perform(post("/joboffers").with(httpBasic(user1.getOwnerName(), "wrong_password"))
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.get().toString()))
+                .contentType(testHelper.getContentType())
+                .content(DatasetHelper.getJson().toString()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -172,8 +172,8 @@ public class SecurityTest {
     public void postJob() throws Exception {
         this.mockMvc.perform(post("/joboffers")
                 .with(httpBasic(user1.getOwnerName(), user1.getAccessKey()))
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJson().toString()))
+                .contentType(testHelper.getContentType())
+                .content(DatasetHelper.getJson().toString()))
                 .andExpect(status().isCreated());
 
         // user that created the job has one more job on its collection
@@ -205,8 +205,8 @@ public class SecurityTest {
         // try to access job of other owner (PATCH)
         this.mockMvc.perform(patch("/joboffers/" + String.valueOf(idJobUser2))
                 .with(httpBasic(user1.getOwnerName(), user1.getAccessKey()))
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.get().toString()))
+                .contentType(testHelper.getContentType())
+                .content(DatasetHelper.get().toString()))
                 .andExpect(status().isNotFound());
     }
 

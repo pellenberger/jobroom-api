@@ -1,7 +1,7 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
@@ -35,7 +35,7 @@ public class PagingTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -54,24 +54,24 @@ public class PagingTest {
         // Create a dataset of 6 job offers
         //
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
 
         for (int i = 0; i < 6; i ++) {
-            JobOffer jobOffer = JobOfferDatasetHelper.get();
+            JobOffer jobOffer = DatasetHelper.get();
             jobOffer.setOwner(restAccessKey);
             jobOfferRepository.save(jobOffer);
         }
 
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
@@ -79,12 +79,12 @@ public class PagingTest {
     public void paging() throws Exception {
 
         // without paging
-        this.mockMvc.perform(get("/joboffers").with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(get("/joboffers").with(testHelper.getDefaultHttpBasic()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(6)));
 
         // page 1/3
-        this.mockMvc.perform(get("/joboffers/?size=2").with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(get("/joboffers/?size=2").with(testHelper.getDefaultHttpBasic()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.page.size", Matchers.is(2)))
@@ -97,7 +97,7 @@ public class PagingTest {
                 .andExpect(jsonPath("$._links.next").exists());
 
         // page 2/3
-        this.mockMvc.perform(get("/joboffers/?size=2&page=1").with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(get("/joboffers/?size=2&page=1").with(testHelper.getDefaultHttpBasic()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.page.size", Matchers.is(2)))
@@ -110,7 +110,7 @@ public class PagingTest {
                 .andExpect(jsonPath("$._links.next").exists());
 
         // page 3/3
-        this.mockMvc.perform(get("/joboffers/?size=2&page=2").with(apiTestHelper.getDefaultHttpBasic()))
+        this.mockMvc.perform(get("/joboffers/?size=2&page=2").with(testHelper.getDefaultHttpBasic()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.page.size", Matchers.is(2)))

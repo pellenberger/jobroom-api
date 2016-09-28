@@ -1,8 +1,8 @@
 package ch.admin.seco.jobroom.doc;
 
 import ch.admin.seco.jobroom.ApiApplication;
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
 import org.hamcrest.Matchers;
@@ -58,40 +58,40 @@ public class ApiDocCreate {
     RestAccessKeyRepository restAccessKeyRepository;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Before
     public void setup() throws Exception {
 
         this.mockMvc = webAppContextSetup(webApplicationContext)
-                .apply(apiTestHelper.getDocumentationConfiguration(restDocumentation))
+                .apply(testHelper.getDocumentationConfiguration(restDocumentation))
                 .apply(springSecurity())
                 .build();
 
-        restAccessKeyRepository.save(apiTestHelper.getDefaultRestAccessKey());
+        restAccessKeyRepository.save(testHelper.getDefaultRestAccessKey());
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
         restAccessKeyRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @Test
     public void createJobOffer() throws Exception {
 
-        String jobOfferJson = JobOfferDatasetHelper.getJson().toString();
+        String jobOfferJson = DatasetHelper.getJson().toString();
 
         this.mockMvc.perform(post(basePath + "/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
                 .contextPath(basePath)
-                .contentType(apiTestHelper.getContentType())
+                .contentType(testHelper.getContentType())
                 .content(jobOfferJson))
                 .andExpect(status().isCreated())
 
-                .andDo(document("{method-name}", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         requestFields(
                                 fieldWithPath("publicationStartDate")
                                         .description("Date from which the job offer is visible on the publication medias. " +
@@ -122,7 +122,7 @@ public class ApiDocCreate {
                                         .description("Support for submitting the job application.\n\n(further information below)")
                                         .attributes(key("constraints").value("* Not null."))
                         )))
-                .andDo(document("{method-name}-job", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}-job", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         requestFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
@@ -190,7 +190,7 @@ public class ApiDocCreate {
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored()
                 )))
-                .andDo(document("{method-name}-company", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}-company", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         requestFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
@@ -242,7 +242,7 @@ public class ApiDocCreate {
                                 fieldWithPath("contact").ignored(),
                                 fieldWithPath("application").ignored()
                         )))
-                .andDo(document("{method-name}-contact", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}-contact", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         requestFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
@@ -268,7 +268,7 @@ public class ApiDocCreate {
                                         .attributes(key("constraints").value("* Not null.")),
                                 fieldWithPath("application").ignored()
                         )))
-                .andDo(document("{method-name}-application", apiTestHelper.getPreprocessRequest(), apiTestHelper.getPreprocessResponse(),
+                .andDo(document("{method-name}-application", testHelper.getPreprocessRequest(), testHelper.getPreprocessResponse(),
                         requestFields(
                                 fieldWithPath("publicationStartDate").ignored(),
                                 fieldWithPath("publicationEndDate").ignored(),
@@ -296,7 +296,7 @@ public class ApiDocCreate {
                         )));
 
         this.mockMvc.perform(get(basePath + "/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
+                .with(testHelper.getDefaultHttpBasic())
                 .contextPath(basePath))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.jobOffers", Matchers.hasSize(1)));

@@ -1,12 +1,13 @@
 package ch.admin.seco.jobroom;
 
-import ch.admin.seco.jobroom.helpers.ApiTestHelper;
-import ch.admin.seco.jobroom.helpers.JobOfferDatasetHelper;
+import ch.admin.seco.jobroom.helpers.TestHelper;
+import ch.admin.seco.jobroom.helpers.DatasetHelper;
 import ch.admin.seco.jobroom.model.JobOffer;
 import ch.admin.seco.jobroom.model.RestAccessKey;
 import ch.admin.seco.jobroom.repository.JobOfferRepository;
 import ch.admin.seco.jobroom.repository.RestAccessKeyRepository;
 import org.joda.time.LocalDate;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +18,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
-
-import javax.json.JsonObject;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -43,7 +42,7 @@ public class PublicationStartDateTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ApiTestHelper apiTestHelper;
+    TestHelper testHelper;
 
     @Autowired
     RestAccessKeyRepository restAccessKeyRepository;
@@ -72,33 +71,36 @@ public class PublicationStartDateTest {
                 .apply(springSecurity())
                 .build();
 
-        RestAccessKey restAccessKey = apiTestHelper.getDefaultRestAccessKey();
+        RestAccessKey restAccessKey = testHelper.getDefaultRestAccessKey();
         restAccessKeyRepository.save(restAccessKey);
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
 
         // create default job offer
-        JobOffer defaultJob = JobOfferDatasetHelper.get();
+        JobOffer defaultJob = DatasetHelper.get();
         defaultJob.setOwner(restAccessKey);
         idDefaultJob = jobOfferRepository.save(defaultJob).getId();
 
         // create job offer published since today
-        JobOffer publishedJobToday = JobOfferDatasetHelper.getWithPublicationStartDate(new LocalDate().toString());
+        JobOffer publishedJobToday = DatasetHelper.get();
+        publishedJobToday.setPublicationStartDate(new LocalDate());
+
         publishedJobToday.setOwner(restAccessKey);
         idPublishedJobToday = jobOfferRepository.save(publishedJobToday).getId();
 
         // create job offer published since 10 day
-        JobOffer publishedJobNotToday = JobOfferDatasetHelper.getWithPublicationStartDate(new LocalDate().minusDays(MINUS_DAYS).toString());
+        JobOffer publishedJobNotToday = DatasetHelper.get();
+        publishedJobNotToday.setPublicationStartDate(new LocalDate().minusDays(MINUS_DAYS));
         publishedJobNotToday.setOwner(restAccessKey);
         idPublishedJobNotToday = jobOfferRepository.save(publishedJobNotToday).getId();
 
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
     }
 
     @After
     public void cleanup() {
-        apiTestHelper.authenticateDefault();
+        testHelper.authenticateDefault();
         jobOfferRepository.deleteAll();
-        apiTestHelper.unAuthenticate();
+        testHelper.unAuthenticate();
         restAccessKeyRepository.deleteAll();
     }
 
@@ -108,36 +110,38 @@ public class PublicationStartDateTest {
     @Test
     public void currentDate() throws Exception {
 
+        JSONObject jobOffer = DatasetHelper.getJson();
+
         // on POST : publication start date < current date -> KO
 
         this.mockMvc.perform(post("/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithPublicationStartDate(getYesterdayDate()).toString()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(jobOffer.put("publicationStartDate", getYesterdayDate()).toString()))
                 .andExpect(status().isBadRequest());
 
         // on POST : publication start date == current date -> OK
 
         this.mockMvc.perform(post("/joboffers")
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithPublicationStartDate(getCurrentDate()).toString()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(jobOffer.put("publicationStartDate", getCurrentDate()).toString()))
                 .andExpect(status().isCreated());
 
         // on PATCH : publication start date < current date -> KO
 
         this.mockMvc.perform(patch("/joboffers/" + idDefaultJob)
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithPublicationStartDate(getYesterdayDate()).toString()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(jobOffer.put("publicationStartDate", getYesterdayDate()).toString()))
                 .andExpect(status().isBadRequest());
 
         // on PATCH : publication start date == current date -> OK
 
         this.mockMvc.perform(patch("/joboffers/" + idDefaultJob)
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
-                .content(JobOfferDatasetHelper.getJsonWithPublicationStartDate(getCurrentDate()).toString()))
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
+                .content(jobOffer.put("publicationStartDate", getCurrentDate()).toString()))
                 .andExpect(status().isNoContent());
     }
 
@@ -148,27 +152,29 @@ public class PublicationStartDateTest {
     @Test
     public void alreadyPublished() throws Exception {
 
-        JsonObject newPublicationDateJob = JobOfferDatasetHelper.getJsonWithPublicationStartDate(new LocalDate().plusDays(15).toString());
-        JsonObject samePublicationDateJob = JobOfferDatasetHelper.getJsonWithPublicationStartDate(new LocalDate().minusDays(MINUS_DAYS).toString());
+        JSONObject newPublicationDateJob = DatasetHelper.getJson()
+                .put("publicationStartDate", new LocalDate().plusDays(15).toString());
+        JSONObject samePublicationDateJob = DatasetHelper.getJson()
+                .put("publicationStartDate", new LocalDate().minusDays(MINUS_DAYS).toString());
 
         // job already published (publication start date == today) -> KO
         this.mockMvc.perform(patch("/joboffers/" + idPublishedJobToday)
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .content(newPublicationDateJob.toString()))
                 .andExpect(status().isBadRequest());
 
         // job already published (publication start date < today) -> KO
         this.mockMvc.perform(patch("/joboffers/" + idPublishedJobNotToday)
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .content(newPublicationDateJob.toString()))
                 .andExpect(status().isBadRequest());
 
         // job already published but publication start date doesn't change -> OK
         this.mockMvc.perform(patch("/joboffers/" + idPublishedJobNotToday)
-                .with(apiTestHelper.getDefaultHttpBasic())
-                .contentType(apiTestHelper.getContentType())
+                .with(testHelper.getDefaultHttpBasic())
+                .contentType(testHelper.getContentType())
                 .content(samePublicationDateJob.toString()))
                 .andExpect(status().isNoContent());
     }
