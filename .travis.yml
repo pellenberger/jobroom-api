@@ -1,43 +1,38 @@
 sudo: false
-
 language: java
-
 jdk: oraclejdk8
-
 before_install:
 - echo "org.gradle.daemon=true" >> ~/.gradle/gradle.properties
-
 install:
-- if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=staging clean assemble; fi
-- if [ "$TRAVIS_BRANCH" == "prod" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=prod clean assemble; fi
-
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME
+  -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=staging clean assemble; fi
+- if [ "$TRAVIS_BRANCH" == "prod" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME
+  -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=prod clean assemble; fi
 script:
-- if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=staging check; fi
-- if [ "$TRAVIS_BRANCH" == "prod" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=prod check; fi
-
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME
+  -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=staging check; fi
+- if [ "$TRAVIS_BRANCH" == "prod" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME
+  -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=prod check; fi
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-
 cache:
   directories:
   - "$HOME/.m2/"
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/native/"
   - "$HOME/.gradle/wrapper/"
-
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - ls $TRAVIS_BUILD_DIR/build/libs
-
 notifications:
   webhooks:
   - https://buildtimetrend.herokuapp.com/travis
-
 deploy:
   provider: releases
-  api_key:
-    secure: 2+/QxB6yIesn19cfXuZh3Xr6O4ZCPR81Zx2XlVqSTZJCMGCpK4vpaeAALBOWS1fdlzOmtJ+U2WgP4ykXg7FsJfVhrMk7KmimBGSePjmKk/k4YH7vt9Sx8K6gA5BnwMOnoxzdrIhl2hE52lWJgmEBpM5yeLcpDrdcZAXGqYbGjxZMQQJaBNq5IY2bM/acLE3sG7QwUa3bw7sWwOZOoaeIOmQTTUHqsH/Z1hPtP+FtwNxFxnjSbPUhhO/cZGbBAiPcTTL1GFsistrgBnzZ/HThg2xQhL7GZ5zJlJRKeENg5np3vW1Qh6ZYbhvBuaqYSH5STkQg/dJdhSfMWNY6NGkFPd9c0C1YO+ZS8WiPXsMQtoTGMB9m9oL+2G8JBShmdN75CepEkCpS23KGbaUKPkEfUM9v/VI0ASWM967bGTxWHEN7ucjDIS7NhJ/ju+3QKu5ssB1U2E8HOkYbCctNsti3xzG8YrZBP0VSDG6vHkTvIEILqtbB3WTXwHpKqvCBE3PRLt5VjPGj11FuIJ1WCSV7kGeAeoH0KaV2tvrzWRye7nsb/aN0/F8ktbMIlPV1kf/VORZuA/Mh6bKG9VHUAPQFkd2tG2PaXAEP5xOsHGNLhFSSVz3JyDrapGmszIpjvNEYUH0Xjd1ugdQdDp2M82y5wpi7r2IZdxbxDslVNFhzfLE=
-  file: $TRAVIS_BUILD_DIR/build/libs/$TRAVIS_TAG.jar
+  file: "$TRAVIS_BUILD_DIR/build/libs/$TRAVIS_TAG.jar"
   skip_cleanup: true
   on:
     tags: true
+  user: pellenberger
+  password:
+    secure: eESUVLo6q+1lAajbeLPpsoI5MOap1rCFNtT1Oc7JlHFC3s1k/4Z36V1nHiVVQ1o5eoYQ6PmgOr/1HGQKX4sw2Y+jr22nU9JsA1Yr6CDn0YwTx9Jr2ADDzkkiD2QvQtoVgfhdIDTwzXlNePbbflKAAjdGaOZ+XH9SDKqsfPNGFWdN4SeBJluxOWqMNRoJhiE5TdvORIINB1Mw+WJlFps/IHSeF0UUbDQUuDu7dVXiBQVOrDILed/9CmgY7kWjnuvcIf3iTZwJpKIxlATKsKfMX5toivWGfP6vfkdr16izAvsXPCjIGvX3nQTFugcBXcC9kV/yTXX4tUlhM+xCc41JDIeedzgJcFqh93ZbcBxQavHFe0CG94/0JX4rcYpdvG64dTEsBnLhlTVRC53XDwNYBriUGs3fVpfnR+bXPioWQE5fUf105zP0R93ZaZaNdsYuSCt6am3Q7YV2xGc6FSfke4uJ9VSZrH9hmsXu8UrCm4eTztBBRutHpCUyiWcVg50Q3fpRC4eQkcHFKbtdZEXB8xq46FzabXdtKB3Z4x39VhqqopuVToUotIziJOfVccWI3i8ONictI4GChFm0NGxv8iTrYCgrUtq4QG3IzEc0w+55RNFd3FMCgNiSqxaCFn6yM7JyfD7fpPAbepkWGCyLczwNJF/nDgfzJp3+Nz4O7vY=
