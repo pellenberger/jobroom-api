@@ -8,12 +8,12 @@ before_install:
 - echo "org.gradle.daemon=true" >> ~/.gradle/gradle.properties
 
 install:
-- if [ "$TRAVIS_BRANCH" == "master" ]; then "./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=staging clean assemble"; fi
-- if [ "$TRAVIS_BRANCH" == "prod" ]; then "./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=prod clean assemble"; fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=staging clean assemble; fi
+- if [ "$TRAVIS_BRANCH" == "prod" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=prod clean assemble; fi
 
 script:
-- if [ "$TRAVIS_BRANCH" == "master" ]; then "./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=staging check"; fi
-- if [ "$TRAVIS_BRANCH" == "prod" ]; then "./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=prod check"; fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=staging check; fi
+- if [ "$TRAVIS_BRANCH" == "prod" ]; then ./gradlew -PalvchUsername=$ARTIFACTORY_USERNAME -PalvchPassword=$ARTIFACTORY_PASSWORD -Penv=prod check; fi
 
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
