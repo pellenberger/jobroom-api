@@ -21,6 +21,8 @@ plugins {
     id "org.asciidoctor.convert" version "1.5.2"
 }
 
+loadConfiguration()
+
 // TODO adapt code to Hibernate 5.x (see ALV #5229)
 ext['hibernate.version'] = '4.3.11.Final'
 
@@ -109,8 +111,6 @@ task wrapper(type: Wrapper) {
 
 ext {
     snippetsDir = file('build/generated-snippets')
-    host='test-api.job-room.ch'
-    basePath='/api/v0.2'
 }
 
 test {
@@ -119,21 +119,31 @@ test {
 
 asciidoctor {
     attributes 'snippets': snippetsDir
-    attributes 'base-url': host + basePath
+    attributes 'base-url': config.host + config.basePath
     inputs.dir snippetsDir
     dependsOn test
 }
 
 processResources {
     filesMatching('**/*.properties') { expand([
-            host: host,
-            basePath: basePath
+            host: config.host,
+            basePath: config.basePath
     ])}
 }
 
 processTestResources {
     filesMatching('**/*.properties') { expand([
-            host: host,
-            basePath: basePath
+            host: config.host,
+            basePath: config.basePath
     ])}
+}
+
+def loadConfiguration() {
+    def environment = hasProperty('env') ? env : 'staging'
+    ext.environment = environment
+    println "Environment is set to $environment"
+
+    def configFile = file('config.groovy')
+    def config = new ConfigSlurper(environment).parse(configFile.toURL())
+    ext.config = config
 }
